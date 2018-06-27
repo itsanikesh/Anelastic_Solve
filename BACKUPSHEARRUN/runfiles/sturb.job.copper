@@ -1,0 +1,25 @@
+#!/bin/sh
+#ACCOUNT
+#PBS -A ONRDC29935310
+
+#QUEUE
+#PBS -q standard
+
+#WALL TIME
+#PBS -l walltime=48:00:00
+
+#NUMBER OF PROCESSORS
+#PBS -l select=2:ncpus=32:mpiprocs=32
+
+#STANDARD ERROR
+#PBS -e Ekman.err
+
+#STANDARD OUT
+#PBS -o Ekman.out
+
+#JOB NAME
+#PBS -N Ekman
+
+#RUN
+cd ${WORKDIR}/Ekman
+aprun -n 64 ./sturb.x > Ekman.log

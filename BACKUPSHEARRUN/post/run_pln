@@ -1,0 +1,12 @@
+./Pln.x << EOF
+'./'                 # Data Directory with /
+'./vtkfiles_Ekman/'                 # Output Directory with /
+.false.               # Tecplot T/F
+.true.               # Paraview T/F
+'u1_j0064'         # BaseName
+20                  # Start Step 
+10000                  # End Step       
+20                    # Stride 
+.true.               # T=Single F=Double
+.true.
+EOF

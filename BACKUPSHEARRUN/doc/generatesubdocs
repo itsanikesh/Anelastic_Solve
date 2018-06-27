@@ -1,0 +1,154 @@
+#!/bin/bash
+
+# DNS files
+dnsdir=../dns
+dnsfiles="$dnsdir/Average.F90 \
+	$dnsdir/BC.F90 \
+	$dnsdir/grid_setup.F90 \
+	$dnsdir/IC.F90 \
+	$dnsdir/initialize.F90 \
+	$dnsdir/input.F90 \
+	$dnsdir/isoSpec.F90 \
+	$dnsdir/memManage.F90 \
+	$dnsdir/NSsolver.F90 \
+	$dnsdir/output.F90 \
+	$dnsdir/Restart.F90 \
+	$dnsdir/Routines.F90 \
+	$dnsdir/Sponge.F90 \
+	$dnsdir/statistics.F90 \
+	$dnsdir/StatTools.F90 \
+	$dnsdir/Sturb.F90"
+
+# decomposition files
+decompdir=../decomp
+decompfiles="$decompdir/dist1dC.f90 \
+	$decompdir/dist1d.f90 \
+	$decompdir/dist2dC.f90 \
+	$decompdir/dist2d.f90 \
+	$decompdir/dist3d.f90 \
+	$decompdir/gather1dC.f90 \
+	$decompdir/gather1d.f90 \
+	$decompdir/gather2dC.f90 \
+	$decompdir/gather2d.f90 \
+	$decompdir/gather3d.f90 \
+	$decompdir/ghost.f90 \
+	$decompdir/Gpencil.f90 \
+	$decompdir/Gplane.f90 \
+	$decompdir/mpi_setup.f90"
+
+# module files
+moddir=../include
+modfiles="$moddir/modules.F90 \
+	$moddir/mg_modules.F90"
+
+# pressure solver files
+pfiledir=../mgMK
+psolverfiles="$pfiledir/mg_solver.F90 \
+	$pfiledir/mg_allocate.F90 \
+	$pfiledir/mg_bdry.F90 \
+	$pfiledir/mg_check_size.F90 \
+	$pfiledir/mg_coeff.F90 \
+	$pfiledir/mg_cor.F90 \
+	$pfiledir/mg_cycle.F90 \
+	$pfiledir/mg_end.F90 \
+	$pfiledir/mg_grids.F90 \
+	$pfiledir/mg_hydro.F90 \
+	$pfiledir/mg_init.F90 \
+	$pfiledir/mg_read_params.F90 \
+	$pfiledir/mg_relax.F90 \
+	$pfiledir/mg_residual.F90 \
+	$pfiledir/mg_restr.F90 \
+	$pfiledir/mg_set.F90 \
+	$pfiledir/mg_set_params.F90 \
+	$pfiledir/mg_sor_sorch.F90 \
+	$pfiledir/mg_trans.F90"
+
+ptestdir=../mgMK/test
+ptestfiles="$ptestdir/test.F90 \
+	$ptestdir/inputptest.F90 \
+	$ptestdir/startup.F90 \
+	$ptestdir/write_solution.F90"
+
+griddir=../grid
+gridfiles="$griddir/Grid.f90"
+
+interpdir=../interp
+interpfiles="$interpdir/InterpX1.f90 \
+	$interpdir/InterpX2.f90 \
+	$interpdir/InterpX3.f90 \
+	$interpdir/Neville.f90 \
+	$interpdir/write_vtk.f90"
+
+utilsdir=../utils
+utilsfiles="$utilsdir/loadGrid.F90 \
+	$utilsdir/PenPln.F90 \
+	$utilsdir/readINI.F90 \
+	$utilsdir/string.F90" 
+
+matlabwakedir=../post/wake/wake_matlab
+matlabwakefiles="$matlabwakedir/centerofmass.m \
+	$matlabwakedir/Cfilename.m \
+	$matlabwakedir/check_diss.m \
+	$matlabwakedir/check_trans.m \
+	$matlabwakedir/check_u3prp.m \
+	$matlabwakedir/comparedata.m \
+	$matlabwakedir/compareplanes.m \
+	$matlabwakedir/contour_var.m \
+	$matlabwakedir/diss_terms.m \
+	$matlabwakedir/exportfig.m \
+	$matlabwakedir/fitgaussian1D.m \
+	$matlabwakedir/fitgaussian2D.m \
+	$matlabwakedir/Gauss2d.m \
+	$matlabwakedir/Gaussian2D.m \
+	$matlabwakedir/ic_radial_cors.m \
+	$matlabwakedir/initialspectra.m \
+	$matlabwakedir/int_tke_budget.m \
+	$matlabwakedir/katan.m \
+	$matlabwakedir/k_terms_0_9.m \
+	$matlabwakedir/large_stats.m \
+	$matlabwakedir/mean_diss.m \
+	$matlabwakedir/mean_rho.m \
+	$matlabwakedir/mke_tke.m \
+	$matlabwakedir/momentum.m \
+	$matlabwakedir/nut.m \
+	$matlabwakedir/penviewer.m \
+	$matlabwakedir/prod_comps.m \
+	$matlabwakedir/p_terms.m \
+	$matlabwakedir/read.m \
+	$matlabwakedir/read_single.m \
+	$matlabwakedir/read_vtk.m \
+	$matlabwakedir/read_vtkpln.m \
+	$matlabwakedir/Ret_Frt.m \
+	$matlabwakedir/sdiss_check.m \
+	$matlabwakedir/temp.m \
+	$matlabwakedir/TE_terms.m \
+	$matlabwakedir/tpe_terms.m \
+	$matlabwakedir/unstrat_radial.m \
+	$matlabwakedir/unstrat_radial_TKE.m \
+	$matlabwakedir/viewMGgrids.m \
+	$matlabwakedir/vort_terms.m \
+	$matlabwakedir/wake_dims.m "
+
+autogendir=autogen
+
+# -o makes the document with no preamble
+./dsbdoc.x -o $autogendir/dnssubs.tex -f $dnsfiles
+./dsbdoc.x -o $autogendir/decompsubs.tex -f $decompfiles
+./dsbdoc.x -o $autogendir/modulecontents.tex -f $modfiles
+./dsbdoc.x -o $autogendir/psolvesubs.tex -f $psolverfiles
+./dsbdoc.x -o $autogendir/ptestsubs.tex -f $ptestfiles
+./dsbdoc.x -o $autogendir/utilssubs.tex -f $utilsfiles
+./dsbdoc.x -o $autogendir/gridprogram.tex -f $gridfiles
+./dsbdoc.x -o $autogendir/interpprogram.tex -f $interpfiles
+
+# matlab files
+./dsbdoc.x -o $autogendir/matlabwakepost.tex -m $matlabwakefiles
+
+# ini files
+./dsbdoc.x -o $autogendir/ptestini.tex -f ../runfiles/ptest/ptest.ini
+./dsbdoc.x -o $autogendir/sturbini.tex -f ../runfiles/Sturb.ini
+./dsbdoc.x -o $autogendir/gridgenini.tex -f ../grid/gridgen.ini
+
+# -d makes the document with a preamble so the document can be turned into a
+# pdf for debugging 
+#dsbdoc.x -d psolvesubs.tex -f $files

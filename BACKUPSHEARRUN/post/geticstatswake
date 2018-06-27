@@ -1,0 +1,11 @@
+# shell script to read and output all the statistics
+  ./run_ics_wake 6  # u1'
+  ./run_ics_wake 7  # u2'
+  ./run_ics_wake 8  # u3'
+  ./run_ics_wake 29 # u1'u2'
+  ./run_ics_wake 30 # u1'u3'
+  ./run_ics_wake 39 # dU1dx3
+  ./run_ics_wake 40 # dU1dx2
+  ./run_ics_wake 41 # Prod13
+  ./run_ics_wake 42 # Prod12
+  ./run_ics_wake 43 # Diss

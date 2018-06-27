@@ -1,0 +1,71 @@
+###########################################################################
+#                  ARCHITECTURE FILE FOR USE WITH HAISE                   #
+#                     v.1 10/16/2013 Hieu T. Pham                         #
+###########################################################################
+
+#RUN DIRECTORY (directory in which executable is created)
+RUNDIR  =./
+
+#COMPILERS AND LINKERS
+FF      =mpiifort
+AR      =ar
+CPP     =cpp
+CPPFLAGS=-P -traditional
+CC      =
+
+#BUILD FLAGS
+#MMS_TEST = -DMMS_TEST
+IBM_FLAG = -DIBM_FLAG
+PARALLEL =-DPARALLEL
+OBUILD   = #-vec-report0
+MODULE   =-module ./include
+USETEC   = #-DUSETEC
+
+#DEBUGGING OPTIONS
+#DEBUG = -check all -warn all,nodec,interfaces -gen-interfaces -traceback -fpe0 -fp-stack-check
+DEBUG = -traceback
+
+#OPTIMIZATION FLAGS
+OPT=-O3 -ipo
+
+#EXTERNAL LIBRARIES 
+LIBDIRS = -L/site/PET/pkgs/fftw-3.3.3-MPI-GNU/lib/
+LIBS    =-lfftw3
+
+#INCLUDE DIRECTORIES
+INCDIRS = -I/site/PET/pkgs/fftw-3.3.3-MPI-GNU/include/
+
+
+#IOFLAGS
+IOFLAG  =-convert little_endian
+###########################################################################
+#                                NOTES                                    #
+###########################################################################
+# 1. -module 'dir_name' tells it to put .mod files in the given directory 
+#      and to include 'dir_name' in the include path (i.e. -I'dir_name')
+
+# 2. -DPARALLEL is a preprocessing flag that is required to build the 
+#      parallel version.
+
+# 3. DEBUGGING ON JAWS--
+#    -C means check (i.e. check array bounds etc)
+
+# 4. OPTIMIZATIONS ON JAWS--
+#     DISCLAMER: FIRST OFF IF THERE ARE ANY PROBLEMS/INCONSISTENCIES
+#     RECOMPILE WITH NO OPTIMIZATIONS!!!!!!  SUPERCOMPUTERS DO NOT
+#     HAVE STATIC ENVIRONMENTS, LIBRARIES CHANGE, COMPILERS CHANGE
+#     WHICH MEANS SOMETHING THAT WORKED YESTERDAY MIGHT NOT WORK 
+#     TODAY.  C'EST LA VIE... JUST REMEMBER TO COMPLETELY RECOMPILE!
+
+#     DEFAULT RECOMENDATIONS FROM THE USERS GUIDE 
+
+#     MOST AGGRESSIVE OPTIMIZATIONS TRIED
+
+#     THIS FLAG BLEW UP THE CODE
+
+#     FLAGS THAT SEEM TO MAKE VERY BIG DIFFERENCE
+
+#     FLAGS THAT SEEM TO MAKE VERY LITTLE DIFFERENCE
+
+#     THIS FLAG SLOWED IT DOWN
+

@@ -1,0 +1,143 @@
+subroutine output(ver,stat)
+!@t
+! \textbf{subroutine output(ver,stat)}
+!@h
+!   Description:
+!     Output planes, restart files, and statistics.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+!@h
+!   Comments:
+!     Kyle why aren't pencils output here???
+!@q
+
+ use ntypes, only: r8
+ use Flow,   only: u,v,w,p,rho,u1_tmp2, u2_tmp2, u3_tmp2, r_tmp1, r_tmp2
+ use domain, only: sx,ex,sy,ey,sz,ez,nxp2,nyp2,nzp2
+ use Grid,   only: xc,xe,yc,ye,zc,ze
+ use IO     
+ use Parameters
+ implicit none
+
+ !Passed Variables
+ integer,intent(out)   :: stat
+ logical,intent(in)    :: ver
+
+ !Local Variables
+ integer               :: err1, i, j, k, s1
+ logical,parameter     :: debug=.false.
+
+  err1=0
+  s1=0
+ 
+  !YOUR OUTPUT GOES HERE
+  if (mod(nstep,wplanes).EQ.0)  then 
+  endif
+
+  !OTHER PLANES (see below)
+  if (mod(nstep,wplanes).EQ.0)  then 
+   call write_plane(p,1,nxp2/2,0,0,'pp',.false.,err1)
+   call write_plane(p,2,nyp2/2,0,0,'pp',.false.,err1)
+   call write_plane(p,3,nzp2/2,0,0,'pp',.false.,err1)
+   call write_plane(w,1,nxp2/2,0,0,'ww',.false.,err1)
+   call write_plane(w,2,nyp2/2,0,0,'ww',.false.,err1)
+   call write_plane(w,3,nzp2/2,0,0,'ww',.false.,err1)
+   call write_plane(u,1,nxp2/2,0,0,'uu',.false.,err1)
+   call write_plane(u,2,nyp2/2,0,0,'uu',.false.,err1)
+   call write_plane(u,3,nzp2/2,0,0,'uu',.false.,err1)
+   call write_plane(v,1,nxp2/2,0,0,'vv',.false.,err1)
+   call write_plane(v,2,nyp2/2,0,0,'vv',.false.,err1)
+   call write_plane(v,3,nzp2/2,0,0,'vv',.false.,err1)
+  endif
+
+  !PENCILS
+  if (mod(nstep,wpencils).EQ.0)  then 
+   call write_pencil(u,1,nyp2/2,nzp2/2,0,'u1',ver,err1)
+  endif
+
+  !CALCULATE AND OUTPUT TOTAL KINETIC, POTENTIAL ENERGY, MOMENTUM, AND MASS
+  call energy(err1)
+
+  !STATISTICS
+  if (mod(nstep,wstats_small).EQ.0) call statistics_small(err1)
+  if (mod(nstep,wstats).EQ.0)       call statistics(err1)
+
+  !FLOW
+  if (mod(nstep,wflow).EQ.0) call write_flow(rest_file_write,err1)
+
+  return
+
+  !ALL PLANES
+  call vorticity(u1_tmp2,r_tmp1,1)
+  call vorticity(u2_tmp2,r_tmp1,2)
+  call vorticity(u3_tmp2,r_tmp1,3)
+  call ghost(u1_tmp2,'cfluc',err1)
+  call ghost(u2_tmp2,'cfluc',err1)
+  call ghost(u3_tmp2,'cfluc',err1)
+
+  do i=1,niplanes
+   !u1
+    call write_plane(u,1,iplanes(i),0,0,'u1',ver,err1)
+   !u2
+    call write_plane(v,1,iplanes(i),0,0,'u2',ver,err1)
+    !u3
+    call write_plane(w,1,iplanes(i),0,0,'u3',ver,err1)
+   !p
+    call write_plane(p,1,iplanes(i),0,0,'p',ver,err1)
+    !rho
+    call write_plane(rho,1,iplanes(i),0,0,'rho',ver,err1)
+   !omg1
+    call write_plane(u1_tmp2,1,iplanes(i),0,0,'omg1',ver,err1)
+   !omg2
+    call write_plane(u2_tmp2,1,iplanes(i),0,0,'omg2',ver,err1)
+   !omg3
+    call write_plane(u3_tmp2,1,iplanes(i),0,0,'omg3',ver,err1)
+  enddo
+
+  do j=1,njplanes
+   !u1
+    call write_plane(u,2,jplanes(j),0,0,'u1',ver,err1)
+   !u2
+    call write_plane(v,2,jplanes(j),0,0,'u2',ver,err1)
+    !u3
+    call write_plane(w,2,jplanes(j),0,0,'u3',ver,err1)
+   !p
+    call write_plane(p,2,jplanes(j),0,0,'p',ver,err1)
+   !rho
+    call write_plane(rho,2,jplanes(j),0,0,'rho',ver,err1)
+   !omg1
+    call write_plane(u1_tmp2,2,jplanes(j),0,0,'omg1',ver,err1)
+   !omg2
+    call write_plane(u2_tmp2,2,jplanes(j),0,0,'omg2',ver,err1)
+   !omg3
+    call write_plane(u3_tmp2,2,jplanes(j),0,0,'omg3',ver,err1)
+  enddo
+
+  do k=1,nkplanes
+   !u1
+    call write_plane(u,3,kplanes(k),0,0,'u1',ver,err1)
+   !u2
+    call write_plane(v,3,kplanes(k),0,0,'u2',ver,err1)
+   !u3
+    call write_plane(w,3,kplanes(k),0,0,'u3',ver,err1)
+   !p
+    call write_plane(p,3,kplanes(k),0,0,'p',ver,err1)
+   !rho
+    call write_plane(rho,3,kplanes(k),0,0,'rho',ver,err1)
+   !omg1
+    call write_plane(u1_tmp2,3,kplanes(k),0,0,'omg1',ver,err1)
+   !omg2
+    call write_plane(u2_tmp2,3,kplanes(k),0,0,'omg2',ver,err1)
+   !omg3
+    call write_plane(u3_tmp2,3,kplanes(k),0,0,'omg3',ver,err1)
+  enddo
+
+ stat=max(err1,s1)
+ return
+end subroutine output 

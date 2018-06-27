@@ -1,0 +1,92 @@
+###########################################################################
+#         ARCHITECTURE FILE FOR USE WITH THE ORS UTILITY SERVER          #
+#                     v.1 10/10/2013 Hieu T. Pham                         #
+###########################################################################
+
+#RUN DIRECTORY (directory in which executable is created)
+RUNDIR  =./
+
+#Environment variables
+
+#COMPILERS AND LINKERS
+#FF       = tau_f90.sh -tau_options='-optKeepFiles -optVerbose -optCompInst -optDetectMemoryLeaks'
+FF       = mpif90  # this is really ifort linked with the mpi libraries
+#FF       = tau_f90.sh        # this is really ifort linked with the mpi libraries
+AR       = ar
+CPP      = cpp
+CPPFLAGS = -P -traditional
+CC       =
+
+#BUILD FLAGS, USETEC is for tecplot
+#MMS_TEST = -DMMS_TEST
+#IBM_FLAG = -DIBM_FLAG
+PARALLEL = -DPARALLEL
+#OBUILD   = -vec-report0
+MODULE   = -module ./include
+USETEC   = -DUSETEC
+
+#DEBUGGING OPTIONS
+#DEBUG = -C -g -gopt -Mbounds -Mchkfpstk -Mchkptr -Mchkstk -Mcoff -Mdwarf1 -Mdwarf2 -Mdwarf3 -Melf -Mnodwarf -Mpgicoff -traceback
+#DEBUG  =-debug -traceback          # use -debug to get debugging info from gdb
+#DEBUG  =-p                         # -p lets you use profiling with gprof
+#DEBUG  =-g                         # -g lets you use profiling with valgrind
+
+#OPTIMIZATION FLAGS
+OPT	=-O3 #ipo
+
+#EXTERNAL LIBRARIES 
+LIBDIRS =-L/app/pet/pkgs/fftw-3.2.2/lib/
+LIBS    =-lfftw3
+TECLIBS =/u/home/anikeshp/tecplot360/lib/tecio64.a -lstdc++
+
+#INCLUDE DIRECTORIES
+INCDIRS =-I/app/pet/pkgs/fftw-3.2.2/include/
+
+#IOFLAGS
+IOFLAG  =
+
+###########################################################################
+#                                NOTES                                    #
+###########################################################################
+# 1. -module 'dir_name' tells it to put .mod files in the given directory 
+#      and to include 'dir_name' in the include path (i.e. -I'dir_name')
+
+# 2. -DPARALLEL is a preprocessing flag that is required to build the 
+#      parallel version.
+
+# 3. DEBUGGING ON A SERIAL MACHINE ORCA--
+#    -debug creates a stack for use with a debugger
+#    -use statements like the following at the command line, without the
+#     quotation marks, "gdb ptest.x", once it loads type run at the 
+#     command line and it will tell you where a segmentation fault is,
+#     among other things.
+
+# 4. SIMPLE PROFILING ON A SERIAL MACHINE ORCA--
+#     compile the code with the -p option. At the end of a successful 
+#     program completion, the file gmon.out is created. Type the 
+#     following to get a profile report
+#     gprof sturb.x > [output_filename]
+
+
+# 3. OPTIMIZATIONS ON JADE--
+#     DISCLAMER: FIRST OFF IF THERE ARE ANY PROBLEMS/INCONSISTENCIES
+#     RECOMPILE WITH NO OPTIMIZATIONS!!!!!!  SUPERCOMPUTERS DO NOT
+#     HAVE STATIC ENVIRONMENTS, LIBRARIES CHANGE, COMPILERS CHANGE
+#     WHICH MEANS SOMETHING THAT WORKED YESTERDAY MIGHT NOT WORK 
+#     TODAY.  C'EST LA VIE... JUST REMEMBER TO COMPLETELY RECOMPILE!
+
+#     OPTIMIZATIONS THAT SEEM TO WORK WELL
+
+#     DEFAULT RECOMENDATIONS 
+#      -O3
+
+#     THIS FLAG BLEW UP THE CODE
+
+#     THIS FLAG SLOWED IT DOWN BY ABOUT 10%
+#     -Mlre Slows it down
+
+#     FLAGS THAT SEEM TO MAKE VERY BIG DIFFERENCE
+
+#     MOST AGGRESSIVE OPTIMIZATIONS TRIED
+
+#     FLAGS THAT SEEM TO MAKE VERY LITTLE DIFFERENCE 

@@ -1,0 +1,19 @@
+1. dsbdoc usage instructions
+
+COMPILE dsweb
+make
+
+PARSE .f90 FILE
+dsbdoc.x -d output.tex -f test.f90
+
+CREATE PDF
+pdflatex output.tex
+
+2. Documentation organization
+
+autogen contains tex files that are generated from code, they are used in the
+manual.
+figs contains figures for the manual.
+srcfiles are user written tex files for the manual.
+
+manual.tex is the main documentation file, manual.pdf is generated from it.

@@ -1,0 +1,14 @@
+./stats2d.x << EOF
+'./'                 # Data Directory with /
+'./'                 # Output Directory with /
+.false.               # Tecplot T/F
+.true.               # Paraview T/F
+'WakeStatsS_'        # BaseName
+0                  # Start Step 
+250                  # End Step       
+1                    # Stride 
+.true.               # T=Single F=Double
+$1                    # Statistic
+.false.              # List Available Variables and STOP
+EOF
+

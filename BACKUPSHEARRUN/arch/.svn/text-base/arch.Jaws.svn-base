@@ -1,0 +1,69 @@
+###########################################################################
+#                  ARCHITECTURE FILE FOR USE WITH JAWS                    #
+#                     v.1 05/11/2009 Matt de Stadler                      #
+###########################################################################
+
+#RUN DIRECTORY (directory in which executable is created)
+RUNDIR  =./
+
+#COMPILERS AND LINKERS
+FF      =mpif90
+AR      =ar
+CPP     =cpp
+CPPFLAGS=-P -traditional
+CC      =
+
+#BUILD FLAGS
+PARALLEL =-DPARALLEL
+OBUILD   =
+MODULE   =-module ./include
+
+#DEBUGGING OPTIONS
+#DEBUG   =-g -C -Ktrap=fp  
+#DEBUG = -check all -warn all,nodec,interfaces -gen-interfaces -traceback -fpe0 -fp-stack-check
+
+
+#OPTIMIZATION FLAGS
+OPT=-O3 -ipo
+
+#EXTERNAL LIBRARIES 
+LIBDIRS =-L/mnt/cfs/pkgs/PTOOLS/MATH/intel/lib/
+LIBS    =-lfftw3
+
+#INCLUDE DIRECTORIES
+INCDIRS =-I/mnt/cfs/pkgs/PTOOLS/MATH/intel/include/
+
+
+#IOFLAGS
+IOFLAG  =-convert little_endian
+###########################################################################
+#                                NOTES                                    #
+###########################################################################
+# 1. -module 'dir_name' tells it to put .mod files in the given directory 
+#      and to include 'dir_name' in the include path (i.e. -I'dir_name')
+
+# 2. -DPARALLEL is a preprocessing flag that is required to build the 
+#      parallel version.
+
+# 3. DEBUGGING ON JAWS--
+#    -C means check (i.e. check array bounds etc)
+
+# 4. OPTIMIZATIONS ON JAWS--
+#     DISCLAMER: FIRST OFF IF THERE ARE ANY PROBLEMS/INCONSISTENCIES
+#     RECOMPILE WITH NO OPTIMIZATIONS!!!!!!  SUPERCOMPUTERS DO NOT
+#     HAVE STATIC ENVIRONMENTS, LIBRARIES CHANGE, COMPILERS CHANGE
+#     WHICH MEANS SOMETHING THAT WORKED YESTERDAY MIGHT NOT WORK 
+#     TODAY.  C'EST LA VIE... JUST REMEMBER TO COMPLETELY RECOMPILE!
+
+#     DEFAULT RECOMENDATIONS FROM THE USERS GUIDE 
+
+#     MOST AGGRESSIVE OPTIMIZATIONS TRIED
+
+#     THIS FLAG BLEW UP THE CODE
+
+#     FLAGS THAT SEEM TO MAKE VERY BIG DIFFERENCE
+
+#     FLAGS THAT SEEM TO MAKE VERY LITTLE DIFFERENCE
+
+#     THIS FLAG SLOWED IT DOWN
+

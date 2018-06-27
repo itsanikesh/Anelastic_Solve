@@ -1,0 +1,77 @@
+###########################################################################
+#                  ARCHITECTURE FILE FOR USE WITH ORCA                    #
+#                     v.1 05/12/2009 Matt de Stadler                      #
+###########################################################################
+
+#RUN DIRECTORY (directory in which executable is created)
+RUNDIR  =./
+
+#COMPILERS AND LINKERS
+FF      =ifort
+AR      =ar
+CPP     =cpp
+CPPFLAGS=-P -traditional
+CC      =
+
+#BUILD FLAGS
+PARALLEL = #-DPARALLEL
+OBUILD   =
+MODULE   =-module ./include
+
+#DEBUGGING OPTIONS
+#DEBUG = -check all -warn all,nodec,interfaces -gen-interfaces -traceback -fpe0 -fp-stack-check
+#DEBUG  =-debug #-check             # use -debug to get debugging info from gdb
+
+#OPTIMIZATION FLAGS
+OPT	=-O3 
+
+#EXTERNAL LIBRARIES 
+#LIBDIRS =-L/usr/local/lib
+LIBDIRS =-L/opt/fftw-3.2.1/lib
+LIBS    =-lfftw3
+
+#INCLUDE DIRECTORIES
+#INCDIRS =-I/usr/local/include
+INCDIRS =-I/opt/fftw-3.2.1/include
+
+#IOFLAGS
+IOFLAG  =
+
+###########################################################################
+#                                NOTES                                    #
+###########################################################################
+# 1. -module 'dir_name' tells it to put .mod files in the given directory 
+#      and to include 'dir_name' in the include path (i.e. -I'dir_name')
+
+# 2. -DPARALLEL is a preprocessing flag that is required to build the 
+#      parallel version.
+
+# 3. DEBUGGING ON A SERIAL MACHINE JADE--
+#    -debug creates a stack for use with a debugger
+#    -use statements like the following at the command line, without the
+#     quotation marks, "gdb ptest.x", once it loads type run at the 
+#     command line and it will tell you where a segmentation fault is,
+#     among other things.
+
+# 3. OPTIMIZATIONS ON JADE--
+#     DISCLAMER: FIRST OFF IF THERE ARE ANY PROBLEMS/INCONSISTENCIES
+#     RECOMPILE WITH NO OPTIMIZATIONS!!!!!!  SUPERCOMPUTERS DO NOT
+#     HAVE STATIC ENVIRONMENTS, LIBRARIES CHANGE, COMPILERS CHANGE
+#     WHICH MEANS SOMETHING THAT WORKED YESTERDAY MIGHT NOT WORK 
+#     TODAY.  C'EST LA VIE... JUST REMEMBER TO COMPLETELY RECOMPILE!
+
+#     OPTIMIZATIONS THAT SEEM TO WORK WELL
+
+#     DEFAULT RECOMENDATIONS 
+#      -O3
+
+#     THIS FLAG BLEW UP THE CODE
+
+#     THIS FLAG SLOWED IT DOWN BY ABOUT 10%
+#     -Mlre Slows it down
+
+#     FLAGS THAT SEEM TO MAKE VERY BIG DIFFERENCE
+
+#     MOST AGGRESSIVE OPTIMIZATIONS TRIED
+
+#     FLAGS THAT SEEM TO MAKE VERY LITTLE DIFFERENCE 

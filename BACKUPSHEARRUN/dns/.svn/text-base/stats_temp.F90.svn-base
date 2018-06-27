@@ -1,0 +1,571 @@
+subroutine stat_setup(dir1,dir2,ok)
+ use stats
+ use grid,       only: zc, ze, yc, ye,xc,xe
+ use domain,     only: sz,ez,nzp2, sy, ey, nyp2, sx,ex,nxp2
+
+ #ifdef PARALLEL
+  use dd,         only: myid,rankx2x3,rankx1x2,rankx1x3,coords,comm3d, &
+                        rankx1,rankx2,rankx3
+ #endif
+
+ !Passed Variables
+ integer,intent(in)                     :: dir1,dir2
+ integer,intent(out)                    :: ok
+
+ ok = 0
+
+ if (dir2.EQ.0) then
+
+  if (dir1.EQ.1) then
+#ifdef PARALLEL
+   Srank2D=rankx2x3
+#endif
+   bnds(1)=sy
+   bnds(2)=ey
+   bnds(3)=sz
+   bnds(4)=ez
+   bnds(5)=nyp2
+   bnds(6)=nzp2
+   gc1 => yc
+   ge1 => ye
+   gc2 => zc
+   ge2 => ze
+   statbase='X2X3stats.'
+  elseif (dir1.EQ.2) then
+#ifdef PARALLEL
+   Srank2D=rankx1x3
+#endif
+   bnds(1)=sx
+   bnds(2)=ex
+   bnds(3)=sz
+   bnds(4)=ez
+   bnds(5)=nxp2
+   bnds(6)=nzp2
+   gc1 => xc
+   ge1 => xe
+   gc2 => zc
+   ge2 => ze
+   statbase='X1X3stats.'
+  elseif (dir1.EQ.3) then
+#ifdef PARALLEL
+   Srank2D=rankx1x2
+#endif
+   bnds(1)=sx
+   bnds(2)=ex
+   bnds(3)=sy
+   bnds(4)=ey
+   bnds(5)=nxp2
+   bnds(6)=nyp2
+   gc1 => xc
+   ge1 => xe
+   gc2 => yc
+   ge2 => ye
+   statbase='X1X2stats.'
+  else
+   goto 1000
+  endif
+ 
+ elseif (dir2.EQ.1) then
+
+  if (dir1.EQ.2) then
+#ifdef PARALLEL
+   Srank2D=rankx3
+#endif
+   bnds(1)=sz
+   bnds(2)=ez
+   bnds(3)=1
+   bnds(4)=1
+   bnds(5)=nzp2
+   bnds(6)=1
+   gc1 => zc
+   ge1 => ze
+   gc2 => zc
+   ge2 => ze
+   statbase='X3tats.'
+  elseif (dir1.EQ.3) then
+#ifdef PARALLEL
+   Srank2D=rankx2
+#endif
+   bnds(1)=sy
+   bnds(2)=ey
+   bnds(3)=1
+   bnds(4)=1
+   bnds(5)=nyp2
+   bnds(6)=1
+   gc1 => yc
+   ge1 => ye
+   gc2 => yc
+   ge2 => ye
+   statbase='X2tats.'
+  else
+   goto 1000
+  endif
+
+ elseif (dir2.EQ.2) then
+
+  if (dir1.EQ.3) then
+#ifdef PARALLEL
+   Srank2D=rankx1
+#endif
+   bnds(1)=sx
+   bnds(2)=ex
+   bnds(3)=1
+   bnds(4)=1
+   bnds(5)=nxp2
+   bnds(6)=1
+   gc1 => xc
+   ge1 => xe
+   gc2 => xc
+   ge2 => xe
+   statbase='X1tats.'
+  else
+   goto 1000
+  endif
+
+ endif
+
+return
+end subroutine stat_setup
+
+subroutine stats_small(ok)
+ use ntypes,     only: r8,i4
+ use Flow,       only: u,v,w,p,rho,u1_tmp2,u2_tmp2,u3_tmp2,r_tmp1,r_tmp2
+ use domain,     only: sz,ez,nzp2, sy, ey, nyp2, sx,ex,nxp2
+ use IO,         only: statDIR,IOUT
+ use parameters, only: nstep, time, g, rho_0, Re, Pr, delt
+ implicit none
+
+ !Passed Variables
+ integer,intent(in)                     :: dir1,dir2
+ integer,intent(out)                    :: ok
+                                                                                                                             
+ !Local Variables
+ integer,parameter                      :: nstats=22
+ integer,parameter                      :: ngroups=1
+ integer,parameter                      :: stp=4 
+ real(stp),allocatable,dimension(:,:,:) :: STATS 
+ real(r8),allocatable,dimension(:,:)    :: Stemp
+ integer                                :: group(1:nstats)
+ character(len=25)                      :: Sname(1:nstats),Gname(1:ngroups)
+ character(len=250)                     :: filen1
+ character(len=100)                     :: header
+ integer                                :: bnds(1:6)
+ integer                                :: sloc
+ integer                                :: err1, s1
+ logical,parameter                      :: debug=.false.
+
+ err1=0
+ s1=0
+
+ allocate( STATS(1:bnds(5),1:bnds(6),1:nstats), stat=s1 )
+ allocate( Stemp(1:bnds(5),1:bnds(6)), stat=s1 )
+  if (s1.NE.0) then
+   write(IOUT,'(a,i4)') "Error Allocating in stat_small: stat=",s1 
+   goto 1000
+  endif
+  if (debug) call check_point('statistics_wake_small#0',.false.)
+
+ !<U1>,<u1'u1'>^(1/2)
+ sloc=1
+ group(sloc)=1
+ Sname(sloc)="U1"
+ call Savg(u,'u',STATS(sloc),Stemp)
+ sloc=6
+ group(sloc)=2
+ Sname(sloc)="u1p"
+ STATS(sloc)=Stemp
+
+ !<U2>,<u2'u2'>^(1/2)
+ sloc=2
+ group(sloc)=1
+ Sname(sloc)="U2"
+ call Savg(v,'v',STATS(sloc),Stemp)
+ sloc=7
+ group(sloc)=2
+ Sname(sloc)="u2p"
+ STATS(sloc)=Stemp
+
+ !<U3>,<u3'u3'>^(1/2)
+ sloc=3
+ group(sloc)=1
+ Sname(sloc)="U3"
+ call Savg(w,'w',STATS(sloc),Stemp)
+ sloc=8
+ group(sloc)=2
+ Sname(sloc)="u3p"
+ STATS(sloc)=Stemp
+
+ !<P>,<p'p'>^(1/2)
+ sloc=4
+ group(sloc)=1
+ Sname(sloc)="P"
+ call Savg(p,'p',STATS(sloc),Stemp)
+ sloc=9
+ group(sloc)=2
+ Sname(sloc)="pp"
+ STATS(sloc)=Stemp
+
+ !<Rho>,<rho'rho'>^(1/2)
+ sloc=5
+ group(sloc)=1
+ Sname(sloc)="Rho"
+ call Savg(rho,'rho',STATS(sloc),Stemp)
+ sloc=10
+ group(sloc)=2
+ Sname(sloc)="rhop"
+ STATS(sloc)=Stemp
+
+#ifdef PARALLEL
+ !**********************************************************************
+ !*************************MASTER NODE ONLY*****************************
+ !**********************************************************************
+ if (myid.EQ.0) then
+#endif
+  write(filen1,'(a,i5.5)') statbase,nstep
+  filen1 = trim(statDIR)//trim(filen1)
+  open(unit=500,file=filen1,status='unknown',form='unformatted',iostat=s1)
+   write(500) nstep
+   write(500) time,delt,Re,Pr,g,rho_0 
+   write(500) bnds(5),bnds(6) 
+   write(500) gc1
+   write(500) ge1
+   write(500) gc2
+   write(500) ge2
+   write(500) wstats,ngroups
+   write(500) Wname
+   write(500) Gname 
+   write(500) group 
+   write(500) STATS
+  close(unit=500)
+
+  write(IOUT,'(a,i6)') "SMALL STATISTICS WRITTEN AT: ",nstep
+#ifdef PARALLEL
+ endif
+ call MPI_BARRIER(comm3d,err1)
+#endif
+
+ if ( allocated(STATS) ) deallocate(STATS,stat=s1)
+ if ( allocated(Stemp) ) deallocate(Stemp,stat=s1)
+
+ ok=max(err1,s1)
+ return
+ 1000 continue
+ write(IOUT,'(a)') "ERROR IN SMALL STATISTICS"
+ ok=1
+ return
+end subroutine stats_2D_small
+
+
+subroutine Savg(var,varLoc,OUTmean,OUTrms,stat)
+ use ntypes, only: r8
+ use Domain, only: sx,ex,sy,ey,sz,ez
+ use IO,     only: IOUT
+ use FLOW,   only: rho
+ use stats 
+#ifdef PARALLEL
+ use dd     only: coords
+#endif 
+ implicit none
+
+ !Passed Variables
+ real(r8),intent(in)     :: var(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ character(len=*)        :: varLoc
+ real(r8),intent(out)    :: OUTmean(1:bnds(5),1:bnds(6))
+ real(r8),intent(out)    :: OUTrms(1:bnds(5),1:bnds(6))
+ integer,intent(out)     :: stat                 
+ !Local Variables
+ real(r8)                :: mean(bnds(1)-1:bnds(2)+1,bnds(3)-1:bnds(4)+1)
+ real(r8)                :: rms(bnds(1)-1:bnds(2)+1,bnds(3)-1:bnds(4)+1)
+
+ stat = 0
+
+ if (dir2.EQ.0) then
+
+  if (dir1.EQ.1) then
+   call avgX1(var,mean,rms,varLoc)
+ 
+  elseif (dir1.EQ.2) then
+   call avgX2(var,mean,rms,varLoc)
+
+  elseif (dir1.EQ.3) then
+   call avgX3(var,mean,rms,varLoc)
+
+  else
+   goto 1000
+  endif
+ 
+ elseif (dir2.EQ.1) then
+
+  if (dir1.EQ.2) then
+   call avgX1X2(var,mean,rms,varLoc)
+
+  elseif (dir1.EQ.3) then
+   call avgX1X3(var,mean,rms,varLoc)
+
+  else
+   goto 1000
+  endif
+
+ elseif (dir2.EQ.2) then
+
+  if (dir.EQ.3) then
+   call avgX2X3(var,mean,rms,varLoc)
+  else
+   goto 1000
+  endif
+
+ endif
+
+#ifdef PARALLEL
+ if (dir2.EQ.0) then
+  if (Srank.EQ.0.AND.coords(dir1).EQ.0)  call gather2d_statM(dir1,bnds,mean,OUTmean,0,err1)
+  if (Srank.NE.0.AND.coords(dir1).EQ.0)  call gather2d_statS(dir1,bnds,mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+ 
+  if (Srank.EQ.0.AND.coords(dir1).EQ.0) call gather2d_statM(dir,bnds,mean,Stemp,0,err1)
+  if (Srank.NE.0.AND.coords(dir1).EQ.0) call gather2d_statS(dir1,bnds,mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ else
+  if (Srank.EQ.0.AND.coords(dir1).EQ.0.AND.coords(dir2).EQ.0)  call gather2d_statM(dir1,bnds,mean,OUTmean,0,err1)
+  if (Srank.NE.0.AND.coords(dir1).EQ.0.AND.coords(dir2).EQ.0)  call gather2d_statS(dir1,bnds,mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+ 
+  if (Srank.EQ.0.AND.coords(dir1).EQ.0.AND.coords(dir2).EQ.0)  call gather1d_statM(dir1,dir2,bnds,mean,OUTmean,0,err1)
+  if (Srank.NE.0.AND.coords(dir1).EQ.0.AND.coords(dir2).EQ.0)  call gather1d_statS(dir1,dir2,bnds,mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ endif
+#else
+ OUTmean(:,:)=mean(:,:)
+ OUTrms(:,:) =rms(:,:)
+#endif
+
+ stat=err1
+ return
+end subroutine Savg2D
+
+#ifdef PARALLEL
+subroutine gather2d_StatM(dir,bnds,varL,OutPlane,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: myid, commx1x2,commx1x3, commx2x3, sizex1, sizex2, sizex3, sizex1x3, sizex1x2,&
+                   sizex2x3,coords,nxprocs, nyprocs,nzprocs, MPI_STATUS_SIZE, inttype, realtype
+ use Domain, only: sx,ex,sy,ey,sz,ez,nxp2,nyp2,nzp2
+ use IO,     only: IOUT
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)                  :: dir,myidM,bnds(1:6)
+ real(r8),intent(in)                 :: varL(bnds(1)-1:bnds(2)+1,bnds(3)-1:bnds(4)+1)
+ real(r8),intent(out)                :: OutPlane(1:bnds(5),1:bnds(6))
+ integer,intent(out)                 :: ok
+                                                                                                                             
+!Local Variables
+ integer                             :: Tsize, Rcoords(3), s1, status1(MPI_STATUS_SIZE),ierr
+ integer                             :: i,j,k,n,istart, jstart, kstart, i2, j2, k2
+ real(r8),allocatable,dimension(:,:) :: Temp_Recv 
+ integer                             :: d1s,d2s,d1e,d2e,d1start,d2start                                                                                                                             
+ integer                             :: Ssize2D,Scomm2D,n1procs,n2procs,d1,d2,Ssized1,Ssized2
+ s1=0
+ ierr=0
+           
+ if (dir.EQ.1) then
+  Ssize2D=sizex2x3
+  Scomm2D=commx2x3
+  n1procs=nyprocs
+  n2procs=nzprocs
+  d1=2
+  d2=3
+  Ssized1=sizex2
+  Ssized2=sizex3
+ elseif (dir.EQ.2) then
+  Ssize2D=sizex1x3
+  Scomm2D=commx1x3
+  n1procs=nxprocs
+  n2procs=nzprocs
+  d1=1
+  d2=3
+  Ssized1=sizex1
+  Ssized2=sizex3
+ elseif (dir.EQ.3) then
+  Ssize2D=sizex1x2
+  Scomm2D=commx1x2
+  n1procs=nxprocs
+  n2procs=nyprocs
+  d1=1
+  d2=2
+  Ssized1=sizex1
+  Ssized2=sizex2
+ else
+  goto 1000
+ endif
+
+ allocate( Temp_Recv(bnds(1)-1:bnds(2)+1,bnds(3)-1:bnds(4)+1), STAT=s1 )
+ Tsize=size(Temp_recv)
+
+ do n=0,Ssize2D-1 !1
+                                                                                                                             
+  if (n.Eq.myidM) then
+   Rcoords=coords
+   Temp_Recv=varL
+  else
+   call MPI_RECV(Rcoords,3,inttype,n,2,Scomm2D,status1,ierr)
+   call MPI_RECV(Temp_Recv,Tsize,realtype,n,1,Scomm2D,status1,ierr)
+  endif
+                                                                                                                      
+  !Determine Block of Data to recieve
+  d1start = Rcoords(d1)*(bnds(5)-2)/n1procs
+  d2start = Rcoords(d2)*(bnds(6)-2)/n2procs
+
+  !Determine if there is boundary data 
+   d1s=0
+   d1e=0
+   d2s=0
+   d2e=0
+   if ( Rcoords(d1).EQ.0      )    d1s=1
+   if ( Rcoords(d2).EQ.0      )    d2s=1
+   if ( Rcoords(d1).EQ.Ssized1-1 ) d1e=1
+   if ( Rcoords(d2).EQ.Ssized2-1 ) d2e=1
+
+   !UnPack Data
+   do k=bnds(3)-d2s,bnds(4)+d2e
+    do j=bnds(1)-d1s,bnds(2)+d1e
+      j2=d1start+j
+      k2=d2start+k
+      Outplane(j2,k2)=Temp_Recv(j,k)
+     enddo
+    enddo
+
+  enddo
+                                                                                                                            
+ deallocate(Temp_Recv,STAT=s1)
+                                                                                                                             
+ ok=max(ierr,s1)
+ return
+ 1000 continue
+ ok=-1
+ write(IOUT,'(a,i3,a)') "ERROR IN GATHER2D_STATM, DIRECTION: ",dir," <>1,2,3"
+ return
+end subroutine gather2d_statM
+
+
+subroutine gather2d_statS(dir,bnds,varL,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: commx1x2,commx1x3,commx2x3, coords,MPI_STATUS_SIZE, inttype, realtype,myid
+ use IO,     only: IOUT
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)        :: dir,myidM,bnds(1:6)
+ real(r8),intent(in)       :: varL(bnds(1)-1:bnds(2)+1,bnds(3)-1:bnds(4)+1)
+ integer,intent(out)       :: ok
+                                                                                                                             
+!Local Variables
+ integer                   :: Tsize,ierr,Scomm2d
+
+ ierr=0
+ Tsize=size(varL)
+
+ if (dir.EQ.1) then
+  Scomm2D=commx2x3
+ elseif (dir.EQ.2) then
+  Scomm2D=commx1x3
+ elseif (dir.EQ.3) then
+  Scomm2D=commx1x2
+ else
+  goto 1000
+ endif
+
+ call MPI_SEND(coords,3,inttype,myidM,2,Scomm,ierr)
+ call MPI_SEND(varL,Tsize,realtype,myidM,1,Scomm,ierr)
+
+
+ ok=ierr
+ return
+ 1000 continue
+ ok=-1
+ write(IOUT,'(a,i3,a)') "ERROR IN GATHER2D_STATS, DIRECTION: ",dir," <>1,2,3"
+ return
+end subroutine gather2d_statS
+
+subroutine gather1d_StatM(varL,OutPencil,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: myid, commx3, sizex3, coords, nzprocs,&
+                   MPI_STATUS_SIZE, inttype, realtype
+ use Domain, only: sx,ex,sy,ey,sz,ez,nxp2,nyp2,nzp2
+ use IO,     only: IOUT
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)                  :: myidM
+ real(r8),intent(in)                 :: varL(sz-1:ez+1)
+ real(r8),intent(out)                :: OutPencil(1:nzp2)
+ integer,intent(out)                 :: ok
+                                                                                                                             
+!Local Variables
+ integer                             :: Tsize, Rcoords(3), s1, status1(MPI_STATUS_SIZE),ierr
+ integer                             :: i,j,k,n,istart, jstart, kstart, i2, j2, k2
+ real(r8),allocatable,dimension(:)   :: Temp_Recv, Temp_Send
+                                                                                                                             
+ s1=0
+ ierr=0
+                                                                                                                             
+ allocate( Temp_Recv(sz-1:ez+1), STAT=s1 )
+ Tsize=size(Temp_recv)
+
+ do n=0,sizex3-1 !1
+
+  if (n.Eq.myidM) then
+   Rcoords=coords
+   Temp_Recv=varL
+   OutPencil(1)=Temp_Recv(sz-1)
+  else
+   call MPI_RECV(Rcoords,3,inttype,n,2,commx3,status1,ierr)
+   call MPI_RECV(Temp_Recv,Tsize,realtype,n,1,commx3,status1,ierr)
+  endif
+  !Determine Block of Data to recieve
+  kstart = Rcoords(3)*(nzp2-2)/nzprocs
+
+  if ( Rcoords(3) .EQ. sizeX3-1 ) OutPencil(nzp2)=Temp_Recv(ez+1)
+
+  !UnPack Data
+  do k=sz,ez
+   k2=kstart+k
+   OutPencil(k2)=Temp_Recv(k)
+  enddo
+
+ enddo !1
+
+ deallocate(Temp_Send,STAT=s1)
+ deallocate(Temp_Recv,STAT=s1)
+
+ ok=max(ierr,s1)
+ return
+end subroutine gather1d_statM
+
+
+subroutine gather1d_statS(varL,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: commx3, coords,MPI_STATUS_SIZE, inttype, realtype
+ use domain, only: sz,ez
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)        :: myidM
+ real(r8),intent(in)       :: varL(sz-1:ez+1)
+ integer,intent(out)       :: ok
+                                                                                                                             
+!Local Variables
+ integer                            :: Tsize,ierr
+                                                                                                                             
+ ierr=0
+ Tsize=size(varL)
+ call MPI_SEND(coords,3,inttype,myidM,2,commx3,ierr)
+ call MPI_SEND(varL,Tsize,realtype,myidM,1,commx3,ierr)
+                                                                                                                             
+                                                                                                                             
+ok=ierr
+return
+end subroutine gather1d_statS
+
+#endif

@@ -1,0 +1,1 @@
+mkdir results; mkdir results/tmp; mkdir results/restart; mkdir results/stat; mkdir results/pln; mkdir results/pen; mkdir results/MGgrids; mkdir results/grid; mkdir results/relax; mkdir results/pln/vtkfiles_Ekman; scp -r ../post/Pln.x results/pln/; scp -r ../post/run_pln results/pln/; cp ../sturb.x .

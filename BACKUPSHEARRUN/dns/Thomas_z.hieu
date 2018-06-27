@@ -1,0 +1,119 @@
+subroutine thomas_MPI_forward_2d_z(a,b,c,G,stat)
+ use dd
+ use ntypes
+ use Domain,   only: sx,ex,sy,ey,sz,ez
+ implicit none
+
+!Passed Variables
+ integer(i4),intent(out)  :: stat  ! 0=sucess 
+ real(r8),intent(in)      :: c(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)  ! note that a is the subdiagonal, b the diagonal and c the superdiagonal
+ real(r8),intent(inout)   :: a(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1),&
+                             b(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1),&
+                             G(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+
+!Local Variables
+ integer(i4)              :: j,k,n1
+ integer                  :: status1(MPI_STATUS_SIZE)
+ real(r8)                 :: ocpack(sx-1:ex+1,2), icpack(sx-1:ex+1,2)
+
+ stat=0
+ n1 = ex-sx+3
+
+ do j = sy-1,ey+1
+   if (coords(3).ne.0) then !1   ! not the first block    
+     call MPI_RECV(ocpack,2*n1,MPI_DOUBLE_PRECISION,nbrx3m1,12,comm3d,status1,stat)
+
+     ! unpack diagonal and rhs entries
+     b(:,j,sz-1)=ocpack(:,1)
+     G(:,j,sz-1)=ocpack(:,2)
+   endif !1
+
+   do k = sz-1,ez-1
+     a(:,j,k+1) = -a(:,j,k+1) / b(:,j,k)
+     b(:,j,k+1) =  b(:,j,k+1) + a(:,j,k+1)*c(:,j,k)
+     G(:,j,k+1) =  G(:,j,k+1) + a(:,j,k+1)*G(:,j,k)
+   enddo
+
+   if (coords(3).eq.sizex3-1) then ! update value at bottom of matrix
+     a(:,j,ez+1) = -a(:,j,ez+1) / b(:,j,ez  )
+     b(:,j,ez+1) =  b(:,j,ez+1) + a(:,j,ez+1)*c(:,j,ez)
+     G(:,j,ez+1) =  G(:,j,ez+1) + a(:,j,ez+1)*G(:,j,ez)
+   endif
+
+  if (coords(3).ne.sizex3-1) then               ! send data
+   icpack(:,1)=b(:,j,ez)
+   icpack(:,2)=G(:,j,ez)
+   call MPI_SEND(icpack,2*n1,MPI_DOUBLE_PRECISION,nbrx3p1,12,comm3d,stat)
+  endif
+ enddo
+!****************************************************
+!**************** downsweep finished ****************
+!****************************************************
+ return
+end subroutine thomas_MPI_forward_2d_z
+
+
+subroutine thomas_MPI_backward_2d_z(b,c,G,stat)
+ use dd
+ use ntypes
+ use Domain,   only: sx,ex,sy,ey,sz,ez
+ implicit none
+
+!Passed Variables
+ integer(i4),intent(out)  :: stat  ! 0=sucess 
+ real(r8),intent(in)      :: c(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)  ! note that a is the subdiagonal, b the diagonal and c the superdiagonal
+ real(r8),intent(inout)   :: b(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1),&
+                             G(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+
+!Local Variables
+ integer(i4)              :: j,k,n1
+ integer                  :: status1(MPI_STATUS_SIZE)
+ real(r8)                 :: ocpack(sx-1:ex+1,2), icpack(sx-1:ex+1,2)
+
+ stat = 0
+ n1 = ex-sx+3
+
+ do j = sy-1,ey+1
+  if (coords(3).ne.sizex3-1) then !3            ! send data
+    call MPI_RECV(ocpack,2*n1,MPI_DOUBLE_PRECISION,nbrx3p1,13,comm3d,status1,stat)
+
+    ! unpack diagonal and rhs, note that c is not updated
+    b(:,j,ez+1)=ocpack(:,1)
+    G(:,j,ez+1)=ocpack(:,2)
+  endif !3
+
+  ! solve at x3max 
+  if (coords(3).eq.sizex3-1) G(:,j,ez+1) = G(:,j,ez+1) / b(:,j,ez+1)
+
+  ! sweep back up
+  do k = ez,sz,-1
+    G(:,j,k) = (G(:,j,k) - c(:,j,k) * G(:,j,k+1)) / b(:,j,k)
+  enddo
+
+  ! solve at x3min
+  if (coords(3).eq.0) G(:,j,sz-1) = (G(:,j,sz-1) - c(:,j,sz-1) * G(:,j,sz)) / b(:,j,sz-1)
+
+  if (coords(3).ne.0) then !             ! send data
+    icpack(:,1)=b(:,j,sz)
+    icpack(:,2)=G(:,j,sz)
+    call MPI_SEND(icpack,2*n1,MPI_DOUBLE_PRECISION,nbrx3m1,13,comm3d,stat)
+  endif
+ enddo
+
+!****************************************************
+!***************** upsweep finished *****************
+!****************************************************
+ return
+end subroutine thomas_MPI_backward_2d_z
+
+
+
+
+
+
+
+
+
+
+
+

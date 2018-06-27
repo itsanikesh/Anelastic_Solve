@@ -1,0 +1,10 @@
+./kxspec.x << EOF
+'./'                 # Data Directory with /
+'./'                 # Output Directory with /
+$1                  # BaseName
+$2                  # Iteration 
+512                  # x2loc 
+256                  # x3loc
+.true.               # T=Single F=Double
+.false.               # true=center/edge location false=no center/edge location 
+EOF

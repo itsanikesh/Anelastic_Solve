@@ -1,0 +1,1 @@
+qsub -l ncpus=8 -A onrdc307 -q debug -l walltime=01:00:00 -I -e int.err -o int.out

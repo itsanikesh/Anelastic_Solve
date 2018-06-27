@@ -1,0 +1,2 @@
+rm -f *.aux; rm -f *.pdf; rm -f *.dvi; rm -f *.bbl; rm -f *.blg; rm -f *.log; rm -rf *.toc; rm -rf *.lof; rm -rf *.lot; rm -rf *.ps; rm -rf *.glo; rm -rf *.gls; rm -rf *.ilg; rm -rf *.out
+rm -f autogen/*.tex

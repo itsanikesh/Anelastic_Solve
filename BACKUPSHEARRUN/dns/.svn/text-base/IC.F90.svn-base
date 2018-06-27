@@ -1,0 +1,544 @@
+subroutine add_mean(stat)
+!@t
+! \textbf{subroutine add\_mean(stat)}
+!@h
+!   Description:
+!     Adds the mean flow to a flow-field.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     Options available are a horizontal or vertical shear layer, towed
+!     wake, propelled wake, and self-propelled wake.
+!@q
+
+ use ntypes,       only: r8
+ use grid,         only: xc,yc,zc
+ use Flow,         only: u, v, w
+ use Domain,       only: sx,ex,sy,ey,sz,ez
+ use IO,           only: IOUT
+ use Parameters,   only: flow_type, meanP1, meanP2, meanP3, meanP4, MX1c, MX2c, MX3c
+ implicit none
+
+ !Passed Variables
+ integer,intent(out) :: stat
+ !Local Variables
+ real(r8)            :: r, ud, ut, zz, yy
+ integer             :: j,k,err1
+
+ select case(flow_type)
+  case('Vshear')
+   !Vertical Shear Layer
+   do k=sz-1,ez+1
+    zz = zc(k)-MX3c
+    u(:,:,k) = u(:,:,k) - (meanP1*0.5d0)*dtanh(2.d0*zz/meanP2)
+   enddo
+
+  case('Hshear')
+   !Horizontal Shear Layer
+   do j=sy-1,ey+1
+    yy = yc(j)-MX2c
+    u(:,j,:) = u(:,j,:) - (meanP1*0.5d0)*dtanh(2.d0*yy/meanP2)
+   enddo
+  
+  case('Twake')
+   !Towed Wake
+   do k=sz-1,ez+1
+    do j=sy-1,ey+1
+     zz = zc(k)-MX3c
+     yy = yc(j)-MX2c
+     r   = dsqrt( yy**2.d0 + zz**2.d0 )
+     u(:,j,k) = u(:,j,k) +  meanP1*dexp(-r**2.d0/(2.d0*meanP2**2.d0)) 
+    enddo 
+   enddo
+  
+  case('SPwake')
+   !Self-Propelled Wake
+   do k=sz-1,ez+1
+    do j=sy-1,ey+1
+     zz = zc(k)-MX3c
+     yy = yc(j)-MX2c
+     r   = dsqrt( yy**2.d0 + zz**2.d0 )
+     u(:,j,k) = u(:,j,k) +  meanP1*( 1.d0 - r**2.d0/(2.d0*meanP2**2.d0) )*dexp(-r**2.d0/(2.d0*meanP2**2.d0)) 
+    enddo 
+   enddo
+  
+  case('PRPwake')
+   !Propelled Wake
+   do k=sz-1,ez+1
+    do j=sy-1,ey+1
+     zz = zc(k)-MX3c
+     yy = yc(j)-MX2c
+     r   = dsqrt( yy**2.d0 + zz**2.d0 )
+     ud =meanP1*dexp(-r**2.d0/(2.d0*meanP2**2.d0))
+     ut =meanP3*dexp(-r**2.d0/(2.d0*meanP4**2.d0))
+     u(:,j,k) = u(:,j,k)  + ud - ut  
+    enddo 
+   enddo
+ case DEFAULT
+  write(IOUT,'(a)') "ABORTING MEAN PROFILE "//trim(flow_type)//" NOT IMPLEMENTED"
+  stat=1
+  return
+ end select
+
+ write(IOUT,'(a,4(1x,f12.6))') "     ADDED MEAN PROFILE: "//trim(flow_type)//" with parameters 1-4=,",meanP1,meanP2,meanP3,meanP4
+ call ghost(u,'u',err1)
+ call ghost(v,'v',err1)
+ call ghost(w,'w',err1)
+ stat=0
+ return
+end subroutine add_mean
+
+subroutine add_density(stat)
+!@t
+! \textbf{subroutine add\_density(stat)}
+!@h
+!   Description:
+!     Updates the mean density field. 
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     Options are linear, two-layer, and Jdeep. 
+!@q
+
+ use ntypes,     only: r8
+ use flow,       only: rho
+ use Domain,     only: sz,ez,nzp2
+ use grid,       only: zc
+ use parameters, only: rho_0,g, rhoMIN, rhoMAX, density_profile, denP1,denP2,denP3, DX3c, clip
+ use IO,         only: IOUT
+ implicit none
+
+ !Passed Variables
+ integer,intent(out)    :: stat 
+
+ !Local Variables
+ integer                :: k,err1
+ real(r8)               :: zz
+
+ !Linear      denP1=d(rho)/dx_3 denP2=(unused)     denP3=(unused)
+ !TwoLayer    denP1=Delta_rho   denP2=delta_omega  denP3=(unused)
+ !Jdeep       denP1=Jm          denP2=Jd           denP3=z0
+
+ select case(density_profile)
+
+  case('Linear')
+   do k=sz-1,ez+1
+     zz = zc(k)-DX3c
+    rho(:,:,k) = rho_0 + rho(:,:,k) + denP1*(zz) 
+   enddo 
+
+  case('TwoLayer')
+   do k=sz-1,ez+1
+    zz = zc(k)-DX3c
+    rho(:,:,k) = rho(:,:,k) + rho_0 - (denP1*0.5d0)*dtanh(2.d0*zz/denP2)
+   enddo
+
+   if (clip) then
+    rhoMin=rho_0-0.5d0*denP1
+    rhoMax=rho_0+0.5d0*denP1
+    write(IOUT,'(a,2(1x,f12.6))') "     TWO LAYER MIN/MAX USED FOR CLIPPING: ",rhoMIN,rhoMAX
+   endif
+
+  case('Jdeep')
+   do k=sz-1,ez+1
+   zz = zc(k)-DX3c
+   rho(:,:,k) = rho(:,:,k)+ rho_0 - 1.d0/g*( (denP1+denP2)/2.d0*zz + &
+        (denP1-denP2)/2.d0*dlog(dabs(dcosh((zz-denP3))/dcosh(denP3)) ))
+   enddo
+
+  case DEFAULT 
+   write(IOUT,'(a)') "ABORTING DENSITY PROFILE "//trim(density_profile)//" NOT IMPLEMENTED"
+   stat=1
+   return
+  end select
+
+  write(IOUT,'(a,3(1x,f12.6))') "    ADDED DENSITY PROFILE: "//trim(density_profile)//" with parameters 1-3=",denP1,denP2,denP3
+  call ghost(rho,'rho',err1)
+  stat=max(0,err1)
+ return
+end subroutine add_density
+
+subroutine crop(stat)
+!@t
+! \textbf{subroutine crop(stat)}
+!@h
+!   Description:
+!     Crop the flow-field for
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     KYLE CAN YOU ADD A COMMENT ON THIS.
+!@q
+
+ use ntypes,       only: r8
+ use flow,         only: u,v,w,p,rho
+ use Domain,       only: sy,ey,sz,ez
+ use grid,         only: yc,zc,ye,ze
+ use IO,           only: IOUT
+ use Parameters,  only: flow_type,cropP1,cropP2,MX1c, MX2c, MX3c
+
+ implicit none
+
+ !Passed Variables
+ integer,intent(out)      :: stat
+ !Local Variables
+ integer                  :: j,k
+ real(r8)                 :: r, func, zz, yy
+ real(r8)                 :: umean, vmean, wmean
+ real(r8)                 :: urms, vrms, wrms
+
+ call avgX1X2x3(u,umean,urms,'cfluc')
+ call avgX1X2x3(v,vmean,vrms,'cfluc')
+ call avgX1X2x3(w,wmean,wrms,'cfluc')
+
+ !Try not to divide by zero (especially with optimizations turned on)
+ if (urms.LT.1d-13) urms=1.d0
+ if (vrms.LT.1d-13) vrms=1.d0
+ if (wrms.LT.1d-13) wrms=1.d0
+
+ select case(flow_type)
+
+  case('Vshear')
+   do k=sz-1,ez+1
+    zz = zc(k)-MX3c
+    u(:,:,k)   = (u(:,:,k)-umean)*(cropP1/urms)*dexp(-zz**2/(2.d0*cropP2**2) )
+    v(:,:,k)   = (v(:,:,k)-vmean)*(cropP1/vrms)*dexp(-zz**2/(2.d0*cropP2**2) )
+    zz = ze(k)-MX3c
+    w(:,:,k)   = (w(:,:,k)-wmean)*(cropP1/wrms)*dexp(-zz**2/(2.d0*cropP2**2) )
+   enddo 
+
+  case('Hshear')
+   do j=sy-1,ey+1
+    yy = yc(j)-MX2c
+    u(:,j,:)   = (u(:,j,:)-umean)*(cropP1/urms)*dexp(-yy**2/(2.d0*cropP2**2) )
+    w(:,j,:)   = (w(:,j,:)-wmean)*(cropP1/wrms)*dexp(-yy**2/(2.d0*cropP2**2) )
+    yy = ye(j)-MX2c
+    v(:,j,:)   = (v(:,j,:)-vmean)*(cropP1/vrms)*dexp(-yy**2/(2.d0*cropP2**2) )
+   enddo 
+  
+  case('Twake','SPwake','PRPwake','Wake')
+   do k=sz-1,ez+1
+    do j=sy-1,ey+1
+     zz = zc(k)-MX3c
+     yy = yc(j)-MX2c
+     r   = dsqrt( yy**2.d0 + zz**2.d0 )
+     func = (1.d0+(r/cropP2)**2)  * ( dexp(-(r)**2/(2.d0*cropP2**2) ) )
+     u(:,j,k)   = func*(cropP1/urms)*(u(:,j,k))
+  
+     zz = zc(k)-MX3c
+     yy = ye(j)-MX2c
+     r   = dsqrt( yy**2.d0 + zz**2.d0 )
+     func = (1.d0+(r/cropP2)**2)  * ( dexp(-(r)**2/(2.d0*cropP2**2) ) )
+     v(:,j,k)   = func*(cropP1/vrms)*(v(:,j,k))
+  
+     zz = ze(k)-MX3c
+     yy = yc(j)-MX2c
+     r   = dsqrt( yy**2.d0 + zz**2.d0 )
+     func = (1.d0+(r/cropP2)**2)  * ( dexp(-(r)**2/(2.d0*cropP2**2) ) )
+     w(:,j,k)   = func*(cropP1/wrms)*(w(:,j,k))
+    enddo 
+   enddo
+
+  case DEFAULT
+   write(IOUT,'(a)') "ABORTING IN crop FLOW TYPE "//trim(flow_type)//" NOT IMPLEMENTED"
+   stat=1
+   return
+
+ end select
+  
+ write(IOUT,'(a,f12.6,a11,f12.6)') "     FIELDS CROPPED FOR: "//trim(flow_type)//" with Amp= ",cropP1," and Delta= ",cropP2
+ stat=0
+ return
+end subroutine crop
+
+subroutine relax_ics(stat)
+!@t
+! \textbf{subroutine relax\_ics(stat)}
+!@h
+!   Description:
+!     Pre-relax on the initial conditions. 
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     adjustAMP is meaningless if the global restart flag is true. Kyle can
+!     you add a line or two about this?
+!@q
+
+ use ntypes,     only: r8, i4
+ use Flow,       only: u, v, w, rho, r_tmp1, p
+ use grid,       only: xc,yc,zc,xe,ye,ze,rdxc,rdyc,rdzc,rdxe,rdye,rdze
+ use Domain,     only: sx,ex,sy,ey,sz,ez
+ use Parameters, only: relax_time, Rsponge, delt, flow_type, cropP1, cropP2, g,nstep,time,restart, RfixMean, MX1c, MX2c, MX3c
+ use IO,         only: IOUT,statDIR,relaxDIR, wpre_stats
+ implicit none
+
+ !Passed Variables
+ integer(i4),intent(out)     :: stat 
+ !Local Variables
+ real(r8)                    :: a1,a2,a3
+ integer(i4)                 :: i,j,k
+ real(r8)                    :: ltime
+ real(r8)                    :: u2d(sy-1:ey+1,sz-1:ez+1), v2d(sy-1:ey+1,sz-1:ez+1),w2d(sy-1:ey+1,sz-1:ez+1)
+ real(r8)                    :: u2drms(sy-1:ey+1,sz-1:ez+1), v2drms(sy-1:ey+1,sz-1:ez+1),w2drms(sy-1:ey+1,sz-1:ez+1)
+ real(r8)                    :: u1d(sz-1:ez+1), v1d(sz-1:ez+1),w1d(sz-1:ez+1)
+ real(r8)                    :: u1drms(sz-1:ez+1), v1drms(sz-1:ez+1),w1drms(sz-1:ez+1)
+ integer(i4)                 :: ok, err1
+ real(r8)                    :: gsave,timesave
+ integer                     :: nstepsave
+ character(len=100)          :: tempDIR
+ logical                     :: Rsponge_orig
+ real(r8)                    :: r,zz,yy
+ integer                     :: niters
+ real(r8)                    :: resmax
+ logical                     :: wdivplanes=.false.
+ logical,parameter           :: debug=.false. ! this checks that each processor is
+                                              ! performing the appropriate actions
+
+ ok=0
+ err1=0
+
+ !SAVE AND RESET OUTPUT/SPONGE/g
+ tempDIR=statDIR
+ statDIR=relaxDIR
+ Rsponge_orig=Rsponge
+ Rsponge=.false.
+ nstepsave=nstep
+ timesave=time
+ gsave=g
+
+ ltime=time
+ g=0.d0
+ nstep=0
+
+ write(IOUT,'(a)') "***********************************************************"
+ write(IOUT,'(a)') "*********************BEGIN RELAX ICS***********************"
+ write(IOUT,'(a)') "***********************************************************"
+
+ do while (ltime .LT. relax_time )
+  write(IOUT,'(a,i3,f15.8)') '  RELAX STEP: ',nstep,ltime
+
+  !Ensure temporary variables are empty
+!  call zero_temps ! KYLE WHY NOT ZERO TEMPS HERE???
+
+  !Calculate maximum timestep
+  call calcdt(delt,ok)
+ write(IOUT,'(a,f15.8)') '  timestep = ', delt
+   if (ok.NE.0) stop
+   if (debug) call check_point('Relax#1',.false.)
+
+  ltime = ltime + delt
+ 
+  !First sub-step
+  a1 = 0.d0
+  a2 = 1.d0
+  a3 = 1.d0/3.d0
+  call rk_ss(a1,a2,a3,1.d0,delt,.true.,ok)
+!  call rk_ss(a1,a2,a3,1.d0,delt,.false.,ok)
+   if (debug) call check_point('Relax#2',.false.)
+
+  !Second sub-step
+  a1=-5.d0/9.d0
+  a2=1.d0
+  a3=15.d0/16.d0
+  call rk_ss(a1,a2,a3,1.d0,delt,.true.,ok)
+!  call rk_ss(a1,a2,a3,1.d0,delt,.false.,ok)
+   if (debug) call check_point('Relax#3',.false.)
+
+  !Third sub-step
+  a1=-153.d0/128.d0
+  a2=1.d0
+  a3=8.d0/15.d0
+  call rk_ss(a1,a2,a3,1.d0,delt,.true.,ok)
+   if (debug) call check_point('Relax#4',.false.)
+
+  if (restart) goto 1000 !skip the adjusting of anything just want g=0 for a while Tr=relax_time 
+
+  select case(flow_type)
+   case('Vshear')
+    call avgX1X2(u,u1d,u1drms,'u')
+    call avgX1X2(v,v1d,v1drms,'v')
+    call avgX1X2(w,w1d,w1drms,'w')
+   case('Twake','SPwake','PRPwake','Wake') 
+    call avgX1(u,u2d,u2drms,'u')
+    call avgX1(v,v2d,v2drms,'v')
+    call avgX1(w,w2d,w2drms,'w')
+   case DEFAULT
+   
+  end select
+    if (debug) call check_point('Relax#5',.false.)
+ 
+  if (RfixMean) then
+
+   if (debug) call check_point('Relax#6',.false.)
+
+   select case(flow_type)
+
+    case('Vshear')
+     do k=sz,ez
+      zz = zc(k)-MX3c
+      zz=zc(k)
+      u(:,:,k)  = ( u(:,:,k)-u1d(k) )/u1drms(k)*dexp(-zz**2/(cropP2**2) )*cropP1
+      v(:,:,k)  = ( v(:,:,k)-v1d(k) )/v1drms(k)*dexp(-zz**2/(cropP2**2) )*cropP1
+      zz = ze(k)-MX3c
+      w(:,:,k)  = ( w(:,:,k)-w1d(k) )/w1drms(k)*dexp(-zz**2/(cropP2**2) )*cropP1
+     enddo
+ 
+    case('Twake','SPwake','PRPwake','Wake') 
+     do k=sz,ez
+      do j=sy,ey
+       zz = zc(k)-MX3c
+       yy = yc(j)-MX2c
+       r   = dsqrt( yy**2.d0 + zz**2.d0 )
+       u(:,j,k)   = ( u(:,j,k)-u2d(j,k) )/u2drms(j,k)*dexp(-r**2/(cropP2**2) )*cropP1
+
+       zz = zc(k)-MX3c
+       yy = ye(j)-MX2c
+       r   = dsqrt( yy**2.d0 + zz**2.d0 )
+       v(:,j,k)   = ( v(:,j,k)-v2d(j,k) )/v2drms(j,k)*dexp(-r**2/(cropP2**2) )*cropP1
+
+       zz = ze(k)-MX3c
+       yy = yc(j)-MX2c
+       r   = dsqrt( yy**2.d0 + zz**2.d0 )
+       w(:,j,k)   = ( w(:,j,k)-w2d(j,k) )/w2drms(j,k)*dexp(-r**2/(cropP2**2) )*cropP1
+      enddo
+    enddo
+ 
+   case DEFAULT
+   
+  end select
+    if (debug) call check_point('Relax#6a',.false.)
+
+   !PROJECT OUT DIVERGENCE
+   !Source
+   do k=sz,ez
+    do j=sy,ey
+     do i=sx,ex
+        r_tmp1(i,j,k) = ( (u(i,j,k)-u(i-1,j,k))*rdxc(i) &
+                   +   (w(i,j,k)-w(i,j,k-1))*rdzc(k) &
+                   +   (v(i,j,k)-v(i,j-1,k))*rdyc(j) )
+     enddo
+    enddo 
+   enddo
+     if (debug) call check_point('Relax#6b',.false.)
+
+   !CALCULATE CORRECTION 
+   call mg_solver(p,r_tmp1,niters,resmax)
+    write(IOUT,'(a20,i3,a11,e22.15)') "    MG Iterations: ",niters,"  RESIDUAL= ",resmax
+    if (debug) call check_point('relax#6c',.false.)
+
+   !SUBTRACT OFF DIVERGENCE
+   do k=sz,ez
+    do j=sy,ey
+     do i=sx,ex
+      u(i,j,k)=u(i,j,k) + ( p(i+1,j,k)-p(i,j,k) )*rdxe(i)
+      v(i,j,k)=v(i,j,k) + ( p(i,j+1,k)-p(i,j,k) )*rdye(j)
+      w(i,j,k)=w(i,j,k) + ( p(i,j,k+1)-p(i,j,k) )*rdze(k)
+     enddo
+    enddo
+   enddo
+    if (debug) call check_point('relax#6d',.false.)
+
+  else
+    if (debug) call check_point('relax#7',.false.)
+
+  !SUBTRACT OFF MEAN, LEAVE FLUCTUATING AMPLITUDES UNTOUCHED
+   select case(flow_type)
+
+    case('Vshear')
+     do k=sz,ez
+      zz=zc(k)
+      u(:,:,k)   = ( u(:,:,k)-u1d(k) )
+      v(:,:,k)   = ( v(:,:,k)-v1d(k) )
+      zz=ze(k)   
+      w(:,:,k)   = ( w(:,:,k)-w1d(k) )
+     enddo
+    case('Twake','SPwake','PRPwake','Wake')
+     do k=sz,ez
+      do j=sy,ey
+       u(:,j,k)   = ( u(:,j,k)-u2d(j,k) )
+       v(:,j,k)   = ( v(:,j,k)-v2d(j,k) )
+       w(:,j,k)   = ( w(:,j,k)-w2d(j,k) )
+      enddo
+     enddo
+
+    case DEFAULT
+
+   end select
+    if (debug) call check_point('relax#7a',.false.)
+
+  endif !end adjustAMP conditional 
+
+    if (debug) call check_point('relax#8',.false.)
+
+  !ADD ORIGINAL MEAN PROFILES
+  call add_mean(stat)
+    if (debug) call check_point('relax#9',.false.)
+
+  1000 continue
+  !CALCULATE DIVERGENCE
+  call divergence(u,v,w,r_tmp1,wdivplanes,ok)
+    if (debug) call check_point('relax#10',.false.)
+
+  nstep=nstep+1
+  time=ltime
+
+  ! Save pre-relax statistics every wpre_stats
+  if (mod(nstep,wpre_stats).EQ.0) call statistics_wake(ok)
+
+ enddo !relax_time loop
+
+ !Reset Variables For Main Solver
+ nstep=nstepsave
+ time=timesave 
+ g=gsave
+ Rsponge=Rsponge_orig
+ statDIR=tempDIR
+
+
+ write(IOUT,'(a)') "***********************************************************"
+ write(IOUT,'(a)') "**********************END RELAX ICS************************"
+ write(IOUT,'(a)') "***********************************************************"
+
+ stat=max(ok,err1)
+ return
+end subroutine relax_ics  

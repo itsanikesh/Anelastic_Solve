@@ -1,0 +1,119 @@
+\subsection{Acquiring sf2s}
+The program Sturb and related tools are available online through a subversion
+repository located at orca.ucsd.edu. It can be checked out remotely using the
+command
+\vspace{12pt} \begin{center}
+svn checkout svn+ssh://USR@orca.ucsd.edu/home/sf2sCodeRepository/sf2s/tags/MRV
+\vspace{12pt} \end{center}
+Where MRV is the name of the most recent version you want to obtain and USR
+should match the user name of a member of the cfdlab group on orca. For a list
+of available files use the command
+\vspace{12pt} \begin{center}
+svn list svn+ssh://USR@orca.ucsd.edu/home/sf2sCodeRepository/sf2s/tags/
+\vspace{12pt} \end{center}
+You must be a member of this group to be able to commit changes. Anyone can
+download the code using the first statement without the USR field. The most
+recent stable released version is the largest tagged value of sf2sv*.*. The 
+most current stable working version can be found at 
+\vspace{12pt}  \begin{center}
+orca.ucsd.edu/home/sf2sCodeRepository/sf2s/trunk/
+\vspace{12pt} \end{center}
+
+\subsection{Configuring sf2s for your system}
+There are a number of sample architecture files in arch/. If the machine you 
+want to use is not listed among the ones given, copy the closest one into a new
+file and edit it to match your system. FFTW is required and must be linked
+using the LIBDIRS, INCDIRS and LIBS flags. The CPPFLAGS allow for
+pre-processing to make either a serial or parallel version, as well as the 
+creation of separate source directories for the serial code which are free from
+pre-processing flags; its value should not be changed. To make the parallel
+version, pass the option -DPARALLEL to the PARALLEL flag in the build section.
+There are notes at the bottom of the arch files containing helpful information
+on building and running the code. Once you have configured an appropriate 
+architecture file, copy it from arch/ into arch.in in the main directory.
+
+\subsubsection{Installing FFTW}
+Sf2s and related packages use FFTW to perform Fast Fourier Transforms. The 
+code uses version 3.* where * is the latest available version. Most if not 
+all supercomputers provide FFTW, this section is included for those running
+serially or on small clusters. FFTW is available from
+http://www.fftw.org/download.html. Installation instructions are available
+on that page, they are repeated here for completeness. It is assumed that the
+user is working on a Unix based system. Consult the FFTW website if this is
+not the case.
+
+\vspace{12pt}
+\textbf{Installation Instructions}
+\begin{enumerate}
+\item Download the latest version from the website: 
+  \begin{description}
+    \item download fftw-3.*.*.tar.gz
+  \end{description}
+\item unpack the tar file:
+  \begin{description}
+    \item tar -xvzf fftw-3.*.*.tar.gz
+  \end{description}
+\item Configure the installation for your system*: ./configure --prefix=DIR
+  \begin{description}
+    \item  ./configure --prefix=DIR
+  \end{description}
+      where DIR is the location you want to install the libraries.
+\item Create the make file: make
+  \begin{description}
+    \item  make
+  \end{description}
+\item Check that the intallation is set up properly: make check
+  \begin{description}
+    \item  make check
+  \end{description}
+\item Install the software: make install
+  \begin{description}
+    \item  make install
+  \end{description}
+\end{enumerate}
+
+*The default behavior of ./configure is to install files in /usr/local. It is 
+suggested that you put them elsewhere as described above for better
+organization and to allow for multiple versions of FFTW to be installed if 
+necessary.
+
+\subsubsection{Linking to FFTW}
+Once FFTW has been installed, one must update the arch file with the correct
+path to its libraries and the relevant fortran file. If FFTW is installed in
+/opt/fftw-3.2.1, The two needed files are 
+\vspace{12pt} \begin{center}
+/opt/fftw-3.2.1/lib/libfftw3.a \\
+/opt/fftw-3.2.1/include/fftw3.f
+\vspace{12pt} \end{center}
+The libfftw3.a file is linked to the main program using the flag LIBDIRS with 
+a link to the library. Note that to link to the library one uses -lfftw3 not
+-libfftw3!
+\vspace{12pt} \begin{center}
+LIBDIRS =-L/opt/fftw-3.2.1/lib \\
+LIBS    =-lfftw3
+\vspace{12pt} \end{center}
+The fftw3.f file is linked to the main program using the flag INCDIRS.
+\vspace{12pt} \begin{center}
+INCDIRS =-I/opt/fftw-3.2.1/include
+\vspace{12pt} \end{center}
+
+
+\subsubsection{Installing ifort}
+The Intel Fortran compiler ifort is the compiler of choice for the serial 
+version. Note that the serial version will not work with gfortan or g95.
+
+\subsection{Making programs}
+There are a number of programs that can be created:
+\begin{enumerate}
+\item make: makes the DNS solver Sturb.x.
+\item make ptest: makes the pressure test program ptest.x
+\item make interp1: makes the interpolation program in X1 interpX1.x
+\item make interp2: makes the interpolation program in X2 interpX2.x
+\item make interp3: makes the interpolation program in X3 interpX3.x
+\item make gridp: makes the grid generation program grid.x
+\item make mglib: makes the library for the pressure solver libmg.a. This
+      should be called after make ptest, otherwise a compilation error will
+      occur
+\item make clean: cleans the current directory only
+\item make cleanall: cleans the current directory and all subdirectories
+\end{enumerate}

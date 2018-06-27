@@ -1,0 +1,12 @@
+runlocation=$WORKDIR/ptest
+#make
+#cp Sturb.x $runlocation/
+cp ptest.ini $runlocation/
+cp ../ptest.x $runlocation/
+cp cleanup.ptest $runlocation/
+cp setup_results_ptest $runlocation/
+cp ptest.job.pingo $runlocation/
+cd $runlocation/
+./cleanup.ptest
+./setup_results_ptest
+qsub < ./ptest.job.pingo

@@ -1,0 +1,230 @@
+subroutine mg_restr(lC,lF,phiC,rhsC,phiF,srcF,resF)
+!@t
+! \textbf{subroutine mg\_restr(lC,lF,phiC,rhsC,phiF,srcF,resF)}
+!@h
+!   Description:
+!     Calculate the residual and restrict it to the coarser level using 
+!     volume weighting (also called linear,bilinear or trilinear 
+!     interpolation depending on the number of dimensions). The algorithm
+!     comes from "Numerical Computation in Science and Engineering" 1st Ed.
+!     by C. Pozrikidis. It can be found on page 302 for the bilinear case.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     Based on Bernard Bunner's (bunner@engin.umich.edu) mgd3 solver
+!     available at www.mgnet.org. Assumes that the grid is uniform. This
+!     should be ok for mild stretching but not for highly stretched grids. 
+!     See further documentation for instructions on how to correct for large
+!     stretching.
+
+!     Full volume weighting for restriction 2D example for updating point C.
+!     The + signs represent a grid around a fine grid point (f). The dotted
+!     lines represent a grid around a coarse grid point (C).
+!
+!              <------dx coarse ------->
+!        <--dx fine-->
+!        f . . . . . f
+!        .     +     .
+!        .     +     .
+!        . + + C + + + + + + + + + + + c
+!        .     +     .     +
+!        .     +     .     +
+!        f . . + . . f     +
+!              +           +
+!              +           +
+!              + + + + + + +
+!
+!     For the unstretched case each fine grid area of influence is a quarter
+!     of the total area.
+!@q
+
+ use ntypes, only: r8,i4
+ use mgVars,    only: nxk,nyk,nzk,sxk,exk,syk,eyk,szk,ezk,& 
+                   pcf_1,pcf_2,pcf_3,pcf_4,pcf_5,pcf_6,kpx1,kpx2,kpx3
+ implicit none
+
+!Passed Variables
+ integer(i4),intent(in)    :: lC,lF
+ real(r8),intent(out)      :: phiC(sxk(lC)-1:exk(lC)+1,syk(lC)-1:&
+                                      eyk(lC)+1,szk(lC)-1:ezk(lC)+1)
+ real(r8),intent(out)      :: rhsC(sxk(lC)-1:exk(lC)+1,syk(lC)-1:&
+                                      eyk(lC)+1,szk(lC)-1:ezk(lC)+1)
+ real(r8),intent(in)       :: phiF(sxk(lF)-1:exk(lF)+1,syk(lF)-1:&
+                                      eyk(lF)+1,szk(lF)-1:ezk(lF)+1)
+ real(r8),intent(in)       :: srcF(sxk(lF)-1:exk(lF)+1,syk(lF)-1:&
+                                      eyk(lF)+1,szk(lF)-1:ezk(lF)+1)
+
+ real(r8),intent(out)      :: resF(sxk(lF)-1:exk(lF)+1,syk(lF)-1:&
+                                      eyk(lF)+1,szk(lF)-1:ezk(lF)+1)
+
+!Local Variables
+ integer(i4)               :: i,j,k,ic,jc,kc
+ integer(i4)               :: sxc,exc,syc,eyc,szc,ezc,nxc,nyc,nzc
+ integer(i4)               :: sxf,exf,syf,eyf,szf,ezf,nxf,nyf,nzf
+ integer(i4)               :: is,js,ks
+ real(r8)                  :: pcfsum
+
+ sxc=sxk(lC)
+ exc=exk(lC)
+ syc=syk(lC)
+ eyc=eyk(lC)
+ szc=szk(lC)
+ ezc=ezk(lC)
+ nxc=nxk(lC)
+ nyc=nyk(lC)
+ nzc=nzk(lC)
+
+ sxf=sxk(lF)
+ exf=exk(lF)
+ syf=syk(lF)
+ eyf=eyk(lF)
+ szf=szk(lF)
+ ezf=ezk(lF)
+ nxf=nxk(lF)
+ nyf=nyk(lF)
+ nzf=nzk(lF)
+
+ is=kpx1(lF)-1
+ js=kpx2(lF)-1
+ ks=kpx3(lF)-1
+
+ do kc=szc-1,ezc+1
+  do jc=syc-1,eyc+1
+   do ic=sxc-1,exc+1
+    phic(ic,jc,kc)=0.d0
+    rhsc(ic,jc,kc)=0.d0
+   enddo
+  enddo
+ enddo
+
+!Calculate residual
+ resF(:,:,:) = 0.d0
+ do k=szf,ezf
+  do j=syf,eyf
+   do i=sxf,exf
+      pcfsum =-(pcf_1(i+is)+pcf_2(i+is)&
+             +  pcf_3(j+js)+pcf_4(j+js)&
+             +  pcf_5(k+ks)+pcf_6(k+ks))
+
+      resF(i,j,k)=srcF(i,j,k) -( pcf_1(i+is)*phif(i-1,j,k)    &
+                              +  pcf_2(i+is)*phif(i+1,j,k)    &
+                              +  pcf_3(j+js)*phif(i,j-1,k)    &
+                              +  pcf_4(j+js)*phif(i,j+1,k)    &
+                              +  pcf_5(k+ks)*phif(i,j,k-1)    &
+                              +  pcf_6(k+ks)*phif(i,j,k+1)    &
+                              +  pcfsum*phif(i,j,k) )
+
+   enddo
+  enddo
+ enddo
+
+!Calculate the right-hand side at the coarser grid
+! level from the averages of the values at the 8 surrounding points;
+! if there is no coarsening in one direction, only 2 or 4 points are
+! used; no exchange of boundary data is necessary
+
+
+!General Case: Coarsening In All Directions; calculate the value from the 8 surrounding points
+ if ( (nxc.lt.nxf).and.(nyc.lt.nyf).and.(nzc.lt.nzf) ) then
+  do kc=szc,ezc
+   k=2*kc-2
+   do jc=syc,eyc
+    j=2*jc-2
+    do ic=sxc,exc
+     i=2*ic-2
+     rhsc(ic,jc,kc)=0.125d0*(resf(i,j,k)+resf(i,j+1,k)         &
+                            +resf(i,j,k+1)+resf(i,j+1,k+1)     &
+                            +resf(i+1,j,k)+resf(i+1,j+1,k+1)   &
+                            +resf(i+1,j+1,k)+resf(i+1,j,k+1))
+    enddo
+   enddo
+  enddo
+
+!No coarsening in two directions; calculate the value from the 2 surrounding points
+ else
+  if ((nxf.eq.nxc).and.(nyf.eq.nyc)) then
+   do kc=szc,ezc
+    k=2*kc-2
+    do jc=syc,eyc
+     j=jc
+     do ic=sxc,exc
+      i=ic
+      rhsc(ic,jc,kc)=0.5d0*(resf(i,j,k)+resf(i,j,k+1))
+     enddo
+    enddo
+   enddo
+  elseif ((nxf.eq.nxc).and.(nzf.eq.nzc)) then
+   do kc=szc,ezc
+    k=kc
+    do jc=syc,eyc
+     j=2*jc-2
+      do ic=sxc,exc
+       i=ic
+       rhsc(ic,jc,kc)=0.5d0*(resf(i,j,k)+resf(i,j+1,k))
+      enddo
+     enddo
+    enddo
+  elseif ((nyf.eq.nyc).and.(nzf.eq.nzc)) then
+   do kc=szc,ezc
+    k=kc
+    do jc=syc,eyc
+     j=jc
+     do ic=sxc,exc
+      i=2*ic-2
+      rhsc(ic,jc,kc)=0.5d0*(resf(i,j,k)+resf(i+1,j,k))
+     enddo
+    enddo
+   enddo
+
+!No coarsening in one direction; calculate the value from the 4 surrounding points
+  elseif (nxf.eq.nxc) then
+   do kc=szc,ezc
+    k=2*kc-2
+    do jc=syc,eyc
+     j=2*jc-2
+     do ic=sxc,exc
+      i=ic
+      rhsc(ic,jc,kc)=0.25d0*(resf(i,j,k)+resf(i,j+1,k)        &
+                    +resf(i,j,k+1)+resf(i,j+1,k+1))
+     enddo
+    enddo
+   enddo
+  elseif (nyf.eq.nyc) then
+   do kc=szc,ezc
+    k=2*kc-2
+    do jc=syc,eyc
+     j=jc
+     do ic=sxc,exc
+      i=2*ic-2
+       rhsc(ic,jc,kc)=0.25d0*(resf(i,j,k)+resf(i,j,k+1)        &
+                     +resf(i+1,j,k)+resf(i+1,j,k+1))
+      enddo
+     enddo
+    enddo
+   elseif (nzf.eq.nzc) then
+    do kc=szc,ezc
+     k=kc
+     do jc=syc,eyc
+      j=2*jc-2
+      do ic=sxc,exc
+       i=2*ic-2
+       rhsc(ic,jc,kc)=0.25d0*(resf(i,j,k)+resf(i+1,j,k)        &
+                     +resf(i,j+1,k)+resf(i+1,j+1,k))
+      enddo
+     enddo
+    enddo
+   endif
+  endif
+
+ return
+end subroutine

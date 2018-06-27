@@ -1,0 +1,205 @@
+!@c
+!DATA TYPES
+module ntypes
+ integer, parameter :: r8=8 
+ integer, parameter :: i4=4 
+end module ntypes 
+
+!DOMAIN
+module Domain
+ use ntypes
+ integer(i4)       :: nx, ny, nz, nxp2, nyp2, nzp2 !# of Grid Points
+ integer(i4)       :: sx,ex,sy,ey,sz,ez,cex        !Sweep indicies
+ integer(i4)       :: EU,EV,EW                     !1 if Vector Edge Node 0 otherwise set in mpi_setup
+end module Domain
+
+!GRID
+module Grid
+ use ntypes
+ !xe_i = edge distance
+ !xc_i = center distance
+
+ !xc_i(index)= ( xe_i(k)+xe_i(k-1) )/2.d0 !BY DEFINITION
+ !dxe_i(k)=xc_i(k+1)-xc_i(k)             !BY DEFINITION
+ !dxc_i(k)=xe_i(k)-xe_i(k-1)             !BY DEFINITION
+
+ !rdxe_i(k) = 1/dxe_i(k)
+ !rdxc_i(k) = 1/dce_i(k)
+
+ real(r8)          :: x0, y0, z0                   !Origin
+ real(r8)          :: xL, yL, zL                   !Length
+
+ real(r8),allocatable,dimension(:),target :: xe,xc,dxe,dxc
+ real(r8),allocatable,dimension(:),target :: ye,yc,dye,dyc
+ real(r8),allocatable,dimension(:),target :: ze,zc,dze,dzc
+ real(r8),allocatable,dimension(:),target :: rdxe,rdxc
+ real(r8),allocatable,dimension(:),target :: rdye,rdyc
+ real(r8),allocatable,dimension(:),target :: rdze,rdzc
+ character(len=50)                        :: Gridtype(1:3),locX0,locY0,locZ0
+end module Grid
+
+!FLOW VARIABLES
+module Flow
+ use ntypes
+ real(r8),allocatable,dimension(:,:,:)            :: u,v,w,p,rho
+ real(r8),allocatable,dimension(:,:,:)            :: u1_tmp2
+ real(r8),allocatable,dimension(:,:,:)            :: u2_tmp2
+ real(r8),allocatable,dimension(:,:,:)            :: u3_tmp2
+ real(r8),allocatable,dimension(:,:,:)            :: r_tmp1,r_tmp2
+end module Flow
+
+!BOUNDARY CONDITIONS
+module boundC
+ use ntypes
+ !TB/VB(direction,face,variable)
+ integer(i4),dimension(1:3,1:2,1:7)  :: TB  !Type of BC
+ real(r8),dimension(1:3,1:2,1:7)     :: VB  !Value of BC
+ logical,dimension(1:3,1:2)          :: BND !Logical of BC (i.e. is it a xi(min/max)
+end module boundC
+
+!SPONGE
+module Spng
+ use ntypes
+ real(r8),allocatable,dimension(:,:)     :: phiX1, phiX2, phiX3       !Spatial Damping Profile/Function
+ real(r8),allocatable,dimension(:,:,:,:) :: X1inf,X2inf,X3inf         !Free Stream Velocities and Densities
+ real(r8),dimension(1:2,1:5)             :: SAmpX1, SAmpX2, SAmpx3    !Amplitude of corresponding phi
+ integer(i4),dimension(1:2)              :: x1spng, x2spng, x3spng    !start indice of xi_min sponge region
+end module Spng
+
+!PARAMETERS
+module Parameters
+ use ntypes
+ real(r8)                                :: g, g_orig, gt1, gt2
+ real(r8)                                :: rho_0 
+ real(r8)                                :: Re, Pr, rRe, rPr
+ real(r8)                                :: time, delt, cfl, relax_time, Ddt,dtmax
+ integer(i4)                             :: nstep, bstep, estep
+ logical                                 :: restart, icparam, init_stats,pzero, Rsponge, clip, IConly, RfixMean, turbICS
+ character(len=80)                       :: flow_type,density_profile, rest_file_write, rest_file_load
+ real(r8)                                :: cropP1,cropP2,denP1,denP2,denP3, RhoMIN, RhoMAX, DX3c
+ real(r8)                                :: meanP1,meanP2,meanP3,meanP4, MX1c, MX2c, MX3c 
+ real(r8)                                :: k0, k1, eps0
+ integer(i4)                             :: bbspect, rest_iter
+end module Parameters
+    
+!IO
+module IO
+ use ntypes, only: i4, r8
+ integer(i4)             :: IOUT,IOUT_MASTER,IOUT_SLAVE !Unit to write output 6 is screen
+ character(len=100)      :: resultDIR,tempDIR,runDIR,ext,penDIR,plnDIR,statDIR,flowDIR, gridDIR,MGDIR,relaxDIR
+ logical                 :: write_grid, write_sponge, write_weights, statbin, tkstat, IObig
+ integer(i4)             :: wflow, wstats, wstats_small,wplanes, wpencils, wtec, checkDIV, wpre_stats
+ integer(i4),allocatable,dimension(:)   :: iLines, jLines, kLines, iPlanes, jPlanes, kPlanes
+ integer(i4)             :: niLines, njLines, nkLines, niPlanes, njPlanes, nkPlanes
+ real(r8),allocatable,dimension(:,:,:) :: x1_planes, x2_planes, x3_planes
+ real(r8),allocatable,dimension(:,:)   :: x1_pencils, x2_pencils, x3_pencils
+
+end module IO
+#ifdef PARALLEL
+!DOMAIN DECOMPOSITION
+module dd
+ use ntypes
+ include "mpif.h"
+
+ integer(i4),parameter                   :: realtype  =MPI_DOUBLE_PRECISION
+ integer(i4),parameter                   :: inttype   =MPI_INTEGER
+ integer(i4),parameter                   :: chartype  =MPI_CHARACTER
+ integer(i4),parameter                   :: logictype =MPI_LOGICAL
+ integer(i4),parameter                   :: cmplxtype =MPI_DOUBLE_COMPLEX
+ integer(i4),parameter                   :: commx1x2x3=MPI_COMM_WORLD
+
+ integer(i4)                             :: gtype(1:7)
+
+ integer(i4)                         :: neighbor(26),bd(26)
+ integer(i4)                         :: dims(3),coords(3)
+ logical                             :: nprscr,periods(3)
+ integer(i4)                         :: nxprocs, nyprocs, nzprocs
+
+ !COMMUNICATORS
+ integer(i4) :: commx1, commx2, commx3, commx1x2, commx2x3, commx1x3
+ integer(i4) :: comm3d,comm3dp,comm3dl,comm3dc 
+
+ !SIZES
+ integer(i4)  :: sizeX1X2X3, numprocs 
+ integer(i4)  :: sizex1,sizex2,sizex3,sizex1x2,sizex2x3,sizex1x3
+
+ !RANKS
+ integer(i4)  :: myid,rankx1,rankx2,rankx3,rankx1x2,rankx2x3,rankx1x3
+
+ !BOUNDARY PENCILS + PLANES
+  !Planes
+   real(r8),allocatable,dimension(:,:,:) :: PlnX1
+   real(r8),allocatable,dimension(:,:,:) :: PlnX2
+   real(r8),allocatable,dimension(:,:,:) :: PlnX3
+  !Pencils
+   real(r8),allocatable,dimension(:,:)   :: PenX1
+   real(r8),allocatable,dimension(:,:)   :: PenX2
+   real(r8),allocatable,dimension(:,:)   :: PenX3
+end module dd
+#endif
+
+module ratios
+ use ntypes, only: r8
+ real(r8),parameter   :: r_9_16=9.d0/16.d0
+ real(r8),parameter   :: r_1_16=1.d0/16.d0
+ real(r8),parameter   :: r_4_3 =4.d0/3.d0
+ real(r8),parameter   :: r_1_3 =1.d0/3.d0
+ real(r8),parameter   :: r_1_2 =1.d0/2.d0
+ real(r8),parameter   :: r_1_4 =1.d0/4.d0
+
+end module ratios
+
+module fft
+ use ntypes, only : r8
+ include "fftw3.f"
+!FFT plans
+ integer(8) :: plan2dF, plan2dB, plan1dF, plan1dB, plan3dF, plan3dB
+
+!FFT VARIABLES
+ !REAL FIELDS
+ real(r8),allocatable,dimension(:,:,:)    :: FIELD_IN
+ real(r8),allocatable,dimension(:,:)      :: PLANE_IN
+
+ !COMPLEX FIELDS
+ complex(r8),allocatable,dimension(:,:,:) :: FIELD_OUT
+ complex(r8),allocatable,dimension(:,:)   :: PLANE_OUT
+ complex(r8),allocatable,dimension(:)     :: PENCIL_IN,PENCIL_OUT
+ complex(r8),allocatable,dimension(:,:,:) :: uhat,vhat,what
+
+!WAVE INDICES  
+ real(r8),allocatable,dimension(:)    :: kx, ky, kz
+
+!WAVE NUMBERS 
+ real(r8),allocatable,dimension(:)    :: rkx, rky, rkz
+
+!MODIFIED WAVE NUMBERS
+ real(r8),allocatable,dimension(:)    :: mkx, mky, mkz
+
+end module fft
+
+module stats
+ use ntypes, only: r8
+
+ real(r8),dimension(:),pointer          :: gc1,ge1,gc2,ge2 
+ integer                                :: bnds(1:6)
+ integer                                :: Srank
+ character(len=10)                      :: statbase
+end module stats
+
+module ptester
+ use ntypes
+ logical                                 :: srcflucs, phiflucs    ! fluctations on or off
+ character(len=40)                       :: testcase,testdir1D ! preset test cases
+ real(r8)                                :: psolvetime ! time to solve pressure equation
+ real(r8),allocatable,dimension(:,:,:)   :: phi,src,error ! field variables
+ real(r8)                                :: pi!CONSTANTS
+ real(r8)                                :: residual !MG OUTPUT
+ integer(i4)                             :: iterations
+ integer(i4)                             :: clock_start, clock_stop, clock_rate
+ real(r8)                                :: exact,locE,globE !MG ERROR
+ real(r8)                                :: cnst,cx,cy,cz,x,y,z !TEST PROBLEM PARAMETERS 
+ real(r8),parameter                      :: wk=1.d0,rro=1.d0
+ real(r8)                                :: b1, c1, a1 ! values from exact solutions
+ character(len=25),parameter             :: iniFILE='ptest.ini' ! ini file
+end module ptester
+!@q

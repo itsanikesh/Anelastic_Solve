@@ -1,0 +1,159 @@
+subroutine mg_cycle(res,work1,work2,kcur)
+!@t
+! \textbf{subroutine mg\_cycle(res,work1,work2,kcur)}
+!@h
+!   Description:
+!     Perform one V-cycle.
+!@q
+!  Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!  Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!  Language:
+!    Fortran 90
+!@h
+!  Comments:
+!    Based on Bernard Bunner's (bunner@engin.umich.edu) mgd3 solver
+!    available at www.mgnet.org
+!@q
+ use ntypes, only: r8,i4
+ use mgVars, only: sxk,exk,syk,eyk,szk,ezk,ngrid,kp3d,nwork3d,ipre_relax,ipost_relax,Smoother, IOUTmg
+#ifdef PARALLEL
+ use mgVars, only: commMG
+#endif
+ implicit none
+
+ !Passed Variables
+ integer(i4),intent(in)    :: kcur
+ real(r8),intent(out)      :: res(sxk(ngrid)-1:exk(ngrid)+1,syk(ngrid)-1:eyk(ngrid)+1,szk(ngrid)-1:ezk(ngrid)+1)
+ real(r8),intent(inout)    :: work1(nwork3d),work2(nwork3d)
+
+ !Local Variables
+ integer(i4)                   :: ipf,ipc, lC, lF
+ integer(i4)                   :: klevel
+ integer(i4)                   :: err1
+
+
+ !DOWN SWEEP
+  klevel=kcur
+  lC=klevel-1
+  lF=klevel
+  ipf=kp3d(lF)      
+  ipc=kp3d(lC)     
+  !Finest grid level 
+  !phiF=work1(ipf)
+  !rhsF=work2(ipf) 
+  select case(Smoother)
+   case('RBPGS')
+    call mg_relax(lF,work1(ipf),work2(ipf),ipre_relax(lF) )
+   case('LJ')
+     call mg_relaxLx(lF,work1(ipf),work2(ipf),ipre_relax(lF) )
+   case DEFAULT
+     write(IOUTmg,*) "SMOOTHER: "//trim(Smoother)//" UNKNOWN ABORTING"
+     stop
+   end select
+#ifdef PARALLEL
+   call MPI_BARRIER(commMG,err1)
+#endif
+  !Calculate residual and restrict it to klevel-1
+   !phiC=work1(ipc) 
+   !rhsC=work2(ipc)
+   !phiF=work1(ipf)
+   !rhsF=work2(ipf)
+   !residual=res 
+   call mg_restr( lC,lF,work1(ipc),work2(ipC),work1(ipf),work2(ipF),res ) 
+
+ do klevel=kcur-1,2,-1
+  lC=klevel-1
+  lF=klevel
+  ipf=kp3d(lF)      
+  ipc=kp3d(lC)     
+
+   !Relax at current level
+   select case(Smoother)
+    case('RBPGS')
+     call mg_relax(lF,work1(ipf),work2(ipf),ipre_relax(lF) )
+    case('LJ')
+     call mg_relaxLx(lF,work1(ipf),work2(ipf),ipre_relax(lF) )
+    case DEFAULT
+     write(IOUTmg,*) "SMOOTHER: "//trim(Smoother)//" UNKNOWN ABORTING"
+     stop
+    end select
+
+  !Calculate residual and restrict it to klevel-1
+   !phiC=work1(ipc) 
+   !rhsC=work2(ipc)
+   !phiF=work1(ipf)
+   !rhsF=work2(ipf)
+   !residual=res 
+   call mg_restr( lC,lF,work1(ipc),work2(ipC),work1(ipf),work2(ipF),res ) 
+
+ enddo
+
+  !PreRelax at coursest Level
+  klevel=1
+  lC=klevel 
+  ipc=kp3d(lC)      
+
+  select case(Smoother)
+   case('RBPGS')
+    call mg_relax(klevel,work1(ipc),work2(ipc),ipre_relax(lC) )
+   case('LJ')
+    call mg_relaxLx(klevel,work1(ipc),work2(ipc),ipre_relax(lC) )
+   case DEFAULT
+     write(IOUTmg,*) "SMOOTHER: "//trim(Smoother)//" UNKNOWN ABORTING"
+     stop
+  end select
+#ifdef PARALLEL
+  call MPI_BARRIER(commMG,err1)
+#endif
+ !UPSWEEP
+ do klevel=1,kcur-1
+  lF=klevel+1
+  lC=klevel
+  ipf=kp3d(lF)
+  ipc=kp3d(lC) 
+
+ !Post-relax
+  !phiC=work1(ipC)
+  !rhsC=work2(ipC) 
+  select case(Smoother)
+   case('RBPGS')
+    call mg_relax(klevel,work1(ipc),work2(ipc),ipost_relax(lC))
+   case('LJ')
+    call mg_relaxLx(klevel,work1(ipc),work2(ipc),ipost_relax(lC))
+   case DEFAULT
+    write(IOUTmg,*) "SMOOTHER: "//trim(Smoother)//" UNKNOWN ABORTING"
+    stop
+  end select
+#ifdef PARALLEL
+  call MPI_BARRIER(commMG,err1)
+#endif
+ !Inject course correction to fine grid 
+  !phiC=work1(ipC)
+  !phiF=work1(ipF) 
+  call mg_cor(lC,lF,work1(ipf),work1(ipc))
+
+ enddo
+
+ !Post-relax and finest level
+ lF=kcur
+ ipf=kp3d(lF) 
+ select case(Smoother)
+  case('RBPGS')
+   call mg_relax(lF,work1(ipf),work2(ipf),ipost_relax(lF) )
+  case('LJ')
+   call mg_relaxLx(lF,work1(ipf),work2(ipf),ipost_relax(lF) )
+  case DEFAULT
+   write(IOUTmg,*) "SMOOTHER: "//trim(Smoother)//" UNKNOWN ABORTING"
+   stop
+ end select
+#ifdef PARALLEL
+ call MPI_BARRIER(commMG,err1)
+#endif
+ return
+end

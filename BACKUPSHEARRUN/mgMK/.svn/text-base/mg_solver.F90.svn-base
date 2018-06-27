@@ -1,0 +1,95 @@
+subroutine mg_solver(phif,rhsf,iter,relmax)
+!@t
+! \textbf{subroutine mg\_solver(phif,rhsf,iter,relmax)}
+!@h
+!   Description:
+!     Solves the Poisson equation del^2(p) = rhs for uniform and stretched
+!     grids with cartesian coordinates.
+
+!   Method:
+!     Uses a second order centered parallel multigrid algorithm with full
+!     volume weighting for prolongation and restriction.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!   Version   Date     Comment 
+!   -------   ----     ------- 
+!   1.0       07/2008  Original code. [Kyle A. Brucker] 
+!   2.0       04/2009  Updated for stretched grids. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     Adapted from bernard bunner's (bunner@engin.umich.edu) mgd3 solver
+!     available at www.mgnet.org
+!
+!     The code will work well for unstretched and slightly stretched grids.
+!     For highly stretched grids revisions need to be made to the 
+!     restriction and prolongation subroutines. These revisions will require
+!     significant extra storage and floating point operations. For details
+!     on what needs to be done for this revision see UPDATE WHEN DOCUMENTING
+!     IS FURTHER ALONG
+!@q
+
+ use ntypes, only: r8,i4
+ use mgVars
+ implicit none
+
+!Passed Variables
+ real(r8),intent(inout)    :: phif(sxk(ngrid)-1:exk(ngrid)+1,syk(ngrid)-1:&
+                                      eyk(ngrid)+1,szk(ngrid)-1:ezk(ngrid)+1)
+ real(r8),intent(inout)    :: rhsf(sxk(ngrid)-1:exk(ngrid)+1,syk(ngrid)-1:&
+                                      eyk(ngrid)+1,szk(ngrid)-1:ezk(ngrid)+1)
+ integer(i4),intent(out)   :: iter
+ real(r8),intent(out)      :: relmax
+
+
+!Local Variables
+ integer(i4)               :: ipf
+ integer(i4)               :: ierr 
+
+
+!rhsf should come in ghosted, since bc's on rhs are not known in general
+!call mg_bdry(ngrid,rhsf,.true.,.true.)
+ call mg_bdry(ngrid,phif,.true.,.true.)
+
+ !Set phi,rhsf in work
+ ipf=kp3d(ngrid)
+ 
+ !phiF-->=work1(ipf)
+ !rhsF-->=work2(ipf)
+  call mg_set(work1(ipf),work2(ipf),phif,rhsf)
+#ifdef PARALLEL
+   call MPI_BARRIER(commMG,ierr)
+#endif
+ do iter=1,maxcy
+  !phiF-->=work1(ipf)
+  !rhsF-->=work2(ipf)
+  !res--> =rhsF
+  call mg_cycle(rhsF,work1(ipf),work2(ipf),ngrid)
+  ipf=kp3d(ngrid)
+
+  call mg_residual(phif,work1(ipf),relmax)
+   if (verbose) write(IOUTmg,'(a,i5,a,e22.15)') "       Iteration: ",iter,"  RESIDUAL= ",relmax
+#ifdef PARALLEL
+   call MPI_BARRIER(commMG,ierr)
+#endif
+   if (relmax.le.tolmax) goto 1000
+ enddo
+
+  !NOT CONVERGED in maxcy, issue an error message and quit
+  write(IOUTmg,'(a,i6,a,f22.16)') "WARNING: failed to achieve &
+           & convergence in  ",maxcy,"cycles, RESIDUAL=",relmax
+
+ !CONVERGED
+ 1000  continue
+
+ !UPDATE THE BOUDARY PLANES AND RETURN
+
+ call mg_bdry(ngrid,phif,.true.,.true.)
+ return 
+end subroutine mg_solver
+

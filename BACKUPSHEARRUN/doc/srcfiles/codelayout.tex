@@ -1,0 +1,32 @@
+The main directory contains two important files
+\begin{enumerate}
+\item arch.in: the architecture file which contains configuration settings for 
+      all the sf2s packages.
+\item Makefile: the Makefile for all the packages of sf2s. This should not be
+      modified unless new files are added and you know what you are doing.
+\end{enumerate}
+The code is broken up into independent directories
+\begin{enumerate}
+\item arch: contains sample architecture files for computers that have run
+      Sturb.
+\item decomp: contains files related to creation and usage of an MPI domain
+      decomposition.
+\item dns: contains files for the DNS solver Sturb.x.
+\item doc: contains documentation for the sf2s package.
+\item grid: contains files for the grid generation program grid.x.
+\item include: contains the module files which define necessary variables for
+      the different subprograms.
+\item interp: contains files for the interpolation program interpX1.x,
+      interpX2.x, interpX3.x.
+\item mgMK: contains files for the multigrid pressure solver.
+\item mgMK/test: contains files for the pressure solver test program ptest.x.
+\item post: contains files for post-processing simulations using Sturb.x.
+\item runfiles: contains sample runfiles for the pressure test program and the 
+      DNS solver. Parallel and Serial versions are available.
+\item scripts: contains useful scripts for ??? KYLE?
+\item serialdev: a directory for new serial files. ??? IS THIS NECESSARY KYLE?
+\item utils: contains files that are useful for general tasks.
+
+There is an exhaustive list of all subroutines by directory in
+Appendix \ref{app:allsubs}.
+\end{enumerate}

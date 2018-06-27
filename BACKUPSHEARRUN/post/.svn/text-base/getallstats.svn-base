@@ -1,0 +1,5 @@
+# shell script to read and output all the statistics
+for (( i=1; i<=64; i=i+1 ))
+do
+  ./run_stat $i
+done

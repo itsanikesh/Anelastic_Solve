@@ -1,0 +1,21 @@
+Getting Started:
+Documentation is located in the doc directory. To generate documentation 
+1. cd doc/
+2. make
+3. ./createdoc
+
+To compile the code
+1. Copy the relevant file in arch/ to arch.in 
+2. There are a number of options when typing make
+	make : makes the sturb.x dns program
+	make ptest : makes the pressure solver test program
+	make interp1 : makes the interpolation program in X1
+	make interp2 : makes the interpolation program in X2
+	make interp3 : makes the interpolation program in X3
+	make grid : makes the grid program, must turn off -DPARALLEL,
+                    and make sure readINI.o does not exist for the parallel
+                    version, this is a tricky item.
+	make mglib : makes the library for the pressure solver
+
+  make clean : cleans the current directory of .x, .o, .oo, lib*.a and .mod files.
+  make cleanall : cleans all sub-directories of .x, .o, .oo, lib*.a and .mod files.

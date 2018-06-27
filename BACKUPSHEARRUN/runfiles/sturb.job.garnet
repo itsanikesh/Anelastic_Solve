@@ -1,0 +1,25 @@
+#!/bin/sh
+#ACCOUNT
+#PBS -A ONRDC29722307
+
+#QUEUE
+#PBS -q standard_lw
+
+#WALL TIME
+#PBS -l walltime=48:00:00
+
+#NUMBER OF PROCESSORS
+#PBS -l select=4:ncpus=32:mpiprocs=32
+
+#STANDARD ERROR
+#PBS -e WENT.err
+
+#STANDARD OUT
+#PBS -o WENT.out
+
+#JOB NAME
+#PBS -N WENT 
+
+#RUN
+cd ${WORKDIR}/WENT
+aprun -n 128 ./sturb.x > WENT.log

@@ -1,0 +1,97 @@
+\documentclass[a4paper,11pt]{article}
+%\documentclass[]{article}
+% This should be ok, if you get into trouble or something does not work try
+% a separate line for each usepackage statement
+\usepackage[dvips]{graphicx}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{fullpage,epsfig,tabularx,supertabular,amsmath,natbib}
+% An error occurs if \usepackage[dvips]{graphicx} is called right before
+% this new command statement.
+\newcommand{\bmath}{\boldsymbol} 
+
+\title{SF2s User Manual}
+
+\author{Matt de Stadler and Kyle Brucker}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introduction}
+This document describes the packages available in sf2s. The algorithms
+underlying the code are presented as well as a description of the layout of
+the code, installation instructions, information on running the code and a 
+comprehensive list of subroutines employed is presented.
+
+\section{Numerical Algorithms}
+\subsection{DNS Solver}
+\subsection{LES Solver}
+Coming soon...
+\subsection{Multigrid Pressure Solver}
+\subsection{Grid Generation Program}
+\subsection{Interpolation Program}
+
+\section{Installing the Code}
+\input{srcfiles/install}
+
+\section{Code Layout}
+\input{srcfiles/codelayout}
+
+\section{Running the Code}
+\input{srcfiles/runningcode}
+
+\section{Statistics}
+
+\section{References}
+Add a set of references to thesis chapters describing the code and a list of
+papers written using the code.
+
+\appendix
+\section{Description of all subroutines organized by directory} \label{app:allsubs}
+
+%\subsection{Modules}
+%\input{autogen/modulecontents}
+
+\subsection{DNS Solver Subroutines}
+\input{autogen/dnssubs}
+
+\subsection{Pressure Solver Subroutines}
+\input{autogen/psolvesubs}
+
+\subsection{Pressure Solver Test Program Subroutines}
+\input{autogen/ptestsubs}
+
+\subsection{MPI Decomposition Directory}
+\input{autogen/decompsubs}
+
+\subsection{Commonly Used Subroutines: utils directory}
+\input{autogen/utilssubs}
+
+\subsection{Grid Generation Program}
+\input{autogen/gridprogram}
+
+\subsection{Interpolation Program}
+\input{autogen/interpprogram}
+
+\section{Post-Processing Tools}
+\subsection{Matlab files for the turbulent wake, post/wake/wakematlabfiles}
+\input{autogen/matlabwakepost}
+
+\section{Acknowledgements}
+The original code was written by Bernard Bunner at the U. of Michigan. It was 
+adapted by Kyle Brucker at UCSD for use with free shear turbulent flows. The
+modified program was made to match the code developed by Sankar Basak. Kyle
+continued to update the code, releasing a major revision in June 2009. Matt 
+de Stadler helped test, validate and verify, organize, and document the code. 
+Matt will take over as owner of the code when Kyle graduates.
+
+%\newpage
+
+%\bibliography{biblio}
+%\bibliographystyle{plain}
+
+\end{document}
