@@ -1,0 +1,385 @@
+#!/bin/sh
+
+TECADDONFILEFLAG=
+ISDEVELOPING=n
+USESGIGL=n
+DEBUGCMD=
+GLLIB=unknown
+
+SUPPORTED_PLATFORMS="macx.101      \
+                    ibmx.43        \
+                    ibmx64.51      \
+                    hp7xx.11       \
+                    hp7xx64.11     \
+                    sgix.65        \
+                    sgix64.65      \
+                    sun4.57        \
+                    sun464.57      \
+                    linuxg23.24    \
+                    linuxg23i64.24 \
+                    linuxi64.24    \
+                    linux64.24     \
+                    linux.24"
+
+#
+# ChangeLog
+#
+# 09/09/1999 (BDP)
+#   Changed script so it now looks in users home directory
+#   for .tecplot.cfg.  If it does not exist then the master
+#   tecplot.cfg file is copied locally.  This way when users
+#   later save preferences they will get saved to their own
+#   copy.
+# 10/13/1999 (BDP)
+#   Commented out change of 09/09/1999 due to beta user feedback.
+#   Need to rethink and reimplement later.
+# 03/21/2001 (DET)
+#   Added -mesa flag to prefix the shared library path with $TECHOME/lib/mesa
+# 04/09/2001 (DET)
+#   Added mesa subdirectory for mesa tecplot executable
+# 04/18/2001 (BDP)
+#   Added logic to switch to use mesa version automatically if native
+#   opengl support not available and mesa is.
+# 11/09/2001 (BDP)
+#   Modified mesa/opengl logic to work with the way linux distribution
+#   is arranged.  Under linux there is no need for separate libtec.so
+#   and tecplot.shared files.
+# 11/30/2001 (BDP)
+#   Added -sgiopengl option.  Removed linux dependent tests as linux
+#   distribution now has separate opengl and mesa installs.
+# 07/02/2002 (DET)
+#   Added DYLD_LIBRARY_PATH for Mac OS X (AKA Darwin).
+# 05/24/2004 (BDP)
+#   Cleaned up code dealing with supported platforms list.
+
+
+
+
+ListPlatforms()
+{
+  printf "\n"
+  n=0
+  for p in $SUPPORTED_PLATFORMS
+  do
+    if test $n -eq 5 ; then
+      printf " \n"
+      n=0
+    fi
+    printf "%14s" "$p "
+    n=`expr $n + 1`
+  done
+  printf "\n\n"
+}
+
+IsValidPlatform()
+{
+  IsValid=n
+  for p in $SUPPORTED_PLATFORMS
+  do
+    if test "$p" = "$1" ; then
+      IsValid=y
+    fi
+  done
+  echo $IsValid
+}
+
+
+
+MasterCfgFile=
+#
+# Look at the args and check on optional [-develop] [-debug] flags.
+# We need to later use "$@" to pass along the arguements so we don't
+# disturb the original arg list.
+#
+#
+FoundHFlag=n
+ISICONIFIED=n
+for arg in "$@"
+do
+  if test "$FoundHFlag" = "y" ; then
+    TEC100HOME="$arg"
+    export TEC100HOME
+    FoundHFlag=nn
+  else
+    case $arg in
+    -h)    FoundHFlag=y
+           ;;
+    -platlist)
+           ListPlatforms
+           exit
+           ;;
+    -develop)
+           if test "$TECADDONDEVDIR"      = "" ; then
+             echo " "
+             echo "Err: Need to define TECADDONDEVDIR environment variable to use"
+             echo "     the -develop flag.  Set TECADDONDEVDIR to be the path to"
+             echo "     the directory where you build add-ons (in sub-directories)"
+             echo " "
+             exit -1
+           fi
+           if test "$TECADDONDEVPLATFORM" = "" -o \
+                   "`IsValidPlatform $TECADDONDEVPLATFORM`" != "y" ; then
+             echo " "
+             echo "Err: Need to define TECADDONDEVPLATFORM environment"
+             echo "     variable in order to use the -develop flag."
+             echo " "
+             echo " "
+             echo " TECADDONDEVPLATFORM must be assigned to one of the following:"
+             echo " "
+             ListPlatforms
+             echo " "
+             exit -1
+           fi
+
+           echo "Running tecplot in addon development mode"
+           echo "Addon Development directory: $TECADDONDEVDIR"
+           echo "Addon Platform             : $TECADDONDEVPLATFORM"
+           TECADDONDIR=$TECADDONDEVDIR/lib/$TECADDONDEVPLATFORM/test
+           TECADDONFILE=$TECADDONDEVDIR/tecdev.add
+           export TECADDONDIR TECADDONFILE
+           ISDEVELOPING=y
+           ;;
+    -debug)
+           if test "$ISDEVELOPING" = "y" ; then
+             if test "$TECADDONDEBUGGER" = "" ; then
+               echo "Err: Must set your TECADDONDEBUGGER environment variable before using -debug"
+               exit -1
+             fi
+             DEBUGCMD=$TECADDONDEBUGGER
+           fi
+           ;;
+    -opengl)
+           GLLIB=opengl
+           ;;
+    -sgiopengl)
+           GLLIB=opengl
+           USESGIGL=y
+           ;;
+    -iconic)
+           ISICONIFIED=y
+           ;;
+    -mesa)
+           GLLIB=mesa
+           ;;
+    esac
+  fi
+done
+
+if test "$FoundHFlag" = "y" ; then
+  echo "Err: missing path to tecplot home directory after -h"
+  exit -1
+fi
+
+
+
+if test "$TEC100HOME" = "" ; then
+  if test "$TECHOME" = "" ; then
+    echo " "
+    echo "Err: Tecplot Home Directory is undefined.  You must either specify -h"
+    echo "     on the command line or set your TEC100HOME or TECHOME environment variable."
+    echo " "
+    exit -1
+  else
+    TEC100HOME=$TECHOME
+    export TECHOME TEC100HOME
+  fi
+else
+  TECHOME=$TEC100HOME
+  export TECHOME TEC100HOME
+fi
+
+######################################################
+#                                                    #
+#          Fixup's for the library path              #
+#                                                    #
+######################################################
+
+#
+# SGI and others use : LD_LIBRARY_PATH
+# HP uses            : SHLIB_PATH
+# IBM uses           : LIBPATH
+# Apple uses         : DYLD_LIBRARY_PATH
+#
+# Just assign them all.....
+#
+
+#
+# Save off the old library search path
+#
+OLD_DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+  OLD_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+       OLD_SHLIB_PATH=$SHLIB_PATH
+          OLD_LIBPATH=$LIBPATH
+
+#
+# Initialize to the tecplot lib sub-dir.
+#
+DYLD_LIBRARY_PATH=$TECHOME/lib
+  LD_LIBRARY_PATH=$TECHOME/lib
+       SHLIB_PATH=$TECHOME/lib
+          LIBPATH=$TECHOME/lib
+
+
+#
+# -mesa may not have been supplied however this could be a platform
+# that only has the mesa version.  Now that TECHOME is established
+# go and check to see if this is the case and if so switch to using
+# the mesa version.  
+#
+
+#
+# First determine which flavors of the GL library are available:
+#
+
+MESA_AVAILABLE=n
+OPENGL_AVAILABLE=n
+
+
+#
+# Mesa version ONLY available if bin/mesa/tecplot.shared 
+# exists.
+#
+if test -f $TECHOME/bin/mesa/tecplot.shared ; then
+  MESA_AVAILABLE=y
+fi
+
+#
+if test -f $TECHOME/bin/tecplot.shared ; then
+  OPENGL_AVAILABLE=y
+fi
+
+if test "$OPENGL_AVAILABLE" = "n" -a "$MESA_AVAILABLE" = "n"; then
+  echo "Err: Invalid tecplot installation.... Missing mesa and/or opengl builds"
+  exit -1
+fi
+
+
+#
+# If the user specified either -mesa or -opengl on the command
+# line this forces the use of either of these libraries.  See if 
+# the required tecplot is available.
+#
+
+if test "$GLLIB" = "mesa" -a "$MESA_AVAILABLE" = "n" ; then
+  echo "Err: This installation cannot use the mesa library"
+  exit -1
+fi
+
+if test "$GLLIB" = "opengl" -a "$OPENGL_AVAILABLE" = "n" ; then
+  echo "Err: This installation cannot use the opengl library"
+  exit -1
+fi
+
+#
+# If the GL library has not been specified then use opengl if
+# it is available otherwise use mesa...
+#
+if test "$GLLIB" = "unknown" ; then
+  if test "$OPENGL_AVAILABLE" = "y" ; then
+    GLLIB=opengl
+  else
+    GLLIB=mesa
+  fi
+fi
+
+
+
+
+if test "$GLLIB" = "mesa" ; then
+  EXECUTABLE=mesa/tecplot.shared
+else
+  EXECUTABLE=tecplot.shared
+fi
+
+#
+# If mesa then prefix the library search path for mesa, if 
+# available and requested.
+#
+if test "$GLLIB" = "mesa" ; then
+  DYLD_LIBRARY_PATH=$TECHOME/lib/mesa:$DYLD_LIBRARY_PATH
+    LD_LIBRARY_PATH=$TECHOME/lib/mesa:$LD_LIBRARY_PATH
+         SHLIB_PATH=$TECHOME/lib/mesa:$SHLIB_PATH
+            LIBPATH=$TECHOME/lib/mesa:$LIBPATH
+fi
+
+#
+# If requested to use the special SGI build of the opengl
+# library make sure to get hold of it...
+#
+if test "$USESGIGL" = "y" ; then
+  DYLD_LIBRARY_PATH=$TECHOME/lib/sgiopengl:$DYLD_LIBRARY_PATH
+    LD_LIBRARY_PATH=$TECHOME/lib/sgiopengl:$LD_LIBRARY_PATH
+         SHLIB_PATH=$TECHOME/lib/sgiopengl:$SHLIB_PATH
+            LIBPATH=$TECHOME/lib/sgiopengl:$LIBPATH
+fi
+
+#
+# To fix up problem with sun's putting the fortran library in a funny
+# location seed LD_LIBRARY_PATH with the path to the fortran libraries
+# in case an addon is loaded that was built with fortran.
+#
+
+if test "`uname`" = "SunOS" ; then
+  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/SUNWspro/lib
+fi
+
+#
+# Reattach the original lib paths...
+#
+DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$OLD_DYLD_LIBRARY_PATH
+  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OLD_LD_LIBRARY_PATH
+       SHLIB_PATH=$SHLIB_PATH:$OLD_SHLIB_PATH
+          LIBPATH=$LIBPATH:$OLD_LIBPATH
+
+
+
+#
+# Make sure everyone is using the english character set (LANG)
+# and uses decimal points in numeric values instead of commas.
+#
+
+LANG=C
+LC_NUMERIC=C
+
+#
+# Set up the XUSERFILESEARCHPATH
+#
+
+XUSERFILESEARCHPATH=$XUSERFILESEARCHPATH:$TECHOME/app-defaults/%N%S
+
+export XUSERFILESEARCHPATH DYLD_LIBRARY_PATH LD_LIBRARY_PATH SHLIB_PATH LIBPATH LANG LC_NUMERIC
+
+#
+# Note:  All addons referenced in $TECHOME/tecplot.add will
+#        be automatically loaded.  To custom load other addons
+#        on a user-by-user basis, use the -addons command line
+#        option and/or use the TECADDONFILE and TECADDONDIR
+#        environment variables.
+#
+
+#
+# The following env vars have been known to cause a few problems...
+#
+unset LD_LIBRARY64_PATH
+unset LD_LIBRARYN32_PATH
+
+#
+# Special for compaq alpha machines using the PowerStorm 300/350 controllers...
+#
+ALLOWINDIRECT=y
+export ALLOWINDIRECT
+
+#
+# Special consideration for KDE under linux.  Not sure what to do if gnome...
+#
+
+ICONSTART=
+
+if test "$ISDEVELOPING" = "y" -a "$DEBUGCMD" != "" ; then
+  echo "Warning: Extra Arguments ignored when debugging"
+  $DEBUGCMD $TECHOME/bin/$EXECUTABLE
+elif test $# -eq 0 ; then  # Kludge here to make dec alpha's happy.
+  $ICONSTART $TECHOME/bin/$EXECUTABLE
+else
+  $ICONSTART $TECHOME/bin/$EXECUTABLE "$@"
+fi

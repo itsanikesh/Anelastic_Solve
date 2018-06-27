@@ -1,0 +1,243 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Probe Field Information</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=879>
+<meta name=layout-width content=535>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+ul.whs3 {list-style: circle;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nProbe Field Information");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Probe Field Information</h1>
+
+<p>To call up the <span style="font-weight: bold;"><B>Probe At dialog</B></span> 
+ select the <span style="font-weight: bold;"><B>Probe At</B></span> option from 
+ the Data menu, or click <span style="font-weight: bold;"><B>Probe At</B></span> 
+ on the sidebar.</p>
+
+<p>&nbsp;</p>
+
+<p>The Zone/Cell Info page of the Probe dialog lists the following information 
+ about any probed data point, regardless of the format of the data:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;">Zone: The number 
+ and name of the probed zone.</font></span></p></li>
+	
+	<li class=kadov-p><p class="whs2">Format: Either ordered 
+ or one of the finite-element formats:</p></li>
+	
+	<ul type="circle" class="whs3">
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>FE-Triangle</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>FE-Quad</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>FE-Tetra</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>FE-Brick</I></span>.</p></li>
+	</ul>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>For ordered format zones, the following additional information is displayed:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>I-Max:</I></span> 
+ Maximum I-index of the zone.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>J-Max:</I></span> 
+ Maximum J-index of the zone. J-Max is one for I-ordered data.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>K-Max:</I></span> 
+ Maximum K-index of the zone. K-Max is one for IJ-ordered data.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Face 
+ Plane:</I></span> The I-, J-, or K-plane that is probed.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Face 
+ Indices:</I></span> The planes that are not mentioned in Face Plane, these 
+ are the other faces that are showing in 3-D, or are the axes in 2-D.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Plane:</I></span> 
+ Shows the type of plane (I, J, or K):</p></li>
+	
+	<ul type="disc" class="whs1">
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>I:</I></span> 
+ The I-index of the point at the principal data point of the cell containing 
+ the probed point. (If the point is probed using Ctrl-click for Nearest 
+ Point, the label reads &quot;I-Index.&quot;)</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>J:</I></span> 
+ The J-index of the point at the principal data point of the cell containing 
+ the probed point. (If the point is probed using Ctrl-click for Nearest 
+ Point, the label reads &quot;J-Index.&quot;)</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>K:</I></span> 
+ The K-index of the point at the principal data point of the cell containing 
+ the probed point. (If the point is probed using Ctrl-click for Nearest 
+ Point, the label reads &quot;K-Index.&quot;)</p></li>
+	</ul>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>For the finite-element zones, the following additional information is 
+ displayed:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Total 
+ Pts:</I></span> Total number of points in the zone.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Total 
+ Elems:</I></span> Total number of elements (cells) in the zone.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ Num:</I></span> Number of the probed node. This field is filled in only if 
+ the point is probed using Ctrl-click for Nearest Point.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Elem 
+ Num:</I></span> Number of the probed element.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 1:</I></span> Number of the node defining Node 1 of the cell.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 2:</I></span> Number of the node defining Node 2 of the cell.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 3:</I></span> Number of the node defining Node 3 of the cell.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 4:</I></span> Number of the node defining Node 4 of the cell. (FE-Quad, FE-Tetra, 
+ and FE-Brick only.)</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 5:</I></span> Number of the node defining Node 5 of the cell. (FE-Brick only.)</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 6:</I></span> Number of the node defining Node 6 of the cell. (FE-Brick only.)</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 7:</I></span> Number of the node defining Node 7 of the cell. (FE-Brick only.)</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Node 
+ 8:</I></span> Number of the node defining Node 8 of the cell. (FE-Brick only.)</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

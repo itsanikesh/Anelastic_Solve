@@ -1,0 +1,91 @@
+<TITLE>1T_Contour2</TITLE>
+<meta name=keywords content="RoboDemo 4.0">
+<HTML>
+<script language="JavaScript">
+<!--
+function doScoring(command,args)
+{   
+
+if ( command == "score" ) {
+
+
+	var nUserScore 	= parseInt(userscore);
+	var nMaxScore 	= parseInt(maxscore);
+	var nRetries 	= parseInt(retries);
+	var nSteps 		= parseInt(steps);
+	var nAccuracy 	= parseInt(accuracy);
+
+
+
+	var htmlString=
+		"<HTML><HEAD><TITLE></TITLE></HEAD>"+
+		"<BODY BGCOLOR='WHITE'>"+
+		"<center><p><font size=3 face='verdana,arial,helvetica'><b>You are at the end of the lesson.</b></font></p>"+
+		"<table cellspacing=1 cellpadding=4 border=0><tr>"+
+		"<td bgcolor='#336699'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>Your score:</b></font></td>"+
+		"<td align='center' bgcolor='#6699cc'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>"+nUserScore+
+		"</b></font></td></tr>"+
+		"<tr><td bgcolor='#336699'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>Maximum score:</b></font></td>"+
+		"<td align='center' bgcolor='#6699cc'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>"+nMaxScore+
+		"</b></font></td></tr>"+
+		"<tr><td bgcolor='#336699'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>Accuracy:</b></font></td>"+
+		"<td align='center' bgcolor='#6699cc'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>"+nAccuracy+
+		"%</b></font></td></tr>"+
+		"<tr><td bgcolor='#336699'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>Number of steps:</b></font></td>"+
+		"<td align='center' bgcolor='#6699cc'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>"+nSteps+
+		"</b></font></td></tr>"+
+		"<tr><td bgcolor='#336699'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>Number of retries:</b></font></td>"+
+		"<td align='center' bgcolor='#6699cc'><b><font size=2 color='#ffffff' face='verdana,arial,helvetica'>"+nRetries+
+		"</b></font></td></tr>"+
+		"</table>"+
+		"<p><font size=2 face='verdana,arial,helvetica'><b>"+
+		"</b></font></p>"+
+		"<p><form><input type='button' value='Print' onClick='javascript:window.print();'>&nbsp;<input type='button' value='Close' onClick='javascript:window.close();'></form></p></center>"+
+		"</BODY></HTML>"
+
+    launchwin(htmlString);
+
+}
+
+
+   if ( command == "userscore") { userscore = args }
+   if ( command == "maxscore") 	{ maxscore = args }
+   if ( command == "retries") 	{ retries= args }
+   if ( command == "steps") 	{ steps = args }
+   if ( command == "accuracy") 	{ accuracy = args }
+
+} 
+
+function launchwin(htmlString){
+   newwin = window.open("","flashcamwin","height=300,width=300,scrollbars=0")
+
+   newwin.document.open();
+   newwin.document.write(htmlString)
+   newwin.document.close()
+}
+
+
+function robodemo_DoFSCommand(command, args)
+{
+   doScoring(command,args);
+}
+//  -->
+</script>
+<script LANGUAGE="VBScript">
+<!--
+Sub robodemo_FSCommand(ByVal command, ByVal args)
+   call robodemo_DoFSCommand(command, args)
+end sub
+-->
+</script>
+
+<BODY><center><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" WIDTH="800" HEIGHT="600" CODEBASE="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" id=robodemo>
+<PARAM NAME=movie VALUE="1T_Contour.swf">
+<PARAM NAME=play VALUE=true>
+<PARAM NAME=loop VALUE=FALSE>
+<PARAM NAME=quality VALUE=high>
+<EMBED NAME=robodemo SRC="1T_Contour.swf" WIDTH=800 HEIGHT=600 loop=FALSE quality=high TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" swLiveConnect=true>
+</EMBED>
+</OBJECT>
+</center>
+</BODY></HTML>

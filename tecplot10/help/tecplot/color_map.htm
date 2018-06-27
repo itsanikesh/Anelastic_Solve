@@ -1,0 +1,375 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Color Map</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=2098>
+<meta name=layout-width content=535>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+ol.whs3 {list-style: decimal;}
+ol.whs4 {list-style: disc;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nWorkspace\nColor Map");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Color Map</h1>
+
+<p>The <span style="font-weight: bold;"><B>Color Map dialog</B></span> controls 
+ the colors displayed in flooded contour plots or multicolored mesh, scatter 
+ or vector plots. In this dialog you can choose from between five predefined 
+ color maps schemes, along with a sixth map scheme that interpolates between 
+ two colors – a user-specified minimum color and a user-specified maximum 
+ color. You also have two choices for defining your own color maps, either 
+ interactively by modifying the current color map, or by defining a color 
+ map file from scratch.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Base 
+ Color Map:</I></span> Selecting this button at the very top of the dialog 
+ allows you to choose a color map from among a selection of color maps 
+ schemes presented in the drop-down to be displayed in the color bar located 
+ below this option. The following options are presented in the drop-down:</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Small 
+ Rainbow (default):</I></span> Select this option to load in a simple, five 
+ color rainbow spectrum that ranges from blue to cyan to green to yellow 
+ and finally to red. RGB values can then be modified interactively.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Large 
+ Rainbow:</I></span> Selecting this option loads in a seven color rainbow spectrum 
+ that ranges from blue to cyan to green to yellow to red to purple and 
+ finally to white. RGB values can then be modified interactively.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Modern:</I></span> 
+ Load in a spectrum of seven distinct colors that change in intensity from 
+ dark to light within each color. The colors presented in this scheme are 
+ dark purple to light purple, dark blue to light blue, and so on for cyan, 
+ green, yellow, orange, and red. RGB values can then be modified interactively.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Gray 
+ Scale:</I></span> Loads in a black to white, gray scale spectrum. RGB values 
+ can then be modified interactively.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Wild:</I></span> 
+ Loads in a random color collection color map that uses random RGB values. 
+ Wild is different each time you select it. So, you can select this options 
+ several times until a combination is displayed that you like.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Two 
+ Color:</I></span> To specify two colors for your spectrum (start and end colors); 
+ Tecplot then interpolates a range of colors between these two values.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>User-Defined:</I></span> 
+ Load in and modify one of the standard color maps. For information on 
+ modifying a color map see Modifying User-Defined Color Maps.</p></li>
+	
+	<li class=kadov-p><p><span style="font-size: 10pt; font-style: italic;"><font size=2 style="font-size:10pt;"><I>Raw 
+ User-Defined:</I></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> Allows you to load 
+ in one of the standard color maps into the Color Map dialog color bar. 
+ You may then save this map off to a file. Use the Copy Color Map to File 
+ option, under the Workspace menu, to save this color map to a color map 
+ file. The file that is saved from this option lists all the RGB values 
+ for the whole spectrum displayed, not just the RGB values for the control 
+ points like the files that the User-Defined option saves. You can then 
+ go into this file and modify the values by hand. This means you can insert 
+ new colors, or other effects, to customize you own color map from scratch. 
+ Use the Paste Color Map from File option, under the Workspace menu, to 
+ load your customized color map as the current color map.</font></span> <span 
+ style="font-size: 10pt;"><font size=2 style="font-size:10pt;">The customized color map will be shown in the 
+ color bar at the top of the Color Map dialog, and the Base Color Map option 
+ shows &quot;Raw User-Defined.”</font></span></p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>To load in one of the standard color maps, after selecting the User-Defined 
+ option or Raw User-Defined:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Click on the Copy Standard 
+ Color Map button at the bottom of the Color Map dialog.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Choose one of the choices 
+ in the drop-down. The choices available are:</p></li>
+</ol>
+
+<ol type="disc" class="whs4">
+	
+	<ul type="disc" class="whs1">
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Small 
+ Rainbow</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Large 
+ Rainbow</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Modern</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Gray 
+ Scale</I></span>.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Color 
+ Bar:</I></span> This is the color spectrum display area just below the Base 
+ Color Map option at the top of the Color Map dialog. It shows the color 
+ mapping that is currently active along with any control points for that 
+ mapping. A color mapping is a linear variation of colors that represent 
+ the minimum to maximum contour value in a flooded contour plot.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>RGB 
+ Values for Control Points:</I></span> Shows the control point that is currently 
+ active (it is highlight in black). The control points are numbered from 
+ one to the maximum number set for this color map. Changing the RGB values 
+ changes the color that is displayed on the left or the right side of a 
+ control point.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Left 
+ RGB:</I></span> The RGB values for the left side of a control point. There 
+ is one slider for setting the value for each color value. The RGB values 
+ range from zero (off) to 255 (full). The combination of values from each 
+ of these colors are combined to create colors in the spectrum. Black is 
+ 0-0-0; white 255-255-255. The remainder of the colors are in between these 
+ values.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Red, 
+ Green, and Blue:</I></span> Use the sliders to specify the RGB the minimum 
+ (maximum) color values of the left RGB color currently being edited for 
+ the active control point. Adjust the slider by clicking-and-dragging.</p></li>
+	</ul>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>To use fine control to increase or decrease the displayed value:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Click on the slider.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Use the left and right 
+ arrow keys.</p></li>
+</ol>
+
+<ol type="disc" class="whs4">
+	
+	<ul type="disc" class="whs1">
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Right 
+ RGB:</I></span> The RGB values for the right side of a control point. There 
+ is one slider for setting the value for each color value. The RGB values 
+ range from zero (off) to 255 (full). The combination of values from each 
+ of these colors are combined to create colors in the spectrum. Black is 
+ 0-0-0; white 255-255-255 The remainder of the colors are in between these 
+ values.</p></li>
+		
+		<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Red, 
+ Green, and Blue:</I></span> Use the sliders to specify the RGB the minimum 
+ (maximum) color values of the right RGB color currently being edited for 
+ the active control point. Adjust the slider by clicking-and-dragging.</p></li>
+	</ul>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>To use fine control to increase or decrease the displayed value:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Click on the slider.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Drag the slider to the 
+ right or left.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Use the left and right 
+ arrow keys.</p></li>
+</ol>
+
+<ol type="disc" class="whs4">
+	
+	<ul type="disc" class="whs1">
+		
+		<li class=kadov-p><p><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;">R</font></span><span 
+ style="font-size: 10pt;"><font size=2 style="font-size:10pt;">ight RGB same as Left: Selecting this check box 
+ gives a continuous spectrum value across a control point, that is, the 
+ value on the left side is the same on the right side. When this is not 
+ selected, the right-hand RGB value can jump up to a completely different 
+ color value. This results in a stepped color effect, like that seen in 
+ the Modern color map.</font></span></p></li>
+		
+		<li class=kadov-p><p class="whs2">Number of Control 
+ Points: This allows you to increase or decrease the number of control 
+ points used in a color map. The number of control points can be any integer 
+ from two to nine. Added control points will be placed on the right end 
+ of the color spectrum. This option is only available user-defined color 
+ maps.</p></li>
+		
+		<li class=kadov-p><p class="whs2">Copy Standard Color 
+ Map: This copies a specific standard color map into the color bar when 
+ the Base Color Map option currently selected is either User-Defined or 
+ Raw User-Defined.</p></li>
+	</ul>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>To load in one of the standard color maps:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Select either User-Defined, 
+ or Raw User-Defined option from the Base Color Map drop-down.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Click on the Copy Standard 
+ Color Map button at the bottom of the Color Map dialog.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Choose one of the choices 
+ in the drop-down. The choices available are:</p></li>
+</ol>
+
+<ol type="disc" class="whs4">
+	
+	<ul type="disc" class="whs1">
+		
+		<li class=kadov-p><p class="whs2">Small Rainbow.</p></li>
+		
+		<li class=kadov-p><p class="whs2">Large Rainbow.</p></li>
+		
+		<li class=kadov-p><p class="whs2">Modern.</p></li>
+		
+		<li class=kadov-p><p class="whs2">Wild.</p></li>
+	</ul>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>The color map option you choose is displayed in the color bar at the 
+ top of the Color Map dialog.</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Redistribute 
+ Control Points:</I></span> Selecting this button moves the control points 
+ back to their default positions without resetting any RGB values to their 
+ default values. This means that any changes you made to the RGB values 
+ remain unchanged while the control points are redistributed equally along 
+ your customized spectrum.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Reset:</I></span> 
+ Selecting this button results in two actions. Reset moves the control 
+ points back to their default positions and resets all the RGB values to 
+ their default values. Use this to put a color map to its original values.</p></li>
+</ul>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

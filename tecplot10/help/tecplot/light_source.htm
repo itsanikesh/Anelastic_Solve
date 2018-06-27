@@ -1,0 +1,221 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Light Source</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=781>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold;}
+ol.whs2 {list-style: decimal;}
+p.whs3 {font-size: 10pt;}
+ul.whs4 {list-style: disc;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nPlot\nLight Source");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Light Source</h1>
+
+<p>The <span style="font-weight: bold;"><B>light source</B></span> is a point 
+ of light infinitely far from the drawing area. You can specify its location 
+ as a point on a hemisphere with a pole along the eye-origin axis. You 
+ control the location with the Light Source Position control in the 3D<span 
+ style="font-weight: bold;"> <B></B></span>Light Source dialog. The 3-D light 
+ source may be different for each frame. The light source position is indicated 
+ by a dot over the origin of the 3-D orientation axes displayed in the 
+ Light Source Position control.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">To adjust the light-source position:</p>
+
+<ol type="1" class="whs2">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs3">In the Light Source Position 
+ control, move the pointer onto the dot representing the light-source position.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs3">Drag the dot to the desired 
+ light-source location. As the light-source position moves away from the 
+ eye origin ray its representation appears as an arrow. The length of the 
+ arrow indicates how far from the eye-origin ray the light-source position 
+ is. At the eye origin ray, the arrow is pointing directly into the screen, 
+ so just a dot is visible; at the horizon (on the circle surrounding the 
+ 3D Orientation Axis in the Light Source Position control), the arrow is 
+ longest.</p></li>
+</ol>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The 3D Light Source dialog includes the following 
+ options:</p>
+
+<ul type="disc" class="whs4">
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Intensity 
+ (%):</I></span> Controls the amount of lighting effect produced by the directional 
+ light source. An intensity of 100 produces the maximum contrast between 
+ lit and unlit areas, and fully lit areas use the full surface color. Lesser 
+ values produce less contrast between lit and unlit areas, and fully lit 
+ areas use darker colors. An intensity of zero means the light source produces 
+ no contrast between lit and unlit areas, and all areas are black.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Background 
+ Light (%):</I></span> Controls the amount of lighting effect applied to all 
+ objects regardless of the light source position. A background light of 
+ zero means that areas unlit by the directional light source receive no 
+ lighting at all and are entirely black, while areas lit by the directional 
+ light source get only the effect of that light. Larger values produce 
+ more lighting effect in areas not lit by the directional light source, 
+ making these areas show some of the surface color. A background light 
+ of 100 means that all areas are lit by the maximum amount, and areas unlit 
+ by the directional light source use the full surface color.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Surface 
+ Color Contrast (%):</I></span> Controls the contrast of the color of light 
+ source shaded surfaces before applying lighting effects. A surface color 
+ contrast of 100 means that light source shaded surfaces use the full surface 
+ color for applying lighting effects. Lesser values mean that the surface 
+ color is blended with progressively more white, making light source shaded 
+ surface colors lighter. A surface color contrast of zero means that colors 
+ are pure white before applying lighting effects; the plot will only be 
+ shades of gray.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Note:</I></span> 
+ Intensity and Background Light are cumulative; they can add up to more 
+ than 100 and result in colors lightened beyond the base surface color. 
+ For example, reds will become pink and grays become white.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Specular Highlighting</p>
+
+<p>Specular Highlighting adds the semblance of reflected light to 3-D shaded 
+ or flooded objects. Options include:</p>
+
+<ul type="disc" class="whs4">
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Include 
+ Specular Highlighting:</I></span> Turns on/off specular highlight for all 
+ light-source shaded objects in the plot.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Intensity 
+ (%):</I></span> Controls intensity of specular highlights (that is, the amount 
+ of reflected light, which controls the amount of whiteness at the peak 
+ of the highlight).</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span style="font-style: italic;"><I>Shininess:</I></span> 
+ Controls shininess of specular highlight (that is, roughly the size and 
+ spread of specular highlight).</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Lighting Optimizations</p>
+
+<p>Some combinations of lighting type and plot style may result in very 
+ slow redrawing of plots. Tecplot provides lighting optimizations to avoid 
+ such conditions and instead draws a similar, but less intensive plot. 
+ These optimizations are on by default. Turn them off if you need to see 
+ the exact effects you have specified. You may want to turn off the graphics 
+ cache before turning off those optimizations for plots with large amounts 
+ of data.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

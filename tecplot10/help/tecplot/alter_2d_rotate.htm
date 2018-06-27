@@ -1,0 +1,179 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Alter 2D Rotate</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=608>
+<meta name=layout-width content=535>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+ol.whs3 {list-style: decimal;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nAlter 2D Rotate");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Alter 2D Rotate</h1>
+
+<p>Use the <span style="font-weight: bold;"><B>2D Rotate dialog</B></span> to 
+ rotate 2-D field data about a user specified XY-origin. Unlike 3-D rotation, 
+ which does not alter the data but merely the user's view of the data, 
+ 2-D rotation actually modifies the data. If you save your data set after 
+ performing 2-D rotation, you will have a data set different from your 
+ original data.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2">&nbsp;<span 
+ style="font-style: italic;"><I>Angle (deg):</I></span> 
+ Specify the angle of rotation. You can either enter a value, in degrees, 
+ in the text field, or select a value from the drop-down. All angles are 
+ measured in degrees counter-clockwise from horizontal.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>X-Origin:</I></span> 
+ Enter the X-coordinate of the origin of rotation, that is, the point around 
+ which the data is rotated. The default is zero.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Y-Origin:</I></span> 
+ Enter the Y coordinate of the origin of rotation, that is, the point around 
+ which the data is rotated. The default is zero.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Select 
+ Zone(s) to Rotate:</I></span> Select zones for rotation. The default is no 
+ zones selected.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>To select a single zone, click on it. To select a range of zones:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Click on the first or 
+ last zone in the range.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Shift-click</B></span> 
+ on the last or first zone in the range.</p></li>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>To select an arbitrary set of zones:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;">Click on the first 
+ desired zone.</font></span></p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Ctrl-click</B></span> 
+ on subsequent zones until all desired zones are selected.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">To perform the transformation, 
+ click <span style="font-weight: bold;"><B>Compute.</B></span></p></li>
+</ol>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

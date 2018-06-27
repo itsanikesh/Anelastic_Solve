@@ -1,0 +1,191 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Alter Transform Coordinates</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=646>
+<meta name=layout-width content=535>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+ol.whs3 {list-style: decimal;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nAlter Transform Coordinates");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Alter Transform Coordinates</h1>
+
+<p>Use the <span style="font-weight: bold;"><B>Transform Coordinates dialog</B></span> 
+ to transform data sets in polar coordinates to a rectangular coordinate 
+ system. When you use this dialog, Tecplot assumes the current X-variable 
+ represents the radius r, and the current Y-variable represents the angle 
+ Theta.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Transformation:</I></span> 
+ Select the type of transformation for changing all points in one or more 
+ zones from one coordinate system to another. Options include Polar to 
+ Rectangular, Spherical to Rectangular, Rectangular to Polar, Rectangular 
+ to Spherical.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Theta/X 
+ Variable:</I></span> Selects variable to use for Theta/X in transformation 
+ equations.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>R/Y 
+ Variable:</I></span> Selects variable to use for R/Y in transformation equations.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Psi/Z 
+ Variable:</I></span> Selects variable to use for Psi/Z in transformation equations.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Create 
+ New Variables:</I></span> When checked, new variables are created to hold 
+ the transformed values. Tecplot comes up with names so the data set integrity 
+ is maintained (no two variables with same names).</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Put 
+ Results in Existing Variables:</I></span> When checked, results are put into 
+ variables in the current data set.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>X/Theta 
+ Variable:</I></span> Selects variable to receive X/Theta values from transformation.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Y/R 
+ Variable:</I></span> Selects variable to receive Y/R values from transformation.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Z/Psi 
+ Variable:</I></span> Selects variable to receive Z/Psi values from transformation.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Angles 
+ in:</I></span> Selects whether to calculate using values in Theta and Psi 
+ variable as radians or degrees.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Select 
+ Zones to Transform:</I></span> Selects zones to alter (also displays that 
+ all are transformed).</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>To transform your data in polar coordinates to rectangular coordinates:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">From the Data menu, choose 
+ <span style="font-weight: bold;"><B>Alter</B></span>, then choose Transform Coordinates. 
+ The Transform Coordinates dialog appears as shown in </p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Select the type of transformation 
+ desired. Options include polar or spherical to rectangular, rectangular 
+ to polar or spherical. Verify that the X- and Y-variables shown represent 
+ r and Theta, respectively, in your polar coordinate data. The data must 
+ be in radians.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Select the zones for 
+ the transformation, then click <span style="font-weight: bold;"><B>Compute</B></span>.</p></li>
+</ol>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

@@ -1,0 +1,335 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Statistics Calculator Formulas</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=2463>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold;}
+img_whs2 {border: none; width: 112px; height: 60px; border-style: none;}
+img_whs3 {border: none; width: 193px; height: 52px; border-style: none;}
+img_whs4 {border: none; width: 274px; height: 54px; border-style: none;}
+img_whs5 {border: none; width: 258px; height: 60px; border-style: none;}
+img_whs6 {border: none; width: 125px; height: 37px; border-style: none;}
+img_whs7 {border: none; width: 289px; height: 60px; border-style: none;}
+img_whs8 {border: none; width: 189px; height: 70px; border-style: none;}
+img_whs9 {border: none; width: 221px; height: 84px; border-style: none;}
+img_whs10 {border: none; width: 240px; height: 77px; border-style: none;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nAdd-Ons\nStatistics Calculator Formulas");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Statistics Calculator Formulas</h1>
+
+<p class="whs1">Statistics Calculator Formulas</p>
+
+<p>Formulas for the Statistics Calculator are described here.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">See Also:</p>
+
+<p>Statistics Calculator.</p>
+
+<p>The Formula for Mean</p>
+
+<p>The mean calculates the average value of each variable over the specified 
+ zones. Mean is calculated by the formula:</p>
+
+<p><img src="image11.gif" width="112px" height="60px" border="0" class="img_whs2"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 1</p>
+
+<p>Given the following data set of five values:</p>
+
+<p>Data set: 4 7 5 2 3</p>
+
+<p>The sum of the values of the data set is: 21</p>
+
+<p>The mean equals the sum, 21, divided by the total number of data points, 
+ 5</p>
+
+<p>Mean: 4.2 = 21/5</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Median</p>
+
+<p>The median is the middle quantitative value of a data set. In the following 
+ formulas, X is an array, and the value n represents its size.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Odd N</p>
+
+<p>If the data set contains an odd number of data points, the data point 
+ in the middle of the sorted data set determines the median. How the median 
+ is determined for data sets containing an odd number of data points is 
+ described by the formula:</p>
+
+<p><img src="image10.gif" width="193px" height="52px" border="0" class="img_whs3"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 2</p>
+
+<p>Assume the same data set as used in the example for mean:</p>
+
+<p>Data set: 4 7 5 2 3</p>
+
+<p>Sorted data set: 2 3 4 5 7</p>
+
+<p>Median: 4</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Even N</p>
+
+<p>If the data set contains an even number of data points, the value is 
+ determined by the average of the two central data points. How the median 
+ is determined for data sets containing an even number of data points is 
+ described by the formula:</p>
+
+<p><img src="image9.gif" width="274px" height="54px" border="0" class="img_whs4"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 3</p>
+
+<p>Given the following data set of six values:</p>
+
+<p>Data set: 4 7 5 2 3 1</p>
+
+<p>Sorted data set: 1 2 3 4 5 7</p>
+
+<p>Median: 3.5 = (3+4)/2</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Variance</p>
+
+<p>Variance is the sum of the squares of the deviations of the sample values 
+ from the mean, divided by n-1. It measures the dispersion, or variance, 
+ of the sample values from the mean. Variance is calculated by the formula:</p>
+
+<p><img src="image8.gif" width="258px" height="60px" border="0" class="img_whs5"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 4</p>
+
+<p>Given the following data set of five values:</p>
+
+<p>Data set: 4 7 5 2 3</p>
+
+<p>Recall that the mean of this data set is 4.2. The sum of the squares 
+ of the deviations of the sample values from the mean equals:</p>
+
+<p>14.8 = .22 + 2.82 + .82 + (-2.2)2 + (-1.2)2 </p>
+
+<p>Variance: 3.7 = 14.8/4</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Standard Deviation</p>
+
+<p>Standard deviation is the square root of the variance. Standard Deviation 
+ is calculated by the formula:</p>
+
+<p>&nbsp;<img src="image7.gif" width="125px" height="37px" border="0" class="img_whs6"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 5</p>
+
+<p>Assume the same data set as used in Example 4.</p>
+
+<p>Recall the variance equals 3.7</p>
+
+<p>Standard Deviation: 1.92 = 3.71/2 </p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Average Deviation</p>
+
+<p>Average deviation is the sum of the magnitudes of the deviations of 
+ the sample values from the median, divided by n. Average Deviation is 
+ calculated by the formula:</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;<img src="image6.gif" width="289px" height="60px" border="0" class="img_whs7"></p>
+
+<p class="whs1">Example 6</p>
+
+<p>Assume the same data set as used in Example 3.</p>
+
+<p>Recall the median equals 3.5. The sum of the magnitudes of the deviations 
+ of the sample values from the median equals:</p>
+
+<p>10 = .5 + 3.5 + 1.5 + |-1.5| + |-.5| + |-2.5|</p>
+
+<p>Average Deviation: 1.67 = 10/6. </p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Geometric Mean</p>
+
+<p>Geometric mean is the nth root of the product of a series. If any value 
+ of the data set is zero, the result will be zero. For large data sets, 
+ or data sets with large values, this statistic will overflow. Geometric 
+ Mean is calculated by the formula:</p>
+
+<p><img src="image4.gif" width="189px" height="70px" border="0" class="img_whs8"></p>
+
+<p>&nbsp;</p>
+
+<p>The geometric mean can also be described by the use of logarithms. The 
+ representation of the geometric mean, as seen below, is used by the Statistics 
+ Calculator. Given the formula geometric mean, it is easy to see that if 
+ any value of the data set is zero, the geometric mean is zero. Although 
+ the logarithm of zero is undefined, the Statistics Calculator will return 
+ zero if any member of the data set is equal to zero. Likewise, the geometric 
+ mean is only useful for data sets with all positive members. If any member 
+ of the data set is negative, the Statistics Calculator will return infinity 
+ for the geometric mean.</p>
+
+<p><img src="image3.gif" width="221px" height="84px" border="0" class="img_whs9"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 7</p>
+
+<p>Given the following data set of six values:</p>
+
+<p>Data set: 4 3 5 3 6 4</p>
+
+<p>Sum of the logarithms divided by n: 0.606 = [log(4) + log(3) + log(5) 
+ + log(3) + log(6) + log(4)]/n</p>
+
+<p>Geometric Mean: 4.036 = 100.606</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">The Formula for Chi Square</p>
+
+<p>Chi Square is the measure of how close observed values were to expected 
+ values. The smaller the result, the closer the observed values are to 
+ the expected values. Chi Square assumes a contingency table of one column 
+ and n rows, where n is the number of data points for the particular variable. 
+ The expected value is assumed to be the mean. If the mean is zero, Chi 
+ Squared will return infinity. Chi Square is calculated by the formula:</p>
+
+<p><img src="image1.gif" width="240px" height="77px" border="0" class="img_whs10"></p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Example 8</p>
+
+<p>Assume the same data set as in Example 1.</p>
+
+<p>Recall that the mean equals 4.2</p>
+
+<p>The summation Chi Squared is equivalent to:</p>
+
+<p>3.52 = (-.2)2/4.2 + 2.82/4.2 + .82/4.2 + (-2.2)2/4.2 + (-1.2)2/4.2</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

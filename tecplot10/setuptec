@@ -1,0 +1,1173 @@
+#!/bin/sh
+#
+# Revision History:
+#
+#  11/21/96:  Changed question about installing license key
+#             to be a multiple choice (3) option.
+#
+#  11/27/96:  Added code to chmod of Tecplot resource file.
+#
+#  01/30/97:  Added code to allow for an alternate form of
+#             the "VMS" file naming structure.
+#
+#  05/28/97:  Added more chmods for read only files.
+#
+#  01/28/98:  Revamped to allow for updates.
+#
+#  05/21/98:  Removed code dealing with tecplot resource files.
+#             tecplot shell script now sets up XFILESEARCHPATH.
+#
+#  09/09/98:  Fixed problem with reference of doc files on Dec Alpha
+#             systems.
+#
+#  07/10/99:  Added license agreement
+#
+#  08/17/99:  Added checks to see if movie and adk install files
+#             exist.  If not then user is not prompted for those 
+#             components.  Also user is sent error message if they
+#             choose an unsupported platform.
+#  09/08/99:  Changed selectable components to now force selection of
+#             the ADK.  Setuptec also now prints out a table at the
+#             end showing selected components.
+#  01/19/01:  Added VMS3 (not tested) because recent CFDA cd required
+#             this option (probably because of new CD burner).
+#
+#  12/01/01:  Fixes for VMS mounts with mesa/opengl combo installs.
+#
+#  02/07/02:  Added test to see if uncompress is available.  If not
+#             and zcat is available use zcat.
+#
+#  10/23/02:  Added recursive chown (actually a find w/chown exec)
+#             for the Mac when installing as root. Also added some
+#             Mac-specific chmods.
+#  04/29/04:  Updated QuerySys to detect 64-bit linux platforms.
+#
+#  05/03/04:  Filter resource file for Linux and non-Linux platforms
+#             to select the best font size.
+#  07/20/04:  replaced extras and extras3 with adk
+#  07/24/04:  Updated querysys to detect macx.102
+
+
+
+OptionPrompt() 
+{ 
+  if test "$1" = "-leftjustify" ; then
+    shift
+    printf "%s " "$1" 
+  else
+    printf "%60s " "$1" 
+  fi
+}
+
+OptionRead()
+{
+  read Opt
+
+  if test "$Opt" = "" ; then
+    Opt=$1
+  fi
+  echo $Opt
+}
+
+QuerySys()
+{
+  ModelGuess=unknown
+  PlatformGuess=unknown
+
+  #
+  # Test for SGI's
+  #
+  UNAMESTRING=`uname -a`
+  OSVersionGuess=`echo $UNAMESTRING | sed -e 's/^[a-zA-Z0-9_-]* [a-z\.A-Z0-9_-]* //' -e 's/ .*$//'`
+  OSNAME=`echo $UNAMESTRING | sed -e 's/ .*$//'`
+
+  if test "`echo $OSNAME | grep -i \"^irix\"`" != "" ; then
+    PlatformGuess=sgi
+    CPU="`hinv | grep CPU | sed -e 's/^.*MIPS R/R/' -e 's/ .*$//'`"
+    case $OSVersionGuess in
+     6.5*) if test "$CPU" = "R4000" ; then
+             ModelGuess=sgix2.65
+           else
+             ModelGuess=sgix64.65
+           fi
+           ;;
+      6.*) if test "$CPU" = "R4000" ; then
+             ModelGuess=sgix3.62
+           else
+             ModelGuess=sgix.62
+           fi
+           ;;
+        *) ModelGuess=unsupported
+           ;;
+    esac
+  
+  #
+  # Test for SUN's
+  #
+  elif test "$OSNAME" = "SunOS" ; then
+    PlatformGuess=sun
+    case $OSVersionGuess in
+      5.5*) ModelGuess=sun4.55
+            ;;
+      5.6*) ModelGuess=sun4.55
+            ;;
+      5.7*) ModelGuess=sun464.57
+            ;;
+      5.8*) ModelGuess=sun464.57
+            ;;
+      5.9*) ModelGuess=sun464.57
+            ;;
+         *) ModelGuess=unsupported
+            ;;
+    esac
+  #
+  # Test for Mac's
+  #
+  elif test "$OSNAME" = "Darwin" ; then
+    PlatformGuess=mac
+    case $OSVersionGuess in
+      5.5*) ModelGuess=macx.101
+            ;;
+      6.8*) ModelGuess=macx.102
+            ;;
+         *) ModelGuess=unsupported
+            ;;
+    esac
+  
+  #
+  # Test for IBM's
+  #
+  elif test "$OSNAME" = "AIX" ; then
+    PlatformGuess=ibm
+    #
+    # Redo OSVersionGuess
+    #
+    OSVersionGuess=`uname -v`.`uname -r`
+    case $OSVersionGuess in
+      4.*)  ModelGuess=ibmx.43
+            ;;
+      5.*)  ModelGuess=ibmx64.51
+            ;;
+         *) ModelGuess=ibmx.43
+            ;;
+    esac
+  
+  #
+  # Test for hp's
+  #
+  
+  elif test "$OSNAME" = "HP-UX" ; then
+    PlatformGuess=hp
+    case $OSVersionGuess in
+      *.10.*) ModelGuess=hp7xx.102
+              ;;
+  
+      *.1*.*) ModelGuess=hp7xx64.11
+              ;;
+           *) ModelGuess=unsupported
+              ;;
+    esac
+  
+  #
+  # Test for compaq or dec
+  #
+  
+  elif test "$OSNAME" = "OSF1" ; then
+    case $OSVersionGuess in
+      V3.*)  ModelGuess=decalpha.32
+             PlatformGuess=dec
+             ;;
+      V4.*)  ModelGuess=decalpha.32
+             PlatformGuess=dec
+             ;;
+      V5.*)  ModelGuess=compaq.51
+             PlatformGuess=compaq
+             ;;
+      V6.*)  ModelGuess=compaq.51
+             PlatformGuess=compaq
+             ;;
+    esac
+  
+  #
+  # Test for linux
+  #
+  
+  elif test "$OSNAME" = "Linux" ; then
+    PlatformGuess=linux
+
+    case $OSVersionGuess in
+      2.2.*)  OSVER=22;;
+      2.4.*)  OSVER=24;;
+    esac
+
+    if test "`echo $UNAMESTRING | grep -i \" alpha \"`" != "" ; then
+      ModelGuess=linuxam.${OSVER}
+    else
+      GLIBVER=
+      if test "`echo $UNAMESTRING | grep ia64`" != "" ; then
+        ARCH=i64
+      elif test "`echo $UNAMESTRING | grep x86_64`" != "" ; then
+        ARCH=64
+      else
+        ARCH=
+      fi
+      LIBLIST=`/bin/ls -l /lib/libc-2* 2>/dev/null | wc -l`
+      if test $LIBLIST -gt 0 ; then
+        if test "`/bin/ls -l /lib/libc-2.3* 2>/dev/null`" != "" ; then
+          GLIBVER=g23
+        fi
+      fi
+      ModelGuess=linux${ARCH}${GLIBVER}.${OSVER}
+    fi
+  fi
+}
+
+
+
+#
+# Debugging
+# QuerySys
+# echo " PlatformGuess=$PlatformGuess"
+# echo "    ModelGuess=$ModelGuess"
+# echo "OSVersionGuess=$OSVersionGuess"
+#
+
+
+GetUncompressUtility ()
+{
+  if test -f /usr/bin/uncompress -o \
+          -f /bin/uncompress -o \
+          -f /usr/bsd/uncompress ; then
+    echo "uncompress -c"
+  else
+    echo "zcat"
+  fi
+}
+
+
+#
+# Convert filenames to the proper syntax depending on the
+# way the CD is mounted.
+#
+GetFinalFileSyntax()
+{
+  if test "$CDMountStyle" = "VMS" -o "$CDMountStyle" = "VMS2" ; then
+    FinalSyntax=`echo "$1" | tr "[a-z]" "[A-Z]"`';1'
+  elif test "$CDMountStyle" = "VMS3" ; then
+    FinalSyntax=`echo "$1" | tr "[a-z]" "[A-Z]"`
+  else
+    FinalSyntax=$1
+  fi
+  echo "$FinalSyntax"
+}
+
+
+
+umask 022
+LANG=C
+BATCH=n
+TarFlags=
+InstallLMOnly=n
+CurMajTecVersion=10
+CurMinTecVersion=0
+
+export LANG
+echo " "
+echo " "
+echo "####################################################################"
+echo "#                                                                  #"
+echo "#                   TECPLOT SETUP SHELL SCRIPT                     #"
+echo "#                                                                  #"
+echo "####################################################################"
+echo " "
+echo " "
+
+UncompressUtility="`GetUncompressUtility`"
+
+if test "$1" = "-batch" ; then
+  if test $# -ne 4 ; then
+    echo "Err: Need setuptec -batch platform installdir licensenumber"
+    exit
+  fi
+  BATCH=y
+  FinalTarExe=$2
+  DestinationDir=$3
+  LicenseNumbers=$4
+elif test $# -ge 1 ; then
+  while test $# -ge 1
+  do
+    case $1 in
+#   -licensemanageronly) InstallLMOnly=y;;
+    *) TarFlags=$1;;
+    esac
+    shift
+  done
+fi
+
+
+#
+# Determine misc. information about the system....
+#
+
+if test "$BATCH" = "n" ; then
+  DestinationDir=.
+fi 
+
+DistDir=`pwd`
+if test $? -ne 0 ; then
+  DistDir=`echo $PWD`
+  if test "$DistDir" = "" ; then
+    echo "Cannot determine the current working directory!!!"
+    exit
+  fi
+fi
+
+#
+# Some CD's, when mounted, mangle filenames to look like old
+# VMS systems.  Need to determine how to look for files on the CD.
+#
+if test -f './platform' ; then
+  CDMountStyle='normal'
+  PlatFile=platform
+  CommonFile=common
+  ADKFile=adk
+  LicFile=licaggr
+  SetupLic=setuplic
+  ReadmeFile=readme.txt
+  ReleaseNotes=release.pdf
+  UsersManual=../doc/tpum.pdf
+  RefManual=../doc/tprm.pdf
+  Addendum=../doc/addendum.pdf
+elif test -f './platform.' ; then
+  CDMountStyle='sunformat'
+  PlatFile=platform.
+  CommonFile=common.
+  ADKFile=adk.
+  LicFile=licaggr.
+  SetupLic=setuplic.
+  ReadmeFile=readme.txt
+  ReleaseNotes=release.pdf
+  UsersManual=../doc/tpum.pdf
+  RefManual=../doc/tprm.pdf
+  Addendum=../doc/addendum.pdf
+elif test -f 'PLATFORM.;1' ; then
+  CDMountStyle='VMS'
+  PlatFile='PLATFORM.;1'
+  CommonFile='COMMON.;1'
+  ADKFile='ADK.;1'
+  LicFile='LICAGGR.;1'
+  SetupLic='SETUPLIC.;1'
+  ReadmeFile='README.TXT;1'
+  ReleaseNotes='RELEASE.PDF;1'
+  UsersManual='../DOC/TPUM.PDF;1'
+  RefManual='../DOC/TPRM.PDF;1'
+  Addendum=../DOC/ADDEMDUM.PDF
+elif test -f 'PLATFORM;1' ; then
+  CDMountStyle='VMS2'
+  PlatFile='PLATFORM;1'
+  CommonFile='COMMON;1'
+  ADKFile='ADK;1'
+  LicFile='LICAGGR;1'
+  SetupLic='SETUPLIC;1'
+  ReadmeFile='README.TXT;1'
+  ReleaseNotes='RELEASE.PDF;1'
+  UsersManual='../DOC/TPUM.PDF;1'
+  RefManual='../DOC/TPRM.PDF;1'
+  Addendum='../DOC/ADDEMDUM.PDF;1'
+elif test -f 'PLATFORM' ; then
+  CDMountStyle='VMS3'
+  PlatFile='PLATFORM'
+  CommonFile='COMMON'
+  ADKFile='ADK'
+  LicFile='LICAGGR'
+  SetupLic='SETUPLIC'
+  ReadmeFile='README.TXT'
+  ReleaseNotes='RELEASE.PDF'
+  UsersManual='../DOC/TPUM.PDF'
+  RefManual='../DOC/TPRM.PDF'
+  Addendum='../DOC/ADDEMDUM.PDF'
+else
+  echo " "
+  echo " "
+  echo "INSTALL ERROR!"
+  echo " "
+  echo "    Cannot find distribution files.  You must be in the"
+  echo "    directory containing the distribution files when you run"
+  echo "    setuptec."
+  exit
+fi
+
+
+if test -f $DistDir/$LicFile -a "$BATCH" != "y"; then
+  echo " "
+  echo " "
+  echo " "
+  echo "********************************************************"
+  echo "*   Press a <Cr> to begin viewing the Tecplot Inc.     *"
+  echo "*   software license agreement.                        *"
+  echo "*                                                      *"
+  echo "*   Once displayed, press the spacebar to go from one  *"
+  echo "*   page to the next.                                  *" 
+  echo "********************************************************"
+  echo " "
+  echo " "
+  echo " "
+  read dummyarg
+  echo " "
+  echo " "
+  echo " "
+  more $DistDir/$LicFile
+  echo " "
+  echo " "
+  OptionPrompt "Do you accept the license agreement?  If so, enter \"accept\":"
+  licreply=`OptionRead`
+
+  if test "$licreply" != "accept" -a "$licreply" != "ACCEPT" ; then
+    exit
+  fi
+fi
+
+
+
+
+isok=0
+while test $isok -eq 0
+do
+  isok=1
+  if test "$BATCH" = "n" ; then
+    echo " "
+    echo " "
+    echo "Enter the name (including the full path) for a new or "
+    echo "existing Tecplot Home Directory."
+    OptionPrompt ":"
+    DestinationDir=`OptionRead`
+  fi
+
+
+
+  if test ! -d $DestinationDir ; then
+    if test "$BATCH" = "y" ; then
+      GoCreate=y
+    else
+      echo " "
+      echo "Err:  $DestinationDir does not exist."
+      echo " "
+      OptionPrompt "Do you want to create it now? [Y]:"
+      GoCreate=`OptionRead Y`
+    fi
+    if test "$GoCreate" = "y" -o "$GoCreate" = "Y" ; then
+      echo "Creating $DestinationDir"
+      mkdir $DestinationDir
+      if test $? -eq 0 ; then
+        isok=1
+      fi
+    else
+      isok=0
+    fi
+  fi
+  if test $isok -eq 1 -a ! -w $DestinationDir ; then
+    echo "Err:  Do not have write permission in $DestinationDir "
+    isok=0
+  fi
+done
+
+cd $DestinationDir
+#
+# Reset the destination dir variable to be an absolute path
+#
+DestinationDir=`pwd`
+
+#
+# Make sure directory is not near the root.
+#
+cd ..
+ParentDir=`pwd`
+cd $DestinationDir
+
+if test "$DestinationDir" = "/" -o \
+        "$ParentDir" = "/" ; then
+  echo "Err: Not allowed to install near the root of the unix filesystem"
+  exit
+fi
+
+
+if test "$DistDir" = "$DestinationDir" ; then
+  echo " "
+  echo "Error:"
+  echo " "
+  echo "Not allowed to install in the same directory where"
+  echo "the distribution source files are located"
+  echo " "
+  echo " "
+  exit 
+fi
+
+InstallLogFile="$DestinationDir/install.log"
+if test -f $InstallLogFile ; then
+  rm -f $InstallLogFile
+fi
+date > $InstallLogFile
+echo "Installation Directory : $DestinationDir" >> $InstallLogFile
+echo "Distribution Directory : $DistDir" >> $InstallLogFile
+
+
+
+
+#
+# Check to see if this smells like an executable upgrade only....
+#
+OverwriteExistingInstall=y
+for file in tecplot.cfg tecplot.fnt tecplot.ntb bin/tecplot bin/preplot 
+do
+  if test ! -f $file ; then
+    OverwriteExistingInstall=n
+  fi
+done
+
+if test "$OverwriteExistingInstall" = "y"  ; then
+  VerString=`bin/tecplot -h $DestinationDir -c $DestinationDir/tecplot.cfg -v |\
+             grep 'Tecplot [0-9][0-9]*.[0-9]-[0-9]-[0-9][0-9]*'               |\
+             sed "s/Tecplot //"                                               |\
+             sed "s/ .*$//"`
+
+  n='[0-9][0-9]*'
+  MajTecVersion=`echo $VerString | sed "s/\.$n-$n-$n//"`
+  MinTecVersion=`echo $VerString | sed "s/^$n\.//" | sed "s/-$n-$n//"`
+  MajTecRevision=`echo $VerString | sed "s/^$n.$n-//" | sed "s/-$n//"`
+  MinTecRevision=`echo $VerString | sed "s/^.*\-//"`
+
+  if test $MajTecVersion -ne $CurMajTecVersion -o \
+          $MinTecVersion -ne $CurMinTecVersion ; then
+    echo "You have selected a home directory that is for version $MajTecVersion.$MinTecVersion."
+    echo "This distribution is for version $CurMajTecVersion.$CurMinTecVersion."
+    echo "Please specify an alternate directory."
+    echo " "
+    exit
+  fi
+fi
+
+
+if test "$BATCH" = "y" -o "$OverwriteExistingInstall" = "y"; then
+  InstallOption=1
+else
+  InstallOption=0
+  while test $InstallOption -lt 1 -o $InstallOption -gt 3 ; do
+    echo " "
+    echo " "
+    echo "Choose install option"
+    echo "   1.  Purchased license installation"
+    echo "   2.  Evaluation installation"
+    echo "   3.  License Manager installation only."
+    OptionPrompt "[1]:"
+    InstallOption=`OptionRead 1`
+    echo " "
+    echo " "
+  done
+
+  if test $InstallOption -eq 3 ; then
+    InstallOption=Purchase
+    InstallLMOnly="y"
+  elif test $InstallOption -eq 2 ; then
+    InstallOption=Eval
+  else
+    InstallOption=Purchase
+  fi
+fi 
+
+
+
+
+#
+# Present the list of platforms to the installer
+#
+
+
+NumExes=`awk "NR == 1 {print}" $DistDir/$PlatFile`
+Exes=
+CurLine=1
+while test $CurLine -le $NumExes 
+do
+  CurLine=`expr $CurLine + 1`
+  NextExe=`awk "NR == $CurLine {print}" $DistDir/$PlatFile`
+  Exes="$Exes $NextExe"
+done
+
+if test "$BATCH" != "y" -a $NumExes -gt 1 ; then
+  QuerySys
+  cd $DestinationDir
+fi
+
+DescLine=`expr $CurLine + 1`
+
+if test $NumExes -eq 1 ; then
+  RawTarExe=$Exes
+  ExeOption=1
+  FinalTarExe="`GetFinalFileSyntax $RawTarExe`"
+elif test "$BATCH" = "y" ; then
+  ExeOption=1
+else
+  ExeOption=0
+  while test $ExeOption -lt 1 -o $ExeOption -gt $NumExes ; do
+    echo " "
+    echo " "
+    echo "Platforms available in this distribution:"
+    echo " "
+    echo "    | Platform | CPU/Model    | Operating System               "
+    echo "    +----------+--------------+--------------------------------"
+
+    CurExe=0
+    DefaultModel=unknown
+    while test $CurExe -lt $NumExes ;
+    do
+      CurLine=`expr $DescLine + $CurExe`
+      CurExe=`expr $CurExe + 1`
+      if test $CurExe -lt 10 ; then
+        LineNum=" $CurExe"
+      else
+        LineNum="$CurExe"
+      fi
+      printf "$LineNum. "
+      awk "NR == $CurLine {print}" $DistDir/$PlatFile
+      AwkOption='$'$CurExe
+      RawTarExe=`echo $Exes | awk "{print $AwkOption}"`
+      if test "$RawTarExe" = "$ModelGuess" ; then
+        DefaultModel="$CurExe"
+      fi
+    done
+
+    if test "$DefaultModel" != "unknown" ; then
+      echo " "
+      echo "It appears that you are running on a [$PlatformGuess] with OS [$OSVersionGuess]."
+      echo " "
+      OptionPrompt "Enter the correct platform option [$DefaultModel]:"
+      ExeOption=`OptionRead $DefaultModel`
+      #
+      # Must be a digit.
+      #
+      case $ExeOption in
+        0*|1*|2*|3*|4*|5*|6*|7*|8*|9* ) ;;
+                  *) ExeOption=-1;;
+      esac
+    fi
+
+    if test $ExeOption -eq 0 ; then
+      echo " "
+      OptionPrompt "Enter the correct platform option:"
+      ExeOption=`OptionRead`
+    fi
+
+    if test $ExeOption -ge 1 -a $ExeOption -le $NumExes ; then
+      AwkOption='$'$ExeOption
+      RawTarExe=`echo $Exes | awk "{print $AwkOption}"`
+      FinalTarExe="`GetFinalFileSyntax $RawTarExe`"
+      if test ! -f $DistDir/$FinalTarExe ; then
+        echo " "
+        echo "Err: installation files for selected platform are not available."
+        echo " "
+        echo " "
+        ExeOption=0
+      fi
+    fi
+  done
+fi
+
+
+if test "$OverwriteExistingInstall" = "y"; then
+  echo " "
+  echo " "
+  echo "You have selected an existing home directory to install to."
+  echo "Continuing with the install will do an upgrade of the application and"
+  echo "support utilities only.  The Add-On development sub-directories will be "
+  echo "completely rebuilt including all sample add-ons.  If you have made any "
+  echo "customizations to the sample add-ons then please save them off elsewhere "
+  echo "and re-run this setup script."
+  echo " "
+  echo "Continuing with this upgrade will not alter any of the main "
+  echo "configuration files such as tecplot.cfg, tecplot.add, or tecplot.ntb."
+  echo " "
+  OptionPrompt "Please confirm that you want to upgrade [N]:"
+  ConfirmUpgrade=`OptionRead N`
+  if test "$ConfirmUpgrade" = "n" ; then
+    echo " "
+    exit
+  else
+    echo " "
+    echo "Performing executable upgrade only......"
+    echo " "
+  fi
+fi
+
+
+CommonTarDirsToExtract=
+IncludeDocs=n
+
+UsersManualsExist=y
+if test ! -f $DistDir/$UsersManual -o \
+        "$InstallLMOnly" = "y" ; then
+  UsersManualsExist=n
+fi
+
+if test "$InstallLMOnly" = "y" ; then
+  TarZList="$FinalTarExe"
+else
+  TarZList="$CommonFile $FinalTarExe"
+  if test -f $DistDir/$ADKFile ; then
+    TarZList="$TarZList $ADKFile"
+  fi
+fi
+
+
+if test "$OverwriteExistingInstall" = "y" ; then
+  CommonTarDirsToExtract="bin app-defaults"
+
+  cd $DestinationDir
+
+  /bin/rm -rf adk bin/*.old bin/*/*.old lib/*.old lib/*/*.old lib/*/*/*.old  > /dev/null 2>&1
+
+  for file in bin/* bin/*/* lib/* lib/*/* lib/*/*/* app-defaults/*
+  do
+    if test -f $file ; then
+      echo "moving $file to $file.old"
+      mv $file $file.old
+    fi
+  done
+else
+  if test "$BATCH" = "y" ; then
+    IncludeDocs=n
+    IsCorrect=y
+  else
+    IsCorrect=n
+  fi
+
+  if test "$UsersManualsExist" = "y"; then
+    while test "$IsCorrect" != "y" -a "$IsCorrect" != "Y" 
+    do
+      echo " "
+      echo " "
+      echo " "
+      echo " "
+      echo "The base component that includes the Tecplot program, some support"
+      echo "utilities and the Add-on Developers Kit.  Answer the following"
+      echo "question(s) to determine what additional components you want installed."
+      echo " "
+      echo " "
+      if test "$UsersManualsExist" = "y"; then
+        echo " "
+        echo "Include the Tecplot Users Manual and Reference Manual (13MB) (Y/N) $BACKC"
+        read IncludeDocs
+      fi
+      echo " "
+      echo " "
+      echo "The following will be installed:"
+      echo " "
+      echo "   - Tecplot Base installation (including Add-on Developers Kit)"
+    
+      if test "$IncludeDocs" = "y" -o "$IncludeDocs" = "Y" ; then
+        echo "   - Tecplot Users and Reference Manuals"
+      fi
+      echo " "
+      echo " "
+      OptionPrompt "Is this correct? [Y]:"
+      IsCorrect=`OptionRead Y`
+    done
+  fi
+fi
+
+if test "$TarFlags" = "" ; then
+  TarFlagLine=`expr $NumExes + $NumExes + 1 + $ExeOption`
+  TarFlags=`awk "NR == $TarFlagLine {print}" $DistDir/$PlatFile`
+fi
+
+
+
+echo " "
+echo "Extracting TECPLOT to $DestinationDir ...... Tar Flags = $TarFlags"
+
+for file in $TarZList ; do
+  if test ! -f $DistDir/$file ; then
+    echo "------------- Install Error $DistDir/$file is missing"
+  else
+    echo "Installing             : $file" | tee -a $InstallLogFile
+    case $file in
+      common) TarDirsToExtract=$CommonTarDirsToExtract
+              ;;
+           *) if test "$InstallLMOnly" = "y" ; then
+                TarDirsToExtract=tlm
+              else
+                TarDirsToExtract=
+              fi
+              ;;
+    esac
+    cat "$DistDir/$file" | $UncompressUtility | tar "$TarFlags" - $TarDirsToExtract
+#
+# Unfortunately, gnu tar generates errors if directories requested do not
+# exist.  Check errors only if not requesting specific directories.
+#
+    if test "$TarDirsToExtract" = "" ; then
+      if test $? -ne 0 ; then
+        echo "Error while extracting tar file!!!!!" | tee -a $InstallLogFile
+        echo "try using setuptec -xvf"
+        exit
+      fi
+    fi
+  fi
+done
+
+
+if test "$InstallLMOnly" = "n" ; then
+  if test ! -f $DestinationDir/bin/tecplot  ; then
+    echo "********************************************"
+    echo "* Err: Installation incomplete...          *"
+    echo "*      Please call Tecplot Inc. and        *"
+    echo "*      Ask for Tecplot Technical Support.  *"
+    echo "********************************************"
+    echo "Err: Tecplot missing!!!" >> $InstallLogFile
+    exit
+  fi
+fi
+
+if test "$IncludeDocs" = "y" -o "$IncludeDocs" = "Y" ; then
+  DocDir=$DestinationDir/doc/tecplot
+  echo " "
+  echo "Installing Tecplot documentation..."
+  if test ! -d $DocDir ; then
+    mkdir -p $DocDir
+    chmod 755 $DestinationDir/doc
+    chmod 755 $DocDir
+  fi
+  cp "$DistDir/$UsersManual" $DocDir/tpum.pdf
+  cp "$DistDir/$RefManual" $DocDir/tprm.pdf
+  if test -f $DistDir/$Addendum ; then
+    cp "$DistDir/$Addendum" $DocDir/addendum.pdf
+  fi
+  chmod 444 $DocDir/*
+fi
+
+
+if test "$OverwriteExistingInstall" = "n" -a "$InstallLMOnly" = "n" ; then
+  if test "$InstallOption" = "Eval" ; then
+    LicenseNumbers=L0000
+  elif test "$BATCH" = "n" ; then
+    echo " "
+    echo "You will now be prompted for your license number. This number can"
+    echo "be found on a sheet labeled "Save!" which is sent with your software."
+    echo "This number should be available when requesting Technical Support. By "
+    echo "entering this number now, it will be available for users from the "
+    echo "Tecplot menu Help/About Tecplot. You may just press return if you can "
+    echo "not find the license number at this time."
+    echo " "
+    OptionPrompt "Enter your license number(s): "
+    LicenseNumbers=`OptionRead LUnknown`
+  fi
+
+  echo "License Number entered : $LicenseNumbers" >> $InstallLogFile
+
+  if test "$LicenseNumbers" != "" ; then
+    echo $LicenseNumbers > $DestinationDir/tecplot.lic
+    chmod 444 $DestinationDir/tecplot.lic
+  fi
+fi
+
+
+#
+# Filter the Tecplot resource file to pick the best font size for the platform.
+#
+if test "$InstallLMOnly" = "n" ; then
+  echo " "
+  echo "Selecting default Tecplot application resources..."
+  TecplotAppResFile=$DestinationDir/app-defaults/Tecplot${CurMajTecVersion}0
+  if test ! -f $TecplotAppResFile ; then
+    echo "********************************************"
+    echo "* Err: Installation incomplete...          *"
+    echo "*      Please call Tecplot Inc. and        *"
+    echo "*      Ask for Tecplot Technical Support.  *"
+    echo "********************************************"
+    echo "Err: Tecplot application resource file ($TecplotAppResFile) is missing!!!" >> $InstallLogFile
+    exit
+  fi
+  
+  mv "$TecplotAppResFile" "$TecplotAppResFile.original"
+  OSName=`uname -a | sed -e 's/ .*$//'`
+  if test "$OSName" = "Linux" -o "$OSName" = "Darwin" ; then
+    # use the new look and feel
+    sed -e 's/^NEW_LOOK_AND_FEEL://' -e 's/^OLD_LOOK_AND_FEEL:/!/' "$TecplotAppResFile.original" > "$TecplotAppResFile"
+  else
+    # use the old look and feel
+    sed -e 's/^OLD_LOOK_AND_FEEL://' -e 's/^NEW_LOOK_AND_FEEL:/!/' "$TecplotAppResFile.original" > "$TecplotAppResFile"
+  fi
+  rm -f "$TecplotAppResFile.original"
+fi
+
+#
+# Setup file permisions.
+#
+echo " "
+echo "Setting file permissions..."
+
+
+
+ChmodRecursive ()
+{
+  if test -d $1 ; then
+    find $1 -print $2 -exec chmod $3 {} \; > /dev/null 2>&1
+  fi
+}
+
+echo "Checking file permissions in $DestinationDir.  Please wait........."
+#
+# Go make sure permissions are ok.
+#
+ChmodRecursive "$DestinationDir" "-type d" 755
+
+#
+# Read Only files.... All plain files in these directories
+# are set to read only.
+#
+
+ChmodRecursive "$DestinationDir" "-type f" 644
+
+chmod 660 $InstallLogFile
+
+#
+# Make sure a few special files are marked as executable
+#
+for subdir in bin       \
+              bin/mesa  \
+              lib       \
+              lib/mesa  \
+              lib/sgiopengl \
+              adk/bin
+do
+  if test -d $DestinationDir/$subdir ; then
+    for file in $DestinationDir/$subdir/*
+    do
+      if test -f $file ; then
+        chmod 755 $file
+      fi
+    done
+  fi
+done
+
+for file in tlm/tlmadmin \
+            tlm/tlmrpt \
+            tlm/tlmd \
+            tlm/tlmusage \
+            tlm/xtlmadmin \
+            tlm/xtlmrpt 
+do
+  if test -f $file ; then
+    chmod 755 $file
+  fi
+done
+
+if test -d $DestinationDir/adk/samples ; then
+  chmod 755 $DestinationDir/adk/samples/*/CustomMake
+fi
+
+if test -f "$DestinationDir/Tecplot 10.app/Contents/Resources/Tecplot 10.sh" ; then
+  chmod 755 "$DestinationDir/Tecplot 10.app/Contents/Resources/Tecplot 10.sh"
+fi
+
+if test -f "$DestinationDir/Tecplot 10.app/Contents/Resources/GetDisplayNum.pl" ; then
+  chmod 755 "$DestinationDir/Tecplot 10.app/Contents/Resources/GetDisplayNum.pl"
+fi
+
+if test -f "$DestinationDir/Tecplot 10.app/Contents/MacOS/Tecplot 10" ; then
+  chmod 755 "$DestinationDir/Tecplot 10.app/Contents/MacOS/Tecplot 10"
+fi
+
+if test -f "$DestinationDir/tlm/AmtecLM.app/Contents/MacOS/AmtecLM" ; then
+  chmod 6755 "$DestinationDir/tlm/AmtecLM.app/Contents/MacOS/AmtecLM"
+fi
+
+if test -f "$DestinationDir/tlm/LicenseSetup.app/Contents/MacOS/LicenseSetup" ; then
+  chmod 6755 "$DestinationDir/tlm/LicenseSetup.app/Contents/MacOS/LicenseSetup"
+fi
+
+
+
+showcomponent()
+{
+  OptionPrompt "$1$BACKC"
+  if test $2 = "y" ; then
+    if test "$3" = "y" -o "$3" = "Y" ; then
+      echo "Yes"
+    else
+      echo "No"
+    fi
+  else
+    echo "No (Unavailable)"
+  fi
+}
+
+showinstalledcomponents()
+{
+  echo "Component Installation Checklist:"
+  echo " "
+  echo "  Component                            Installed?"
+  echo "-------------------------------------------------"
+  echo "  Base Tecplot components..............  Yes"
+# echo "  Guided Tour component................  Yes"
+  showcomponent "  Tecplot Users and Reference Manuals..  " $UsersManualsExist $IncludeDocs
+  echo " "
+  echo " "
+}
+
+showinstallheader()
+{
+  echo " "
+  echo " "
+  echo "#######################################################"
+  echo "#                                                     #"
+  echo "$1"
+  echo "#                                                     #"
+  echo "#######################################################"
+  echo " "
+  echo " "
+}
+
+
+
+promptforlicense()
+{
+  echo " "
+  echo " "
+  echo " "
+  echo "The next step in the installation process is to install the"
+  echo "Tecplot license key.  You DON'T need to install a license"
+  echo "key if one of the following is true:"
+  echo " "
+  echo "       - You are only going to run the Tecplot demo."
+  echo "       - You have a network license and the license manager"
+  echo "         will be running on a different machine."
+  echo " "
+  echo "If you are installing a purchased license but are not ready to"
+  echo "install the license key at this time then choose to obtain"
+  echo "the server code now and install the key later (by running the"
+  echo '"setuplic" program).'
+  echo " "
+  echo " "
+  LicOption=0
+  while test $LicOption -lt 1 -o $LicOption -gt 3 ; do
+    echo " "
+    echo "Choose one of the following options:"
+    echo " "
+    echo "   1.  Obtain server code now and install the key later."
+    echo "   2.  Obtain server code now and install the key now."
+    echo "   3.  Skip license key installation on this machine."
+    echo "       (License key will be managed on a different machine)"
+    echo " "
+    OptionPrompt "Enter Option [1]:"
+    LicOption=`OptionRead 1`
+  done
+  echo " "
+  echo " "
+  echo " "
+  case $LicOption in
+    1) $DistDir/$SetupLic showlicensecode
+       echo " "
+       echo "Contact Tecplot Inc. or your distributor to obtain your license key."
+       echo "Please send the above server code AND your Tecplot License Number."
+       echo "Later, go to the Tecplot home directory "'('"$DestinationDir"')'
+       echo "and run ./setuplic to install the key"
+       echo " "
+       echo " "
+       echo " "
+       GOINSTALLPW=n;;
+     
+    2) GOINSTALLPW=y;;
+    3) /bin/rm -f $DestinationDir/tecplot.ntb > /dev/null 2>&1
+       echo "TLM" > $DestinationDir/tecplot.ntb
+       chmod 444 $DestinationDir/tecplot.ntb
+       GOINSTALLPW=n;;
+  esac
+  
+  if test "$GOINSTALLPW" = "y" -o "$GOINSTALLPW" = "Y" ; then
+    echo "Attempting to install license... " >> $InstallLogFile
+    $DistDir/$SetupLic $DestinationDir installkey
+  fi
+}
+
+
+
+if test "$OverwriteExistingInstall" = "y" ; then
+
+  showinstallheader "#           TECPLOT UPDATE IS NOW COMPLETE            #"
+
+  echo "Files related to the previous version of Tecplot have been"
+  echo "renamed to have the .old extension.  You may remove these"
+  echo "if you wish and/or merge your previous settings into the"
+  echo "new distribution."
+  echo " "
+elif test "$InstallLMOnly" = "y" ; then
+  showinstallheader "#  TECPLOT LICENSE MANAGER INSTALL IS NOW COMPLETE    #"
+  promptforlicense
+elif test "$BATCH" = "y" ; then
+  showinstallheader "#  TECPLOT DISTRIBUTION INSTALLATION IS NOW COMPLETE  #"
+  showinstalledcomponents
+elif test "$InstallOption" = "Eval" ; then
+  
+  showinstallheader "#     Your TECPLOT installation is now complete.      #"
+
+  echo "You can run Tecplot on your own but will be limited to reading"
+  echo "in the data supplied with this installation."
+  echo " "
+  echo "If you would like to evaluate Tecplot with your own data, contact "
+  echo "Tecplot Inc. (or your local distributor) with the following "
+  echo "host code and you will be given a password that allows you to run "
+  echo "the full version of Tecplot for a limited time."
+  $DistDir/$SetupLic showevalcode $DestinationDir
+  echo " "
+  echo " "
+  showinstalledcomponents
+else
+  showinstallheader "#  TECPLOT DISTRIBUTION INSTALLATION IS NOW COMPLETE  #"
+  showinstalledcomponents
+  promptforlicense
+fi
+
+
+
+#
+# Copy setuplic to the destination directory regardless in
+# case this needs to be run again at a later date.
+#
+# Also copy over the readme file and the release notes.
+#
+if test "$DestinationDir" != "$DistDir" ; then
+  /bin/cp $DistDir/$SetupLic $DestinationDir/setuplic
+  /bin/cp $DistDir/$ReadmeFile $DestinationDir/readme.txt
+  /bin/cp $DistDir/$ReleaseNotes $DestinationDir/release.pdf
+  chmod 755 $DestinationDir/setuplic
+  chmod 444 $DestinationDir/readme.txt
+fi
+
+if test "$OverwriteExistingInstall" = "n" -a "$InstallLMOnly" = "n"; then
+  #
+  # Last minute fixups for tecplot.add file.  If selected addons
+  # are not available for certain platforms then do not turn them
+  # on by default.  Currently  only the hdf loader is not available
+  # on some platforms...
+  #
+    for finickyaddons in loadhdf
+    do
+      if test ! -f $DestinationDir/lib/lib$finickyaddons.so -a \
+              ! -f $DestinationDir/lib/lib$finickyaddons.sl ; then
+        chmod 660 $DestinationDir/tecplot.add
+        mv $DestinationDir/tecplot.add $DestinationDir/tecplot.add.old
+        grep -v $finickyaddons $DestinationDir/tecplot.add.old > $DestinationDir/tecplot.add
+        rm $DestinationDir/tecplot.add.old
+        chmod 644 $DestinationDir/tecplot.add
+      fi
+    done
+fi  
+
+if test `uname` = "Darwin" ; then
+  USER=`id -un`
+  if test "$USER" = "root" ; then
+    GROUP=`id -gn`
+    echo "Changing file ownership to $USER:$GROUP"
+    find $DestinationDir -exec chown $USER:$GROUP {} \;
+  fi
+fi
+

@@ -1,0 +1,205 @@
+#!MC 1000
+$!SETSTYLEBASE FACTORY
+$!PAPER 
+  BACKGROUNDCOLOR = WHITE
+  ISTRANSPARENT = YES
+  ORIENTPORTRAIT = NO
+  SHOWGRID = YES
+  SHOWRULER = YES
+  SHOWPAPER = YES
+  PAPERSIZE = LETTER
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    }
+  RULERSPACING = ONEINCH
+  PAPERGRIDSPACING = HALFINCH
+  REGIONINWORKAREA
+    {
+    X1 = -0.05
+    Y1 = -0.05
+    X2 = 11.05
+    Y2 = 8.55
+    }
+$!COLORMAP 
+  CONTOURCOLORMAP = SMRAINBOW
+$!COLORMAPCONTROL RESETTOFACTORY
+### Frame Number 1 ###
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = GREEN
+  XYPOS
+    {
+    X = 1.7504
+    Y = 2.4456
+    }
+  WIDTH = 7.3108
+  HEIGHT = 4.7615
+$!FRAMENAME  = 'ID=1 TITLE="Export BMP" MODE=MODAL' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.99999742383134115897
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.65129503386400000586
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.91174619162
+    Y = 12.6933409546
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'File:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 16.6939443535
+    Y = 13.4547013432
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 50
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'FileName' 
+  TEXT = 'TF:                                                                              ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 91.9183727209
+    Y = 13.4547019403
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 50
+    FILLCOLOR = CUSTOM2
+    }
+  ANCHOR = CENTER
+  MACROFUNCTIONCOMMAND = 'BrowseFile' 
+  TEXT = '...' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 9.85572571906
+    Y = 39.5177609673
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = HOLLOW
+    MARGIN = 90
+    COLOR = CUSTOM2
+    FILLCOLOR = CUSTOM2
+    }
+  LINESPACING = 2.2
+  MACROFUNCTIONCOMMAND = 'Depth' 
+  TEXT = '<math>7</math>  8-bit Color\n<math>7</math>  24-bit Color' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 4.34974191112
+    Y = 85.8063722522
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Image Width in Pixels:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 39.8597819378
+    Y = 85.6243735692
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 50
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'ImageWidth' 
+  TEXT = 'TF:            ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 39.7147395592
+    Y = 70.0925181014
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 60
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'ExportRegion' 
+  TEXT = 'OPT:                                              ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 11.3078297703
+    Y = 69.3875174662
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Export Region:' 
+$!SETSTYLEBASE CONFIG

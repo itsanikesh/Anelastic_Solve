@@ -1,0 +1,96 @@
+#!/bin/sh
+#
+# Make sure TECHOME is setup. Allow it to be overridden by TEC100HOME.
+#
+if test "$TEC100HOME" != "" ; then
+  # override any TECHOME setting.
+  TECHOME=$TEC100HOME
+  export TECHOME
+elif test "$TECHOME" = "" ; then
+  echo "$0: TECHOME environment variable is not set." 1>&2
+  exit 1
+fi
+
+
+ShowProtoType()
+{
+    ProtoLine=`grep -ni "$1[( ]" TEC*.h | grep LINKTOADDON | head -1`
+    if test "$ProtoLine" != "" ; then
+      File=`echo $ProtoLine | sed 's/:.*$//'`
+      #
+      # Pull out the prototype
+      #
+      LineNum=`echo $ProtoLine                           | \
+               sed 's/^[a-zA-Z][a-zA-Z0-9_\.]*://'  | \
+               sed 's/:.*$//'`
+
+      EndLineNum=`tail +$LineNum $File | grep -n ';' | sed 's/:.*$//' | head -1`
+      #
+      # If this is an "X" function then pull out the ArgList stuff
+      #
+      IsX=`echo $1 | grep 'X$'`
+      if test "$IsX" != "" ; then
+        for file in $TECHOME/include/TEC*.h
+        do
+          $TECHOME/bin/extarglist $1 < $file
+          if test $? = 0 ; then
+            break
+          fi
+        done
+      fi
+      echo " "
+      tail +$LineNum $File     | \
+          head -$EndLineNum    | \
+          sed -e 's/LINKTOADDON //' -e 's/STDCALL //' -e 's/^/  /'
+    else
+      echo " "
+      echo "------ Prototype unavailable --------"
+      echo " "
+    fi
+}
+
+
+
+if test "$1" = "-a" ; then
+  ShowMode=All
+  shift
+elif test "$1" = "-i" ; then
+  ShowMode=InlineProtoOnly
+  shift
+else
+  ShowMode=Normal
+fi
+
+if test "$ShowMode" = "All" ; then
+  FunctionList=`grep -i tec $TECHOME/adk/doc/TecUtil.lst`
+else
+  FunctionList=`grep -i $1 $TECHOME/adk/doc/TecUtil.lst`
+fi
+
+
+
+
+if test "$ShowMode" != "InlineProtoOnly" ; then
+  echo " "
+  echo " " 
+  echo "---------------------------------------------"
+
+  for F in $FunctionList
+  do
+    echo $F
+  done
+
+  echo "---------------------------------------------"
+  echo " " 
+  echo " "
+fi
+
+cd $TECHOME/include
+
+for Function in $FunctionList
+do
+  ShowProtoType $Function
+  if test "$ShowMode" != "All" ; then
+    exit
+  fi
+done

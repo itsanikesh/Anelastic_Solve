@@ -1,0 +1,251 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>ijk blanking</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=927>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+ol.whs3 {list-style: decimal;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nPlot\nijk blanking");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>ijk blanking</h1>
+
+<p>IJK-blanking is available only for 3-D volume zones. IJ-blanking is 
+ available for 2-D surface zones and uses the same dialog as IJK-blanking. 
+ IJK-blanking removes a selected portion of one IJK-ordered zone from the 
+ plot. This allows you to create cut-away plots, plots showing the exterior 
+ of some data set with a section cut-away to show the interior.</p>
+
+<p>&nbsp;</p>
+
+<p>You define the blank region by specifying the following:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2">The IJ- or IJK-ordered 
+ zone in which the blanking is to be performed.</p></li>
+	
+	<li class=kadov-p><p class="whs2">I-, J-, and K-index ranges 
+ for the blank region, either using specific index values or percentages 
+ of the index range. Only I- and J-index ranges are needed for IJ-blanking.</p></li>
+	
+	<li class=kadov-p><p class="whs2">Whether Tecplot should 
+ blank the interior or exterior of the defined region.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>To use IJK-blanking, you must have an IJ- or IJK-ordered zone, and the 
+ current frame must be in the 2D or 3D Cartesian plot type. Unlike value-blanking, 
+ which operates on all zones within a single frame, IJK-blanking can only 
+ be used on a single zone within a frame, and the zone must be IJ- or IJK-ordered.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Include 
+ IJK-Blanking:</I></span> Select this check box to turn on IJK-blanking.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Domain:</I></span> 
+ Specify the blanking domain by choosing the appropriate option:</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Interior:</I></span> 
+ Cells within the specified index ranges are blanked; those outside are 
+ plotted. This creates a hole in the plotted zone. Use this option to create 
+ cut-away plots.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Exterior:</I></span> 
+ Cells outside the specified index ranges are blanked; those inside are 
+ plotted. This is a convenient way to create a plot of a 3-D sub-zone, 
+ without having to create the sub-zone.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Zone:</I></span> 
+ Select a zone for the IJK-blanking from the drop-down.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Select 
+ IJK-Range Using Index Value:</I></span> Set the format for specifying the 
+ IJK-maximum and minimum range values to the index values for the data 
+ set range. Tecplot always stores IJK-ranges as percentages, if you use 
+ index values to specify the blanking region, Tecplot internally converts 
+ to percentages.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Select 
+ IJK-Range Using % of Max:</I></span> Set the format for specifying the IJK-maximum 
+ and minimum range values as a percentage of the maximum index values for 
+ the data set range.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>I-Start:</I></span> 
+ Start of the I-range.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>I-End:</I></span> 
+ End of the I-range.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>J-Start:</I></span> 
+ Start of the J-range.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>J-End:</I></span> 
+ End of the J-range.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>K-Start:</I></span> 
+ Start of the K-range. (This option is inactive for IJ-ordered zones.)</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>K-End</I></span>: 
+ End of the K-range. (This option is inactive for IJ-ordered zones.)</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>To use IJK-blanking:</p>
+
+<ol type="1" class="whs3">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">From the Plot menu, choose 
+ IJK-Blanking. The IJK-Blanking dialog appears.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Select the Include IJK-Blanking 
+ check box to turn on IJK-blanking for the current frame. IJK-blanking 
+ does not take effect until this option is turned on, nor are any of the 
+ other controls sensitive.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Specify the domain of 
+ the IJK-blanking by choosing one of the following option buttons: <span 
+ style="margin-left: 40px; font-style: italic;"><I>Interior:</I></span><span style="margin-left: 40px;"> 
+ Cells within the specified index ranges are blanked. Those outside are 
+ plotted. This creates a hole in the zone. </span><span style="margin-left: 40px; font-style: italic;"><I>Exterior:</I></span><span 
+ style="margin-left: 40px;"> Cells outside the specified index ranges are 
+ blanked. Those inside are plotted. This plots a sub-zone of the zone.</span></p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Select the zone to which 
+ IJK-blanking is applied from the Zone drop-down. The zone must be IJK-ordered. 
+ You may select only one zone at a time.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Specify the format in 
+ which you will specify the index ranges by selecting one of the following 
+ options: <span style="font-style: italic;"><I>Select IJK-Ranges Using Index 
+ Values:</I></span> If you select this option, you specify the I-, J-, and 
+ K-index ranges using actual minimum and maximum indices. <span style="font-style: italic;"><I>Select 
+ IJK-Ranges Using % of Max:</I></span> If you select this option, you specify 
+ the I-, J-, and K-index ranges as start and end percentages of the maximum 
+ index. For example, you could blank the middle third of a data set by 
+ setting the start percentage to 33.3 and the end percentage to 66.6.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">Enter the I-, J- and 
+ K-index ranges in the fields provided.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">When you save a layout, 
+ macro, or stylesheet, the IJK-blanking index ranges are stored as the 
+ percentage of the maximum index regardless of how you chose to enter them. 
+ This way, one file can be used for different zone sizes.</p></li>
+</ol>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

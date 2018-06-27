@@ -1,0 +1,23 @@
+Simple Fortran Example Addon.
+
+
+Description:  This addon simply shows how to manipulate
+              field data using FORTRAN.   Two methods are
+              described, one simple and one a bit more involved.
+              The simple method is not very efficient.
+
+
+Tecutil funcitons used:
+
+              TECUTILADDONREGISTERINFO
+              TECUTILDATASETGETINFO
+              TECUTILDATASETISAVAILABLE
+              TECUTILDATAVALUEGETBYZONEVAR
+              TECUTILDATAVALUEGETRAWPTR
+              TECUTILDATAVALUESETBYZONEVAR
+              TECUTILDIALOGERRMSG
+              TECUTILLOCKOFF
+              TECUTILLOCKON
+              TECUTILMENUADDOPTION
+              TECUTILSETFLAGSONVARVALUECHANGE
+              TECUTILZONEGETINFO

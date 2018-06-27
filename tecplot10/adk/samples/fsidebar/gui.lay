@@ -1,0 +1,369 @@
+#!MC 1000
+$!SETSTYLEBASE FACTORY
+$!PAPER 
+  BACKGROUNDCOLOR = WHITE
+  ISTRANSPARENT = NO
+  ORIENTPORTRAIT = NO
+  SHOWGRID = YES
+  SHOWRULER = YES
+  SHOWPAPER = YES
+  PAPERSIZE = LETTER
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    CUSTOM1
+      {
+      WIDTH = 3
+      HEIGHT = 3
+      }
+    }
+  RULERSPACING = ONEINCH
+  PAPERGRIDSPACING = ONETENTHCENTIMETER
+  REGIONINWORKAREA
+    {
+    X1 = -0.2727
+    Y1 = 0.1533
+    X2 = 8.797
+    Y2 = 7.183
+    }
+$!COLORMAP 
+  CONTOURCOLORMAP = SMRAINBOW
+$!COLORMAPCONTROL RESETTOFACTORY
+### Frame Number 1 ###
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CYAN
+  HEADERCOLOR = GREEN
+  XYPOS
+    {
+    X = 1.3878E-16
+    Y = 1.3878E-16
+    }
+  WIDTH = 2.3
+  HEIGHT = 7.5
+$!FRAMENAME  = 'ID=1 TITLE="fsidebar" SIDEBAR=T' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.37481481481413342
+    GRSPACING = 0.1
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 1.2222222222200003
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 95.2755905512
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=Data Type=PushButton' 
+  TEXT = 'Data      ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 89.501312336
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=Alter Type=PushButton' 
+  TEXT = 'Alter      ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 83.7270341207
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=Contour Type=PushButton' 
+  TEXT = 'Contour' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 77.9527559055
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=Scatter Type=PushButton' 
+  TEXT = 'Scatter ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 72.1784776903
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN5 Type=PushButton' 
+  TEXT = 'Task05 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 66.4041994751
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN6 Type=PushButton' 
+  TEXT = 'Task06 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.84697021568
+    Y = 60.6299212598
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN7 Type=PushButton' 
+  TEXT = 'Task07 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 95.2755905512
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN8 Type=PushButton' 
+  TEXT = 'Task08 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 89.501312336
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN9 Type=PushButton' 
+  TEXT = 'Task09 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 83.7270341207
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN10 Type=PushButton' 
+  TEXT = 'Task10 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 77.9527559055
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN11 Type=PushButton' 
+  TEXT = 'Task11 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 72.1784776903
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN12 Type=PushButton' 
+  TEXT = 'Task12 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 66.4041994751
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN13 Type=PushButton' 
+  TEXT = 'Task13 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.1286713075
+    Y = 60.6299212598
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=BTN14 Type=PushButton' 
+  TEXT = 'Task14 ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 27.3878808627
+    Y = 53.8057742782
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=ZoomIn Type=PushButton' 
+  TEXT = 'Zoom In   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 27.3878808627
+    Y = 48.031496063
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=ZoomOut Type=PushButton' 
+  TEXT = 'Zoom Out' 
+$!ATTACHGEOM 
+  POSITIONCOORDSYS = FRAME
+  ANCHORPOS
+    {
+    X = 50.9594520258
+    Y = 100
+    }
+  RAWDATA
+1
+2
+1.97056877482E-06 0 
+1.97056877482E-06 -40.7602190971 
+$!SETSTYLEBASE CONFIG

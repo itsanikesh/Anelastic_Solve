@@ -1,0 +1,605 @@
+#!MC 1000
+$!SETSTYLEBASE FACTORY
+$!PAPER 
+  BACKGROUNDCOLOR = WHITE
+  ISTRANSPARENT = NO
+  ORIENTPORTRAIT = NO
+  SHOWGRID = YES
+  SHOWRULER = YES
+  SHOWPAPER = YES
+  PAPERSIZE = LETTER
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    CUSTOM1
+      {
+      WIDTH = 3
+      HEIGHT = 3
+      }
+    }
+  RULERSPACING = ONEINCH
+  PAPERGRIDSPACING = ONETENTHCENTIMETER
+  REGIONINWORKAREA
+    {
+    X1 = -1.388
+    Y1 = -4.15
+    X2 = 16.81
+    Y2 = 9.955
+    }
+$!COLORMAP 
+  CONTOURCOLORMAP = SMRAINBOW
+$!COLORMAPCONTROL RESETTOFACTORY
+### Frame Number 1 ###
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = GREEN
+  XYPOS
+    {
+    X = 0.11811
+    Y = -3.3206
+    }
+  WIDTH = 15.341
+  HEIGHT = 9.2261
+$!FRAMENAME  = 'ID=1 MODE=MODELESS TITLE="Get Style Exerciser" OKCLOSEBUTTON=T HELPBUTTON=T' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 1.0000415087806002745
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.60142643661825812007
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.05306607224
+    Y = 4.26712236349
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TAB1' 
+  TEXT = 'TAB:Group=1                                                                                                                                                                                                                                  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' 
+### Frame Number 2 ###
+$!CREATENEWFRAME 
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM26
+  HEADERCOLOR = RED
+  XYPOS
+    {
+    X = 0.62992
+    Y = 0.35433
+    }
+  WIDTH = 14.944
+  HEIGHT = 8.3733
+$!FRAMENAME  = 'TABPAGE=T ID=2 POS=2 TITLE="Zone/Map"' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 1.0001102890011401847
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.56037362706726767669
+    GRSPACING = 0.1
+    }
+$!LINKING 
+  BETWEENFRAMES
+    {
+    LINKFRAMESIZEANDPOSITION = YES
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.37106509973
+    Y = 95.2981322052
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = '' 
+  TEXT = 'Style attributes for zone or map:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 25.818184619
+    Y = 95.2981322052
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'ZoneOrMap' 
+  TEXT = 'TFS:        ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.635
+    Y = 4.417
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'StyleResult' 
+  TEXT = 'TRO:                                                                                                                                                                                                                                        \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' 
+### Frame Number 3 ###
+$!CREATENEWFRAME 
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM26
+  HEADERCOLOR = CYAN
+  XYPOS
+    {
+    X = 0.62992
+    Y = 0.35433
+    }
+  WIDTH = 14.944
+  HEIGHT = 8.3733
+$!FRAMENAME  = 'TABPAGE=T ID=3 POS=3 TITLE="Global Style"' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 1.0000989971752949348
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.56036730012365476572
+    GRSPACING = 0.1
+    }
+$!LINKING 
+  BETWEENFRAMES
+    {
+    LINKFRAMESIZEANDPOSITION = YES
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.37106509973
+    Y = 95.2981322052
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=LBL1 Type=Label' 
+  TEXT = 'Global Style:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.635
+    Y = 4.417
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=GlobalStyle Type=ReadOnlyText' 
+  TEXT = 'TRO:                                                                                                                                                                                                                                        \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' 
+### Frame Number 4 ###
+$!CREATENEWFRAME 
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM26
+  HEADERCOLOR = BLUE
+  XYPOS
+    {
+    X = 0.62992
+    Y = 0.35433
+    }
+  WIDTH = 14.944
+  HEIGHT = 8.3733
+$!FRAMENAME  = 'TABPAGE=T ID=1 POS=1 TITLE="Specific"' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 1.0001102890011401847
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.56037362706726767669
+    GRSPACING = 0.1
+    }
+$!LINKING 
+  BETWEENFRAMES
+    {
+    LINKFRAMESIZEANDPOSITION = YES
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 30.7144707452
+    Y = 88.0293679506
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Offset1' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 30.7144707452
+    Y = 79.7995584167
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Offset2' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 33.8595456917
+    Y = 69.3252553735
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'S1' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 33.8595456917
+    Y = 61.0954458395
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'S2' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 33.8595456917
+    Y = 52.8656363056
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'S3' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 33.8595456917
+    Y = 44.6358267716
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'S4' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 33.8595456917
+    Y = 36.4060172377
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'S5' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 33.8595456917
+    Y = 28.1762077037
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'S6' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.2264906513
+    Y = 17.0544912147
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'Units' 
+  TEXT = 'N/A' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 28.2106788109
+    Y = 16.9537401574
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'GetValue' 
+  TEXT = 'Get Value' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 88.0293679506
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'Offset1Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 79.7995584167
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'Offset2Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 69.3252553735
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'S1Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 61.0954458395
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'S2Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 52.8656363056
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'S3Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 44.6358267716
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'S4Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 36.4060172377
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'S5Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 28.1762077037
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'S6Value' 
+  TEXT = 'TF:                                       ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6424656001
+    Y = 16.9537401574
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'GetValueResult' 
+  TEXT = 'TF:                                       ' 
+$!SETSTYLEBASE CONFIG

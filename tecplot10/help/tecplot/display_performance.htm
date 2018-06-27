@@ -1,0 +1,356 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Display Performance</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=2607>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ol.whs1 {list-style: decimal;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nWorkspace\nDisplay Performance");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Display Performance</h1>
+
+<h1>Performance Dialog</h1>
+
+<h3>Best Practices For Rendering Performance</h3>
+
+<p>The factory settings in the Performance dialog are designed for moderately-sized 
+ data and may need adjusting to optimize Tecplots 
+ rendering performance. There are many combinations of “Plot Approximation” 
+ and “Graphics Cache” modes, however two combinations meet most user's 
+ needs.</p>
+
+<p>&nbsp;</p>
+
+<ol type="1" class="whs1">
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">For moderate to large 
+ size data, turn on approximation plots and set the “Plot Approximation” 
+ mode to “Automatic” when dealing with one frame or “Non-Current Frames 
+ Always Approximated” for multiple frames. Also set the “Graphics Cache” 
+ mode to “Cache All Graphics”.</p></li>
+	
+	<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+		class=kadov-p><p class="whs2">For large to very large 
+ size data (usually determined when option #1 is not providing responsive 
+ interactive performance), set the “Plot Approximation” mode to “All Frames 
+ Always Approximated” and the “Graphics Cache” mode to “Cache only Lightweight 
+ Graphics Objects”.</p></li>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>In both cases, adjust the “Approximate Plot as % of Full Plot” value 
+ to give an acceptable balance between good interactive performance and 
+ sufficient detail.</p>
+
+<p>&nbsp;</p>
+
+<h3>Rendering</h3>
+
+<h4>Plot Approximation</h4>
+
+<p><span style="font-style: italic;"><I>Use Auto Redraw:</I></span> When selected, 
+ Tecplot will automatically redraw the plot whenever style or data changes. 
+ Some users prefer to turn this option off while setting multiple style 
+ settings and then manually pressing Tecplot's Redraw or Redraw All button 
+ on the sidebar to see a full plot. Please note that even if Tecplot is 
+ in the middle of an auto-redraw it can be interrupted with a mouse click 
+ or key press. Note that this toggle is directly available on the Tecplot 
+ sidebar in the Performance menu.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Approximate Plots for Better Speed:</I></span> 
+ When selected, Tecplot builds an approximate representations of the plot. 
+ The degree of detail of the approximation is controlled by the other Plot 
+ Approximation settings. Note that this toggle is directly available on 
+ the Tecplot sidebar in the Performance menu.</p>
+
+<p>&nbsp;</p>
+
+<p>Tecplot has three approximate modes: automatic, non-current frames always 
+ approximated, and all frames always approximated.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Automatic:</I></span> When selected, and 
+ if the number of data points is above the point threshold, (see below) 
+ Tecplot will render the approximate plot for style, data, and interactive 
+ view changes followed immediately by the full plot. This option provides 
+ for good interactive performance with the final plot always displayed 
+ in the full representation.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Non-Current Frames Always Approximated:</I></span> 
+ When only one frame exists this option is exactly like automatic mode. 
+ If more than one frame exists the current frame is set to automatic mode 
+ while the other frames are always approximated.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>All Frames Always Approximated:</I></span> 
+ When selected, and if the number of data points is above the point threshold, 
+ Tecplot will only render the approximate plot in any frame. To see the 
+ full representation press the Redraw or Redraw All button on the sidebar.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Point Threshold for Automatic Approximation:</I></span> 
+ This value controls when Tecplot will consider using approximate plots 
+ (if approximate plots are turned on). The value to use is highly dependent 
+ on the computer's hardware capabilities. A computer with lots of RAM and 
+ a high performance graphics card with good OpenGL hardware acceleration 
+ can have a much larger number than the factory default.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Approximate Plot as % of Full Plot:</I></span> 
+ This value controls the percentage of geometric detail represented by 
+ the approximate plot. The larger the percentage the more closely the approximation 
+ represents the original plot but the interactive performance is reduced. 
+ This number should be adjusted until there is a balance between good interactive 
+ performance and sufficient detail. Usually the percentage should be set 
+ to be less than or equal to 50. If values larger than 50% are needed to 
+ provide sufficient detail consider not using approximate plots at all.</p>
+
+<p>&nbsp;</p>
+
+<h4>Graphics Cache</h4>
+
+<p>Tecplot uses OpenGL to render plots. OpenGL provides for the ability 
+ to cache graphic instructions for rendering and can re-render the cached 
+ graphics much faster than having Tecplot send the instructions again. 
+ This is particularly true for interactive manipulation of a plot. However 
+ this performance potential comes at the cost of using more memory. If 
+ the memory need is too high the overall performance could be less. Tecplot 
+ has three graphics cache modes: cache all graphics, cache only lightweight 
+ graphics objects, and do not cache graphics.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Cache All Graphics:</I></span> When selected, 
+ Tecplot assumes there is enough memory to generate the graphics cache. 
+ Assuming this is true Tecplot's rendering performance will be optimal 
+ for interactive manipulation of plots.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Cache Only Lightweight Graphics Objects:</I></span> 
+ Lightweight objects include approximate plots and some other minor items 
+ but do not include full plots. For memory constrained problems this is 
+ a good setting. Consider using this option in conjunction with the “Plot 
+ Approximation” mode set to “All Frames Always Approximated”.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Do Not Cache Graphics:</I></span> When 
+ memory constraints are very limited consider using this option. If you 
+ intend on interacting with the plot also consider setting the “Plot Approximation” 
+ mode set to “All Frames Always Approximated”. </p>
+
+<p>&nbsp;</p>
+
+<h4>High Quality Font Usage</h4>
+
+<p>The Windows and Linux 32 bit versions of Tecplot support high quality 
+ TrueType font usage. Windows platforms are shipped with the TrueType fonts 
+ used by Tecplot. On the Linux platforms they have to be obtained and installed 
+ (see the Release Notes). Tecplot has three high quality font modes: when 
+ possible, for large characters only, and never.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>When Possible:</I></span> When selected, 
+ Tecplot uses any of its TrueType fonts that are available for any size 
+ text. This produces the best rendering quality however it is somewhat 
+ slower for large amounts of text.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>For Large Characters Only:</I></span> 
+ When selected, Tecplot uses the TrueType fonts only for larger characters. 
+ Small characters will use Tecplot's built-in stroke fonts. This is a good 
+ blend of quality and performance.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Never:</I></span> When selected, Tecplot 
+ never uses TrueType fonts. This is the default mode for platforms other 
+ than Windows and Linux 32 bit.</p>
+
+<p>&nbsp;</p>
+
+<h4>Image Export Options</h4>
+
+<p>Some graphics card hardware does not support off-screen rendering needed 
+ for exporting images. In addition, most graphic hardware is slower at 
+ producing images off-screen than on-screen. To accommodate a variety of 
+ graphic hardware Tecplot provides two image export modes: safe, and fast.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Safe (Render Image Off-Screen):</I></span> 
+ When selected, Tecplot will render all exported images off-screen. This 
+ allows images to be created that are not bound by the physical size and 
+ state of the Tecplot drawing area.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Fast (Use On-Screen Image):</I></span> 
+ When selected, Tecplot will grab the pixels from the physical Tecplot 
+ drawing area. Any rendering damage, such as occluding windows or partially 
+ drawn images will become part of the exported image as it simply takes 
+ the pixels directly from the physical Tecplot drawing area. In addition 
+ the image size is bound by the physical size of the Tecplot drawing area.</p>
+
+<p>&nbsp;</p>
+
+<h3>Miscellaneous</h3>
+
+<h4>Variable Derivation</h4>
+
+<p>When Tecplot needs to create a nodal variable from a cell-centered one, 
+ it uses a prescribed derivation method. Tecplot provides two such derivation 
+ methods: fast and accurate.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Fast (Linear):</I></span> When selected, 
+ Tecplot uses linear interpolation to derive a nodal variable from a cell 
+ centered one.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Accurate (Laplacian):</I></span> When 
+ selected, Tecplot uses Laplacian interpolation to derive a nodal variable 
+ from a cell centered one.</p>
+
+<p>&nbsp;</p>
+
+<h4>Data I/O</h4>
+
+<p><span style="font-style: italic;"><I>Use Memory Mapped I/O:</I></span> When 
+ selected, Tecplot will use system level memory mapping functions to map 
+ Tecplot variables directly over block data in a binary data file or layout 
+ package file. The advantage of mapping variable data is that Tecplot will 
+ only load the variable when it is first used. In addition the mapped variable 
+ data can be shared between other Tecplot sessions running on the same 
+ machine. Memory mapped I/O is most useful when there is a large number 
+ of data points to load from a file and they are not all being used by 
+ Tecplot at the same time. Only variable data that is in a binary block 
+ format (the default for .plt files generated by Tecplot) can be memory 
+ mapped.</p>
+
+<p>&nbsp;</p>
+
+<h4>Status Information</h4>
+
+<p>Sometimes the updating the status line slows down processing (mainly 
+ when remotely &nbsp;displaying 
+ Tecplot on X terminals) or is just annoying so Tecplot provides several 
+ toggles to turn on or off the status line and tool tips. In addition you 
+ can control what kind of information is shown on the status line.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+    FINALOBJDIR=$OBJBUILDDIR/obj/$PLATFORM/$OBJSUBDIR
+    if test "$CLEANBUILD" = "y" -a -d $FINALOBJDIR; then
+      echo "Clean build: Removing $FINALOBJDIR"
+      rm -rf $FINALOBJDIR
+    fi

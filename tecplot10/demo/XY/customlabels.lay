@@ -1,0 +1,334 @@
+#!MC 900
+$!VarSet |LFDSFN1| = '"monthlabels.plt"'
+$!VarSet |LFDSVL1| = '"Month" "Y"'
+$!SETSTYLEBASE FACTORY
+$!PAPER 
+  BACKGROUNDCOLOR = WHITE
+  ISTRANSPARENT = YES
+  ORIENTPORTRAIT = NO
+  SHOWGRID = YES
+  SHOWRULER = YES
+  SHOWPAPER = YES
+  PAPERSIZE = LETTER
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    }
+  RULERSPACING = ONEINCH
+  PAPERGRIDSPACING = HALFINCH
+  REGIONINWORKAREA
+    {
+    X1 = -0.05
+    Y1 = -0.05
+    X2 = 11.05
+    Y2 = 8.55
+    }
+$!COLORMAP 
+  CONTOURCOLORMAP = SMRAINBOW
+$!COLORMAPCONTROL RESETTOFACTORY
+### Frame Number 1 ###
+$!READDATASET  '|LFDSFN1|' 
+  INCLUDETEXT = NO
+  INCLUDEGEOM = NO
+  VARLOADMODE = BYNAME
+  VARNAMELIST = '|LFDSVL1|' 
+$!REMOVEVAR |LFDSVL1|
+$!FRAMELAYOUT 
+  HEADERCOLOR = RED
+  XYPOS
+    {
+    X = 1
+    Y = 0.25
+    }
+  WIDTH = 9
+  HEIGHT = 8
+$!FRAMEMODE  = XY
+$!FRAMENAME  = 'Frame 001' 
+$!DELETEXYMAPS 
+$!ACTIVEXYMAPS  =  [1-2]
+$!GLOBALXY 
+  DATALABELS
+    {
+    NUMFORMAT
+      {
+      CUSTOMLABEL = 1
+      }
+    DISTANCESKIP = 5
+    }
+  LEGEND
+    {
+    SHOW = YES
+    XYPOS
+      {
+      X = 25.726
+      Y = 89.264
+      }
+    }
+$!XYMAP  [1]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 1
+    XAXISVAR = 1
+    YAXISVAR = 2
+    }
+  LINES
+    {
+    COLOR = RED
+    }
+  SYMBOLS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  BARCHARTS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  ERRORBARS
+    {
+    COLOR = RED
+    }
+$!XYMAP  [2]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 2
+    XAXISVAR = 1
+    YAXISVAR = 2
+    YAXIS = 2
+    }
+  LINES
+    {
+    COLOR = GREEN
+    }
+  SYMBOLS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  BARCHARTS
+    {
+    COLOR = GREEN
+    FILLCOLOR = GREEN
+    }
+  ERRORBARS
+    {
+    COLOR = GREEN
+    }
+$!XYMAP  [3]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 3
+    XAXISVAR = 1
+    YAXISVAR = 2
+    }
+  LINES
+    {
+    COLOR = BLUE
+    }
+  SYMBOLS
+    {
+    COLOR = BLUE
+    FILLCOLOR = BLUE
+    }
+  BARCHARTS
+    {
+    COLOR = BLUE
+    FILLCOLOR = BLUE
+    }
+  ERRORBARS
+    {
+    COLOR = BLUE
+    }
+$!XYMAP  [4]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 4
+    XAXISVAR = 1
+    YAXISVAR = 2
+    YAXIS = 3
+    }
+  LINES
+    {
+    COLOR = CYAN
+    }
+  SYMBOLS
+    {
+    COLOR = CYAN
+    FILLCOLOR = CYAN
+    }
+  BARCHARTS
+    {
+    COLOR = CYAN
+    FILLCOLOR = CYAN
+    }
+  ERRORBARS
+    {
+    COLOR = CYAN
+    }
+$!XYMAP  [5]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 5
+    XAXISVAR = 1
+    YAXISVAR = 2
+    YAXIS = 2
+    }
+  LINES
+    {
+    COLOR = YELLOW
+    }
+  SYMBOLS
+    {
+    COLOR = YELLOW
+    FILLCOLOR = YELLOW
+    }
+  BARCHARTS
+    {
+    COLOR = YELLOW
+    FILLCOLOR = YELLOW
+    }
+  ERRORBARS
+    {
+    COLOR = YELLOW
+    }
+$!XYMAP  [6]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 6
+    XAXISVAR = 1
+    YAXISVAR = 2
+    }
+  LINES
+    {
+    COLOR = PURPLE
+    }
+  SYMBOLS
+    {
+    COLOR = PURPLE
+    FILLCOLOR = PURPLE
+    }
+  BARCHARTS
+    {
+    COLOR = PURPLE
+    FILLCOLOR = PURPLE
+    }
+  ERRORBARS
+    {
+    COLOR = PURPLE
+    }
+$!XYMAP  [7]
+  NAME = '&ZN&' 
+  ASSIGN
+    {
+    ZONE = 7
+    XAXISVAR = 1
+    YAXISVAR = 2
+    }
+  LINES
+    {
+    COLOR = RED
+    }
+  SYMBOLS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  BARCHARTS
+    {
+    COLOR = RED
+    FILLCOLOR = RED
+    }
+  ERRORBARS
+    {
+    COLOR = RED
+    }
+$!XYAXIS 
+  XDETAIL 1
+    {
+    AUTOGRID = NO
+    RANGEMIN = 0.5
+    RANGEMAX = 12.2011698092
+    GRSPACING = 1
+    TICKLABEL
+      {
+      NUMFORMAT
+        {
+        FORMATTING = CUSTOMLABEL
+        CUSTOMLABEL = 1
+        }
+      }
+    }
+$!XYAXIS 
+  YDETAIL 1
+    {
+    RANGEMIN = 1
+    RANGEMAX = 3070.84894639
+    GRSPACING = 500
+    TICKLABEL
+      {
+      NUMFORMAT
+        {
+        CUSTOMLABEL = 1
+        }
+      }
+    TITLE
+      {
+      TITLEMODE = USETEXT
+      TEXT = 'Concentration' 
+      OFFSET = 8.62
+      }
+    }
+$!XYAXIS 
+  YDETAIL 2
+    {
+    AXISPOSITION = 88
+    RANGEMIN = -0.248538061976
+    RANGEMAX = 446.895723139
+    GRSPACING = 50
+    TICKLABEL
+      {
+      NUMFORMAT
+        {
+        CUSTOMLABEL = 1
+        }
+      }
+    TITLE
+      {
+      TITLEMODE = USETEXT
+      TEXT = 'Stress' 
+      }
+    }
+$!XYAXIS 
+  YDETAIL 3
+    {
+    AXISPOSITION = 91
+    RANGEMIN = 150000
+    RANGEMAX = 400025
+    GRSPACING = 50000
+    TICKLABEL
+      {
+      NUMFORMAT
+        {
+        CUSTOMLABEL = 1
+        }
+      }
+    }
+$!XYAXIS 
+  DEPXTOYRATIO = 1
+$!REMOVEVAR |LFDSFN1|
+$!SETSTYLEBASE CONFIG

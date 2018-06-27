@@ -1,0 +1,73 @@
+#!/bin/sh
+
+ADDONUTILDIR=`dirname $0`
+WORDLIST=$ADDONUTILDIR/cwfile
+
+echo "Choose:"
+echo "  1.  Review changes to be made (files are not changed)."
+echo "  2.  Make changes"
+
+read coption
+
+if test $coption -eq 1 ; then
+  chflags=-v
+elif test $coption -eq 2 ; then
+  chflags=
+else
+  echo "Err:  Need 1 or 2"
+  exit
+fi
+
+for file in *
+do
+  DoChange=n
+  case $file in
+     adkutil.c ) ;;
+     ADKUTIL.h ) ;;
+     *.c)   DoChange=y;;
+     *.h)   DoChange=y;;
+     *.cpp) DoChange=y;;
+     *.f)   DoChange=y;;
+     *.F)   DoChange=y;;
+     *) ;;
+  esac
+  if test "$DoChange" = "y" ; then
+    if test ! -w $file ; then
+      echo "Err: Unable to overwrite $file!"
+      exit
+    fi
+    changeword -l $WORDLIST $chflags $file
+  fi
+done
+
+
+if test -f adkutil.c ; then
+  echo " "
+  echo " "
+  echo " "
+  echo "*********************************************"
+  echo "* NOTE:  You are using adkutil.c.  You must *"
+  echo "*        update this (and ADKUTIL.h) to the *"
+  echo "*        versions supplied with the tecplot *"
+  echo "*        distribution.                      *"
+  echo "*        You can obtain them from one of the*"
+  echo "*        sample addons that uses them.      *"
+  echo "*********************************************"
+fi
+
+
+if test -f gui.lay ; then
+  echo " "
+  echo " "
+  echo " "
+  echo "*********************************************"
+  echo "* NOTE:  It appears as if you are using the *"
+  echo "*        Tecplot GUI Builder.  You must run *"
+  echo "*        tecplot, reload gui.lay and run    *"
+  echo "*        the "rebuild" option in the GUI    *"
+  echo "*        builder before proceeding.         *"
+  echo "*********************************************"
+fi
+
+
+

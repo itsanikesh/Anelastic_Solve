@@ -1,0 +1,203 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Triangulate</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=642>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {margin-left: 40px;}
+p.whs3 {font-size: 10pt; margin-left: 40px;}
+p.whs4 {font-size: 10pt; margin-left: 80px;}
+p.whs5 {margin-left: 40px; font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nTriangulate");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Triangulate</h1>
+
+<p>Use the <span style="font-weight: bold;"><B>Triangulate dialog</B></span> to 
+ create a finite-element surface zone from one or more arbitrary source 
+ zones. The source data zones should all lie in the same plane. Triangulation 
+ preserves the accuracy of the data: the resulting zone has the source 
+ data points as nodes and consists of a set of Triangle elements.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p class="whs2"><span style="font-size: 10pt; font-weight: bold;"><font size=2 style="font-size:10pt;"><B>Source 
+ Zone(s):</B></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> Select the zone or zones 
+ to triangulate. If you select more than one zone, they are combined into 
+ one new triangulated zone with any coincident points ignored. The zones 
+ can be ordered or finite-element, although typically they will be irregular 
+ data in I-ordered zones. To select a single zone, click on it in the scrolled 
+ list Select Zone(s).</font></span></p></li>
+</ul>
+
+<p class="whs3">- To select a range of zones:</p>
+
+<p class="whs4">1. Click on the first or 
+ last zone in the range.</p>
+
+<p class="whs4">2. Shift-click on the last 
+ or first zone in the range. </p>
+
+<p class="whs3">- To select a set of arbitrary 
+ zones:</p>
+
+<p class="whs4">1. Click on the first zone 
+ you want.</p>
+
+<p class="whs4">2. Ctrl-click on subsequent 
+ zones until you have selected all the zones in the set.</p>
+
+<ul type="disc" class="whs1">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p class="whs2"><span style="font-size: 10pt; font-weight: bold;"><font size=2 style="font-size:10pt;"><B>Use 
+ Boundary Zone(s):</B></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> Select this check 
+ box if you want to specify a boundary zone, that is, a zone that defines 
+ the boundary of the region to triangulate. This boundary zone must be 
+ I-ordered. It can be either a line that surrounds the data, or a line 
+ that defines an interior boundary. If you do not select a boundary zone, 
+ the triangulation routine assumes that the data is contained within a 
+ convex polygon and that all points in the interior can be connected.</font></span></p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p class="whs5"><span 
+ style="font-weight: bold;"><B>Include Boundary Points:</B></span> Select this 
+ check box if you want to include boundary points in the source data. If 
+ this box is selected, points that are part of the boundary zone are considered 
+ part of the source zones, and hence show up in the resultant triangulation.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p class="whs5"><span 
+ style="font-weight: bold;"><B>Triangle Keep Factor:</B></span> Enter a value 
+ defining bad triangles. At the completion of triangulation, Tecplot attempts 
+ to remove bad triangles from the outside of the triangulation. This does 
+ not include any triangles next to the boundary zone, only those along 
+ the edges where there is no boundary (or the boundary zone points are 
+ excluded). The definition of a bad triangle is stored as the Triangle 
+ Keep Factor as a number between zero (three collinear points) and 0.5 
+ (an equilateral triangle). Values between 0.1 and 0.3 are typical.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>To perform the triangulation, click <span style="font-weight: bold;"><B>Compute</B></span>. 
+ Tecplot displays a dialog while the triangulation is in progress, informing 
+ you of its progress. </p>
+
+<p>&nbsp;</p>
+
+<p>To abort the triangulation, click <span style="font-weight: bold;"><B>Cancel</B></span> 
+ on this dialog.</p>
+
+<p>&nbsp;</p>
+
+<p>When the triangulation is complete, the data set includes a new FE-surface 
+ zone (with Triangle element type) titled &quot;Triangulation.&quot; The 
+ number of triangles in the new zone is reported along with the number 
+ of coincident points ignored.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

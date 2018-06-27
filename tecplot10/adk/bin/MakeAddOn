@@ -1,0 +1,120 @@
+#!/bin/sh 
+#
+# Generic shell script used to run make
+# must run using "." 
+#
+
+#
+# Make sure TECHOME is setup. Allow it to be overridden by TEC100HOME.
+#
+if test "$TEC100HOME" != "" ; then
+  # override any TECHOME setting.
+  TECHOME=$TEC100HOME
+  export TECHOME
+elif test "$TECHOME" = "" ; then
+  echo "$0: TECHOME environment variable is not set." 1>&2
+  exit 1
+fi
+
+MACheckDir ()
+{
+  if test ! -d $1; then
+    echo "Creating directory: $1"
+    mkdir -p $1
+  fi
+}
+
+FINALOBJDIR=$OBJBUILDDIR/obj/$PLATFORM/$OBJSUBDIR
+
+if test "$ISCLEANBUILD" = "y" ; then
+   echo "Cleaning up $FINALOBJDIR"
+   rm -rf $FINALOBJDIR > /dev/null 2>&1
+fi
+
+MACheckDir $FINALOBJDIR
+
+echo "$MAKECMD $LIBTYPE"
+echo "   LIBBASENAME=$LIBBASENAME"
+echo "         CCOMP=$CCOMP" 
+echo "        CFLAGS=$CFLAGS"
+echo "       CPPCOMP=$CPPCOMP"
+echo "      CPPFLAGS=$CPPFLAGS"
+echo "         CPPLD=$CPPLD"
+echo "    CPPLDFLAGS=$CPPLDFLAGS"
+echo "         FCOMP=$FCOMP" 
+echo "        FFLAGS=$FFLAGS"
+echo "         FLIBS=$FLIBS"
+echo "     SOURCEDIR=$SOURCEDIR"
+echo "   OBJBUILDDIR=$OBJBUILDDIR"
+echo "       LDFLAGS=$LDFLAGS"
+echo "            LD=$LD"
+echo "            AR=$AR"
+echo "       ARFLAGS=$ARFLAGS"
+echo "    EXTBASEDIR=$TECHOME/lib/ext"
+echo "TECADDONDEVDIR=$TECADDONDEVDIR"
+echo "     OBJSUBDIR=$OBJSUBDIR"
+echo "      PLATFORM=$PLATFORM"
+echo "        LIBEXT=$LIBEXT"
+
+$MAKECMD $LIBTYPE\
+      LIBBASENAME="$LIBBASENAME"\
+            CCOMP="$CCOMP" \
+           CFLAGS="$CFLAGS"\
+          CPPCOMP="$CPPCOMP"\
+         CPPFLAGS="$CPPFLAGS"\
+            CPPLD="$CPPLD"\
+       CPPLDFLAGS="$CPPLDFLAGS"\
+            FCOMP="$FCOMP" \
+           FFLAGS="$FFLAGS"\
+            FLIBS="$FLIBS"\
+          LDFLAGS="$LDFLAGS"\
+        SOURCEDIR="$SOURCEDIR"\
+      OBJBUILDDIR="$OBJBUILDDIR"\
+               LD="$LD"\
+               AR="$AR"\
+          ARFLAGS="$ARFLAGS"\
+       EXTBASEDIR="$EXTBASEDIR"\
+   TECADDONDEVDIR="$TECADDONDEVDIR"\
+        OBJSUBDIR="$OBJSUBDIR"\
+         PLATFORM="$PLATFORM"\
+           LIBEXT="$LIBEXT"
+
+
+echo " "
+echo " "
+echo "--------------------------------------------------------------------------------"
+echo " "
+if test "$COMPILEHOW" != "release" ; then
+echo " "
+echo "To include this addon in tecplot while testing you have two options:"
+echo " "
+echo "   1.  Add the following command to $TECADDONDEVDIR/tecdev.add:"
+echo " "
+echo '       $!LoadAddon "|$TECADDONDIR|/lib'"$LIBBASENAME"'"'
+echo " "
+echo "       Then run tecplot in development mode:"
+echo " "
+echo "         tecplot -develop"
+echo " "
+echo "                  or"
+echo " "
+echo "   2.  Simply run tecplot and include the full path to the addon:"
+echo " "
+echo "         tecplot -develop $TECADDONDEVDIR/lib/$PLATFORM/test/lib$LIBBASENAME.$LIBEXT"
+echo " "
+else
+echo "To enable this addon for general use, do the following:"
+echo " "
+echo '   1.  Copy the release version of the addon to the lib sub-directory of '
+echo '       the tecplot home directory:'
+echo " "
+echo "       cp $TECADDONDEVDIR/lib/$PLATFORM/release/lib$LIBBASENAME.$LIBEXT "'$TECHOME/lib/.'
+echo " "
+echo '   2.  Add the following command to $TECHOME/tecplot.add:'
+echo " "
+echo '       $!LoadAddon "'"$LIBBASENAME"'"'
+echo " "
+fi
+echo "--------------------------------------------------------------------------------"
+echo " "
+echo " "

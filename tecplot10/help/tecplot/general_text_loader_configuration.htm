@@ -1,0 +1,384 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>General Text Loader Configuration</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=2056>
+<meta name=layout-width content=889>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-family: 'Courier New', monospace; font-weight: bold;}
+p.whs2 {font-weight: bold;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nAdd-Ons\nGeneral Text Loader Configuration");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>General Text Loader Configuration</h1>
+
+<p>A configuration file contains all of the instructions which tell General 
+ Text Loader how to load a particular type of text file. This information 
+ is collected from the dialog fields and written to a file when you click 
+ Save on the main dialog. The configuration file format is similar to the 
+ Tecplot macro language format. Configuration files for the general text 
+ loader are ASCII text files which use a command set that can describe 
+ all loading instructions. Normally you do not need to edit these files, 
+ as they are automatically written by the loader when you select New on 
+ the main dialog.</p>
+
+<p>Note: Editing these configuration files by hand is not recommended.</p>
+
+<p>&nbsp;</p>
+
+<p>All General Text Loader configuration files must start with the line:</p>
+
+<p class="whs1">#!TECPLOT_LOADGEN</p>
+
+<p>If this line is missing, the add-on will not recognize the file as a 
+ configuration file.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs2">Instruction Syntax</p>
+
+<p>Each instruction file contains commands which describe the loading instructions.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs2">Comments</p>
+
+<p>Any text following '#' to the end of the line is ignored.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs2">String Format</p>
+
+<p>When you see the <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>&lt;string&gt;</B></span> 
+ parameter type it is defined as follows:</p>
+
+<p>The string must be enclosed in double quotes. You can include a double 
+ quote character in the string by preceding it with a backslash '\.' For 
+ example:</p>
+
+<p>&quot;This is a normal string&quot;</p>
+
+<p>&quot;This is a \&quot;quote\&quot; inside a string&quot;</p>
+
+<p>&nbsp;</p>
+
+<p class="whs2">List Format</p>
+
+<p>When you see the &lt;list&gt; parameter type it is defined as follows:</p>
+
+<p>One or more number ranges, separated by commas, enclosed in double quotes. 
+ A number range may be a single number, or two numbers separated by a dash. 
+ Optionally, you may use &quot;end&quot; to indicate the last valid number. 
+ For example:</p>
+
+<p>&quot;1&quot;</p>
+
+<p>&quot;1,2-7,3&quot;</p>
+
+<p>&quot;10-end,3,2-5&quot;</p>
+
+<p>&nbsp;</p>
+
+<p class="whs2">Command List</p>
+
+<p>The commands in the file are formatted as follows. They may appear in 
+ any order, and any command may be divided into any number of lines (that 
+ is, all white space, including carriage returns, is ignored). See also 
+ the <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>CONFIGNAME</B></span> 
+ command.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">VERSION 
+ = &lt;integer&gt; # version of the template file (default is 100)</p>
+
+<p class="whs1">&nbsp;&nbsp;# 
+ Note: changing the version number may cause unpredictable behavior</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">TITLE 
+ </p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">SEARCH 
+ = [NONE|LINE|KEYWORD] # default = NONE</p>
+
+<p class="whs1">NAME 
+ = &lt;string&gt; # default = &quot;New Dataset&quot;, ignored if SEARCH 
+ is not NONE</p>
+
+<p class="whs1">LINE 
+ = &lt;integer&gt; # 1-based, ignored if SEARCH is not LINE</p>
+
+<p class="whs1">KEYWORD 
+ = &lt;string&gt; # ignored if SEARCH is not KEYWORD</p>
+
+<p class="whs1">DELIMITER 
+ = [AUTO|TAB|SPACE|SEMICOLON|COMMA|FIXED]</p>
+
+<p class="whs1">WIDTH 
+ = &lt;integer&gt; # Valid only if DELIMITER = FIXED</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">VARIABLES</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">SEARCH 
+ = [NONE|SCAN]</p>
+
+<p class="whs1">NAMES 
+ = &lt;string&gt; &nbsp;# 
+ ignored SEARCH is SCAN, &lt;string&gt; is a comma separated string</p>
+
+<p class="whs1">&nbsp;&nbsp;LOADED 
+ = &lt;all|n1,n2,...nn&gt; # list of variables to be loaded, or ALL to 
+ load all variables</p>
+
+<p class="whs1">STARTLINE 
+ = &lt;integer&gt; # 1-based, ignored if SEARCH=NONE, default = 1</p>
+
+<p class="whs1">ENDLINE 
+ = &lt;integer&gt; &nbsp;# 
+ 1-based, ignored if SEARCH=NONE, default = 1</p>
+
+<p class="whs1">DELIMITER 
+ = [AUTO|TAB|SPACE|SEMICOLON|COMMA|FIXED]</p>
+
+<p class="whs1">WIDTH 
+ = &lt;integer&gt; &nbsp;# 
+ Valid only if DELIMITER = FIXED</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">DATA</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">IGNORENONNUMERICTOKENS 
+ = &lt;boolean&gt; &nbsp;# 
+ default = TRUE</p>
+
+<p class="whs1">IMPORT</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">STARTID 
+ = [FIRSTNUMERICLINE | LINE | KEYWORD]</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">KEYWORD 
+ = &lt;string&gt; # ignored if STARTID is not KEYWORD</p>
+
+<p class="whs1">LINE 
+ = &lt;integer&gt; # 1-based, ignored if STARTIDENTIFICATION is not LINE</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">ENDID 
+ = [FIRSTNONNUMERICLINE | LINE | KEYWORD]</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">KEYWORD 
+ = &lt;string&gt; # ignored if ENDID is not KEYWORD</p>
+
+<p class="whs1">LINE 
+ = &lt;integer&gt; # 1-based, ignored if ENDID is not LINE</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">FORMAT 
+ = [POINT|BLOCK] # default POINT</p>
+
+<p class="whs1">DELIMITER 
+ = [AUTO|TAB|SPACE|SEMICOLON|COMMA|FIXED]</p>
+
+<p class="whs1">WIDTH 
+ = &lt;integer&gt; # Valid only if DELIMITER = FIXED</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">DIMENSION</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">AUTO=&lt;boolean&gt; 
+ &nbsp;# default 
+ = TRUE</p>
+
+<p class="whs1">IMAX=&lt;integer&gt; 
+ &nbsp;# ignored 
+ if AUTO = TRUE, default = 1</p>
+
+<p class="whs1">JMAX=&lt;integer&gt; 
+ &nbsp;# ignored 
+ if AUTO = TRUE, default = 1</p>
+
+<p class="whs1">KMAX=&lt;integer&gt; 
+ &nbsp;# ignored 
+ if AUTO = TRUE, default = 1</p>
+
+<p class="whs1">&nbsp;&nbsp;USEMULTIPLEZONES 
+ = &lt;boolean&gt; # ignored if AUTO = TRUE, default false</p>
+
+<p class="whs1">&nbsp;&nbsp;KEYWORD=&lt;string&gt; 
+ # ignored if USEMULTIPLEZONES = FALSE</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">}</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">GLOBALFILTERS 
+ # filters are applied cumulatively, so lines matching</p>
+
+<p class="whs1"># 
+ any of the criteria are filtered</p>
+
+<p class="whs1">{</p>
+
+<p class="whs1">COMMENT 
+ = &lt;string&gt; # ignore lines beginning with &lt;string&gt;</p>
+
+<p class="whs1">NUMBER 
+ = &lt;integer&gt; # ignore all lines starting with line number &lt;integer&gt;</p>
+
+<p class="whs1">KEYWORD 
+ = &lt;string&gt; # ignore all containing &lt;string&gt; (case insensitive)</p>
+
+<p class="whs1">COLUMNS 
+ = &lt;list&gt; #&lt;list&gt; is a UNIX-style comma separated list of number 
+ ranges</p>
+
+<p class="whs1">&nbsp;&nbsp;# 
+ example: &quot;1-80,100-end&quot;, etc. Must be in double quotes</p>
+
+<p class="whs1">ROWS 
+ = &lt;list&gt; # same as above</p>
+
+<p class="whs1">USEBLANKCELLVALUE 
+ = &lt;boolean&gt; # if TRUE, then the value of blank cells is BLANKCELLVALUE</p>
+
+<p class="whs1">BLANKCELLVALUE 
+ = &lt;double&gt; # blank cell value. Ignored if USEBLANKCELLVALUE is FALSE</p>
+
+<p class="whs1">}</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

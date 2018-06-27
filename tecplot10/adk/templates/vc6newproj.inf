@@ -1,0 +1,96 @@
+$$// newproj.inf = template for list of template files
+$$//  format is 'sourceResName' \t 'destFileName'
+$$//    The source res name may be preceded by any combination of '=', '-',  '!', '?', ':', '#', and/or '*'
+$$//       '=' => the resource is binary
+$$//       '-' => the file should not be added to the project (all files are added to the project by default)
+$$//       '!' => the file should be marked exclude from build
+$$//       '?' => the file should be treated as a help file
+$$//       ':' => the file should be treated as a resource
+$$//       '#' => the file should be treated as a template (implies '!')
+$$//       '*' => bypass the custom AppWizard's resources when loading
+$$//	if name starts with / => create new subdir
+Info.txt	ReadMe.txt
+tgb.cfg	tgb.cfg
+
+$$// ================== CPP ===========================
+$$// Note -- CPPLANGUAGE implies MFCDLL, even though we still
+$$// check for TGB and include the TGB files if specified
+$$IF(AW_CPPLANGUAGE)
+ADDGLBL.h	ADDGLBL.h
+dllroot.cpp	$$root$$.cpp
+dllroot.h	$$root$$.h
+stdafx.h	stdafx.h
+stdafx.cpp	stdafx.cpp
+Resource.h	resource.h
+dllroot.clw	$$root$$.clw
+rootrc.txt	$$root$$.rc
+main.c	main.cpp
+$$IF(AW_USETGB)
+gui.lay	gui.lay
+guicb.c	guicb.cpp
+guidefs.c	guidefs.cpp
+GUIDEFS.h	GUIDEFS.h
+!guibld.c	guibld.cpp
+$$ENDIF
+$$IF(AW_HASENGINE)
+engine.c	engine.cpp
+ENGINE.h	engine.h
+$$ENDIF
+$$ENDIF
+
+$$// =================== C =============================
+$$IF(AW_CLANGUAGE)
+ADDGLBL.h	ADDGLBL.h
+main.c	main.c
+
+$$IF(AW_HASENGINE)
+engine.c	engine.c
+ENGINE.H	ENGINE.h
+$$ENDIF
+
+$$IF(AW_USETGB)
+gui.lay	gui.lay
+guicb.c	guicb.c
+guidefs.c	guidefs.c
+GUIDEFS.h	GUIDEFS.h
+!guibld.c	guibld.c
+$$ENDIF
+
+/Motif
+-addoninfo	Motif\AddOnInfo.x
+-symbols.exp	Motif\symbols.exp
+-custommake	Motif\CustomMake.x
+-makefile	Motif\Makefile.x
+-tgb.cfg	Motif\tgb.cfg
+$$ENDIF
+
+$$// =================== FORTRAN ========================
+$$IF(AW_FORTRANLANGUAGE)
+ADDGLBL.INC	ADDGLBL.INC
+main.F	main.F
+
+$$IF(AW_HASENGINE)
+engine.F	engine.F
+Engine.inc	ENGINE.INC
+$$ENDIF
+
+$$IF(AW_USETGB)
+gui.lay	gui.lay
+guicb.F	guicb.F
+Guicb.inc	GUICB.INC
+Guidefs.inc	GUIDEFS.INC
+!guibld.F	guibld.F
+$$ENDIF
+$$ENDIF
+
+
+
+
+
+
+
+
+
+
+
+

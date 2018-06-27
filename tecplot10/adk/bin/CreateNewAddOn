@@ -1,0 +1,496 @@
+#!/bin/sh
+
+#
+# Make sure TECHOME is setup. Allow it to be overridden by TEC100HOME.
+#
+if test "$TEC100HOME" != "" ; then
+  # override any TECHOME setting.
+  TECHOME=$TEC100HOME
+  export TECHOME
+elif test "$TECHOME" = "" ; then
+  echo "$0: TECHOME environment variable is not set." 1>&2
+  exit 1
+fi
+
+TECVER=100
+#
+#
+#
+root="myaddon"
+AW_TECPLOTVERSION=$TECVER
+AW_ADDONNAME="New Addon"
+AW_COMPANY="Company Name"
+AW_MENUTEXT="Menu Text"
+AW_VERSION="1.0"
+DEFINES=
+
+BaseFiles="Makefile AddOnInfo CustomMake symbols.exp"
+BaseCFiles="$BaseFiles main.c ADDGLBL.h"
+BaseFFiles="$BaseFiles main.F ADDGLBL.INC"
+
+USEBACKC=`echo "\c" | wc -c`
+if test $USEBACKC -eq 0 ; then
+  EFLAG=
+  BACKC="\c"
+else
+  EFLAG=-n
+  BACKC=
+fi
+
+#
+# The templates may be in different places depending on the
+# installation revision.  First look in the new location 
+# (adk/templates).  I
+# in adk/bin/templates....
+#
+
+if test -d $TECHOME/adk/templates ; then
+  TEMPLATEDIR=$TECHOME/adk/templates
+elif test -d $TECHOME/adk/bin/templates ; then
+  TEMPLATEDIR=$TECHOME/adk/bin/templates
+else
+  echo "Err:  Cannot find template files.  Check for a valid "
+  echo "      TECHOME or TEC${TECVER}HOME environment variable."
+  exit
+fi
+
+echo "***************************************************************"
+echo "*                                                             *"
+echo "*                       IMPORTANT!!!!                         *"
+echo "*                                                             *"
+echo "*  This shell script assumes that you are currently in the    *"
+echo "*  directory above where you want your add-on project         *"
+echo "*  to be created.  This shell script will create a sub-       *"
+echo "*  directory for your add-on source code and install a        *"
+echo "*  Makefile and a few other handy files for you there.        *"
+echo "*                                                             *"
+echo "***************************************************************"
+echo " "
+
+#######################################################################
+#                            LANGUAGE                                 #
+#######################################################################
+
+language=a
+while test "$language" = "a" 
+do
+  echo " "
+  echo " "
+  echo "Choose the language you will be using for your add-on"
+  echo "   1.  C"
+  echo "   2.  C++"
+  echo "   3.  FORTRAN"
+  echo " "
+  echo $EFLAG "-> $BACKC"
+
+  read language
+
+  case $language in
+    1) language=c
+       TemplateFiles="$BaseCFiles"
+       DEFINES="$DEFINES -DAW_CLANGUAGE"
+       ;;
+    2) language=cpp
+       TemplateFiles="$BaseCFiles"
+       DEFINES="$DEFINES -DAW_CPPLANGUAGE"
+       ;;
+    3) language=fortran
+       DEFINES="$DEFINES -DAW_FORTRANLANGUAGE"
+       TemplateFiles="$BaseFFiles"
+       ;;
+    *) language=a;;
+  esac
+done
+
+
+
+#######################################################################
+#                            ADDON BASENAME                           #
+#######################################################################
+isok=0
+while test $isok -eq 0 
+do
+  echo " "
+  echo " "
+  echo "Enter the base name of the add-on you want to create."
+  echo "This is the name given to the shared library that tecplot will load."
+  echo "Preferably use all lower case letters and a max of 6 characters:"
+  echo "Use no spaces."
+  echo " "
+  echo $EFLAG "-> $BACKC"
+
+  read root
+
+  spacegrep=`echo $root | grep ' '`
+
+  if test "$spacegrep" != "" ; then
+    echo " "
+    echo " "
+    echo "******** Err:  The base name cannot contain spaces.  Choose a different name"
+  elif test -d $root ; then
+    echo " "
+    echo " "
+    echo "******** Err: $root already exists.  Choose a different name"
+  else
+    isok=1
+  fi
+done
+
+#######################################################################
+#                            COMPANY NAME                             #
+#######################################################################
+echo " "
+echo " "
+echo "Enter your company name.  This will appear in the \"About Add-ons\""
+echo "dialog box in tecplot when your add-on is loaded"
+echo " "
+echo $EFLAG "-> $BACKC"
+
+read AW_COMPANY
+
+
+
+#######################################################################
+#                            TYPE OF ADDON?                           #
+#######################################################################
+
+addontypenum=0
+while test $addontypenum -lt 1 -o $addontypenum -gt 4
+do
+  echo " "
+  echo " "
+  echo "Choose the type of add-on you are creating"
+  echo "   1.  General Purpose"
+  echo "   2.  Data Loader"
+  echo "   3.  Data Converter"
+  echo "   4.  Extended Curve Fit"
+  echo " "
+  echo $EFLAG "-> $BACKC"
+
+  read addontypenum
+done
+  
+case $addontypenum in
+  1) AddOnType=GeneralPurpose
+     DEFINES="$DEFINES -DAW_GENERAL"
+     usingguibuilder=a
+     ;;
+  2) AddOnType=DataLoader
+     DEFINES="$DEFINES -DAW_LOADER"
+     usingguibuilder=y
+     guibuilderdialog=modal
+     ;;
+  3) AddOnType=DataConverter
+     DEFINES="$DEFINES -DAW_CONVERTER"
+     usingguibuilder=n
+     ;;
+  4) AddOnType=ExtendedCurveFit
+     DEFINES="$DEFINES -DAW_CURVEFIT"
+     usingguibuilder=a
+     guibuilderdialog=modal
+     useprobecallback=a
+     ;;
+  *) ;;
+esac
+
+
+#######################################################################
+#                            ADDON ID                                 #
+#######################################################################
+
+
+echo " "
+echo " "
+echo "Enter the name of your add-on.  This will appear in the \"About Add-ons\""
+echo "dialog box in tecplot when you add-on is loaded.  If you are building "
+echo "a loader or a converter or you are extending tecplot's macro language "
+echo "this will be the name used to reference your add-on from the macro.  If"
+echo "you are building a data loader then this will also be the text that"
+echo "appears in the list of importers from the File/Import menu in tecplot."
+echo " "
+echo $EFLAG "-> $BACKC"
+
+read AW_ADDONNAME
+
+
+if test "$AddOnType" = "GeneralPurpose" ; then
+  #
+  # Force the inclusion of state change callback and macro command callback.
+  #
+  DEFINES="$DEFINES -DAW_STATECHANGE -DAW_MACROCOMMANDS"
+#######################################################################
+#                          MENU OPTION TEXT                           #
+#######################################################################
+
+  while test "$usetoolsmenuoption" != "n" -a \
+             "$usetoolsmenuoption" != "y" 
+  do
+    echo " "
+    echo " "
+    echo "Do you want to add an option to the tools menu in tecplot? (y/n)"
+    echo $EFLAG "-> $BACKC"
+
+    read usetoolsmenuoption
+  done
+  
+  usesidebar=a
+  if test "$usetoolsmenuoption" = "y" ; then
+    DEFINES="$DEFINES -DAW_MAKEMENUOPTION"
+    echo " "
+    echo "Enter the text for the menu label"
+    echo " "
+    echo $EFLAG "-> $BACKC"
+    read AW_MENUTEXT
+
+
+#######################################################################
+#                            USING TGB?                               #
+#######################################################################
+    dialogoption=0
+    while test $dialogoption -lt 1 -o $dialogoption -gt 3
+    do
+      echo " "
+      echo " "
+      echo "Choose option for menu callback" 
+      echo "   1.  Launch a modal dialog"
+      echo "   2.  Launch a modeless dialog"
+      echo "   3.  Perform a simple callback"
+      echo " "
+      echo $EFLAG "-> $BACKC"
+  
+      read dialogoption
+    
+      while test "$usesidebar" != "n" -a \
+                 "$usesidebar" != "y" 
+      do
+        echo " "
+        echo " "
+        echo "Do you want to replace Tecplot's sidebar with your own? (y/n)"
+        echo $EFLAG "-> $BACKC"
+
+        read usesidebar
+      done
+
+      case $dialogoption in
+        1) usingguibuilder=y
+           guibuilderdialog=modal
+           ;;
+        2) usingguibuilder=y
+           guibuilderdialog=modeless
+           ;;
+        3) if test "$usesidebar" = "y" ; then
+             usingguibuilder=y
+           else
+             usingguibuilder=n
+           fi
+           ;;
+        *) ;;
+      esac
+    done
+  else
+    while test "$usesidebar" != "n" -a \
+               "$usesidebar" != "y" 
+    do
+      echo " "
+      echo " "
+      echo "Do you want to replace Tecplot's sidebar with your own? (y/n)"
+      echo $EFLAG "-> $BACKC"
+
+      read usesidebar
+    done
+
+    if test "$usesidebar" = "y" ; then
+      usingguibuilder=y
+    else
+      usingguibuilder=n
+    fi
+  fi
+fi
+
+
+#######################################################################
+#                  Extended Curve Fit - Configurable Settings         #
+#                                       and Probe Callback            #
+#######################################################################
+if test "$AddOnType" = "ExtendedCurveFit" ; then
+  while test "$usingguibuilder" != "n" -a \
+             "$usingguibuilder" != "y" 
+  do
+    echo " "
+    echo " "
+    echo "If the curve fit has configurable settings, a dialog must "
+    echo "be created to enter the settings. "
+    echo " "
+    echo "Do you want the curve fit to have configurable settings? (y/n)"
+    echo $EFLAG "-> $BACKC"
+
+    read usingguibuilder
+  done
+  while test "$useprobecallback" != "n" -a \
+             "$useprobecallback" != "y" 
+  do
+    echo " "
+    echo " "
+    echo "When the user probes the data you've curve fit, Tecplot "
+    echo "will either do a linear interpolation between the points"
+    echo "on the curve fit or call a function you provide to"
+    echo "compute more accurate values."
+    echo " "
+    echo "Do you want to create a callback function for more "
+    echo "accurate probing? (y/n)"
+    echo $EFLAG "-> $BACKC"
+
+    read useprobecallback
+  done
+  if test "$useprobecallback" = "y" ; then
+    DEFINES="$DEFINES -DAW_USEPROBECB"
+  fi
+fi
+
+#######################################################################
+#                            DATA CONVERTER                           #
+#######################################################################
+if test "$AddOnType" = "DataConverter" ; then
+    converteroption=0
+    while test $converteroption -lt 1 -o $converteroption -gt 3
+    do
+      echo " "
+      echo " "
+      echo "Choose the type of converter:" 
+      echo "   1.  Standard"
+      echo "   2.  Converter Plus! with dialog"
+      echo "   3.  Converter Plus! without dialog"
+      echo " "
+      echo $EFLAG "-> $BACKC"
+  
+      read converteroption
+    
+      case $converteroption in
+        1) ;;
+        2) DEFINES="$DEFINES -DAW_CONVERTERPLUS"
+           usingguibuilder=y
+           guibuilderdialog=modal
+           ;;
+        3) DEFINES="$DEFINES -DAW_CONVERTERPLUS"
+           ;;
+        *) ;;
+      esac
+    done
+fi
+
+
+#######################################################################
+#                            DATA LOADER OVERRIDE                     #
+#######################################################################
+if test "$AddOnType" = "DataLoader" ; then
+  echo " "
+  echo " "
+  echo "Data loaders can optionally supply a callback to tecplot for the "
+  echo "purpose of allowing the user to override data referenced in layout"
+  echo "files.  This is an advanced feature that is not required."
+  echo "Do you want to include the code for the data override?"
+  echo $EFLAG "-> $BACKC"
+
+  read includeoverride
+
+  if test "$includeoverride" = "y" ; then
+    DEFINES="$DEFINES -DAW_INCLUDEOVERRIDE"
+  fi
+fi
+
+if test "$AddOnType" != "GeneralPurpose" ; then
+  if test "$language" = "c" -o "$language" = "cpp"; then
+    TemplateFiles="$TemplateFiles engine.c ENGINE.h"
+  elif test "$language" = "fortran" ; then
+    TemplateFiles="$TemplateFiles engine.F ENGINE.INC"
+  fi
+  DEFINES="$DEFINES -DAW_HASENGINE"
+fi
+
+if test "$usingguibuilder" = "y" ; then
+
+  if test "$guibuilderdialog" = "modal" -o "$guibuilderdialog" = "modeless" ; then
+    AW_DLGTITLE=
+    while test "$AW_DLGTITLE" = "" 
+    do
+      echo " "
+      echo " "
+      echo "Enter the title to place at the top of the dialog to be launched"
+  
+      echo $EFLAG "-> $BACKC"
+  
+      read AW_DLGTITLE
+    done
+  fi
+
+  if test "$usesidebar" = "y" ; then
+    AW_SBTITLE=
+    while test "$AW_SBTITLE" = "" 
+    do
+      echo " "
+      echo " "
+      echo "Enter a unique name for your sidebar to place in Tecplot's sidebar menu"
+  
+      echo $EFLAG "-> $BACKC"
+  
+      read AW_SBTITLE
+    done
+  fi
+
+  DEFINES="$DEFINES -DAW_USETGB"
+
+  if test "$guibuilderdialog" = "modal" ; then
+    DEFINES="$DEFINES -DAW_ISMODAL"
+  elif test "$guibuilderdialog" = "modeless" ; then
+    DEFINES="$DEFINES -DAW_ISMODELESS"
+  fi
+  if test "$usesidebar" = "y" ; then
+    DEFINES="$DEFINES -DAW_HASSIDEBAR"
+  fi
+  TemplateFiles="$TemplateFiles gui.lay tgb.cfg"
+  if test "$language" = "c" -o "$language" = "cpp"; then
+    TemplateFiles="$TemplateFiles guicb.c guibld.c guidefs.c GUIDEFS.h"
+  else
+    TemplateFiles="$TemplateFiles guicb.F guibld.F GUIDEFS.INC GUICB.INC"
+  fi
+fi
+
+
+
+
+mkdir $root
+cd $root
+
+for file in $TemplateFiles
+do
+  if test "$language" = "cpp" ; then
+    case $file in
+       *.c) newfile=${file}pp ;;
+         *) newfile=$file ;;
+    esac
+  else
+    newfile=$file
+  fi
+  sed -e 's/\$\$root\$\$/qqqq/g'              -e "s/qqqq/$root/g" \
+      -e 's/\$\$AW_ADDONNAME\$\$/qqqq/g'      -e "s/qqqq/$AW_ADDONNAME/g" \
+      -e 's/\$\$AW_TECPLOTVERSION\$\$/qqqq/g' -e "s/qqqq/$AW_TECPLOTVERSION/g" \
+      -e 's/\$\$AW_COMPANY\$\$/qqqq/g'        -e "s/qqqq/$AW_COMPANY/g" \
+      -e 's/\$\$AW_MENUTEXT\$\$/qqqq/g'       -e "s/qqqq/$AW_MENUTEXT/g" \
+      -e 's/\$\$AW_DLGTITLE\$\$/qqqq/g'       -e "s/qqqq/$AW_DLGTITLE/g" \
+      -e 's/\$\$AW_SBTITLE\$\$/qqqq/g'        -e "s/qqqq/$AW_SBTITLE/g" \
+      -e 's/\$\$AW_VERSION\$\$/qqqq/g'        -e "s/qqqq/$AW_VERSION/g" \
+  $TEMPLATEDIR/$file |\
+  $TECHOME/bin/extemplate $DEFINES > $newfile
+done
+
+
+chmod 660 *
+chmod 770 CustomMake
+
+echo " "
+echo " "
+echo " "
+echo "The following files have been created in the $root sub-directory::"
+echo " "
+/bin/ls -l
+echo " "

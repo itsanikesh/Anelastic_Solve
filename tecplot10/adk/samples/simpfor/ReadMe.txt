@@ -1,0 +1,16 @@
+While debugging your DLL, it may be easier for you
+to run Tecplot directly from you Visual C++ DLL project.
+To do this:
+
+1. Select Project/Settings.
+2. Click the Debug tab.
+3. Set "Executable for debug sessions" file to "tecplot.exe" (include the full path if necessary).
+4. Set "Working Directory" to "Debug".
+5. Set "Program Arguments" to "-loadaddon SIMPFOR"
+
+Note: You can avoid compiler warnings about not finding 'GUI.INC', and 'FGLUE.INC' by
+adding the TecplotHome/Include directory to the global list of directories.
+
+For example, if Tecplot is installed in c:\tec90, then from Developer Studio, select
+"Tools/Options..." and click on the "Directories" tab. Add "c:\tec90\Include" to list
+of include directories to search.

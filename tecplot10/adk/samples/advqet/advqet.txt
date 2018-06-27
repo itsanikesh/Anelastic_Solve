@@ -1,0 +1,112 @@
+General
+-------
+The Advanced Quick Edit Tool is an example add-on for demonstrating some
+of the TecUtil ADK functionality to the add-on writer. Additionally, however,
+it provides the general user with a few nice capabilities for manipulating
+groups of text and geometry objects.
+
+Access to the Advanced Quick Edit Tool is achieved by selecting it from
+Tecplot's "Tools" menu. If the option can not be found under the "Tools"
+menu then Tecplot was not instructed to load the add-on. Edit the
+"tecplot.add" file, insert the following line, and restart Tecplot
+(see the ADK Reference manual for details):
+
+  $!LoadAddOn "advqet"
+
+Controls on the Advanced Quick Edit Tool dialog are sensitive to user
+commands only when one or more geometry and/or text objects are selected.
+Some controls are specific to geometry or text and some apply to both.
+If the picked list contains a mix of geometry and text objects then the
+controls that apply specifically to geometric objects will only effect
+those objects. The same is true for those controls that apply specifically
+to text.
+
+Geometric specific controls allow the user to change the coordinate
+system of one or more geometry objects. Text specific controls allow
+the user to change the coordinate and unit system, box margin, line
+spacing, and anchor position of one or more text objects. General
+controls that apply to both text and geometric objects allow the
+user to change the scope, and zone attachment of one or more objects.
+
+Following are a list of controls provided:
+
+* Coordinate System/Character Height
+* Text Margin
+* Text Line Space
+* Text Anchor Location
+* Scope
+* Zone Attachment
+
+
+
+Coordinate System/Character Height
+----------------------------------
+Selected geometry objects may have their coordinate system changed to the
+frame or grid system. Selected text objects can also have their coordinate
+systems changed to the frame or grid system but, in addition, can have their
+character height unit system changed to the frame, point, or grid system.
+
+When switching coordinate system, the Advanced Quick Edit Tool will adjust
+the modified geometry or text object's anchor position and font height to
+ensure that it's visual screen position and size does not change.
+
+
+
+Text Margin:
+------------
+Selected text objects may have the space, or margin, between the text and
+the surrounding text box modified by pressing the text box margin button
+and entering a real number value into the input field and pressing the OK
+button. The margin is measured as a percentage of the character height,
+therefore a value of 100.0 produces a text margin that is as large as the
+height of the text.
+
+The Advanced Quick Edit Tool checks the input field's value and, if a valid
+number, applies it to margin of all selected text objects.
+
+
+
+Text Line Space:
+----------------
+Selected text objects may have their spacing between lines of text modified
+by pressing the text line spacing button and entering a real number value into
+the input field and pressing the OK button. The line spacing is measured
+relative to the character height, therefore a value of 1.0 produces a "normal"
+single lines spacing.
+
+The Advanced Quick Edit Tool checks the input field's value and, if a valid
+number, applies it to line space of all selected text objects.
+
+
+
+Text Anchor Location
+--------------------
+Selected text objects may have their anchor alignment, or location, modified
+by selecting one of the nine grid buttons specifying the horizontal and
+vertical alignment.
+
+When switching the text anchor location, the Advanced Quick Edit Tool will
+always leave the anchor position alone to prevent putting the anchor point
+outside of the frame.
+
+
+
+Scope
+-----
+Selected text and geometry objects may have their scope modified by selecting
+on of the two buttons provided: local and global. Locally scoped text is
+displayed only in the frame in which it is created. If the the text is
+defined as having global scope it will appear in all "like" frames, i.e.
+those frames using the same data set as the one in which the text was created.
+
+
+
+Zone Attachment Or XY Map Attachment
+---------------    -----------------
+Selected text and geometry objects may have their association with a
+particular zone or map modified by pressing the select button and then
+selecting from the list the desired zone or map with which to associate
+the selected objects followed by the OK button.
+
+Selecting "<Unattach Object>" will disassociate the selected objects
+from any zone or map.

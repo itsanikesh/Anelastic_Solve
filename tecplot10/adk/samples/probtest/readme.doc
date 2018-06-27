@@ -1,0 +1,42 @@
+Probe Test Addon.
+
+
+   I.  Description.
+
+       This addon essentially mimicks the probe feature
+       within tecplot. does the following:
+
+           - Adds an option to the tools menu called "Probe Test"
+
+           - When "Probe Test" is selected a call is made to 
+             TecUtilProbeInstallCallback.  This replaces tecplot's 
+             probe mouse mode callback with a new one called 
+             ProbeTestCallback.
+
+           - When the user probes on a plot ProbeTestCallback is
+             called and prints out information about the probe.
+
+
+
+   II.  TecUtil functions used
+
+              TecUtilAddOnRegisterInfo
+              TecUtilDataSetGetInfo
+              TecUtilFrameGetMode
+              TecUtilLockOff
+              TecUtilLockOn
+              TecUtilMenuAddOption
+              TecUtilProbeFieldGetValue
+              TecUtilProbeFieldGetZone
+              TecUtilProbeGetPointIndex
+              TecUtilProbeInstallCallback
+              TecUtilProbeXYGetDepValue
+              TecUtilProbeXYGetDepValue
+              TecUtilProbeXYGetIndValue
+              TecUtilProbeXYGetSourceMap
+              TecUtilStringDealloc
+              TecUtilVarGetName
+              TecUtilXYGetNumMaps
+              TecUtilZoneGetType
+
+

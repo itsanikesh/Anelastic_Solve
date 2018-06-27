@@ -1,0 +1,65 @@
+This addon brings up a dialog box with 2 scales and a button labeled 
+"reset".  Press reset to start.  One scale adjusts the phase
+of the sine wave and the other the amplitude.
+
+
+   The code:
+   ---------
+   
+      sinewave.F:  
+         This contains the standard "InitTecAddOn()" function with
+         calls to register the addon with tecplot and install the menu
+         option.  A function called InitializeSineWave is called to
+         initialize a few global variables.  
+
+
+      guicb.F:     
+         This is the standard module that contains the callback functions
+         for the dialog used by the sinewave addon.  The sinewave
+         dialog is modal and, being lazy I make the "Ok" and "Cancel" 
+         buttons do the same thing - namely close the dialog.
+
+         PhaseScale_SC_D1_CB and PhaseScale_SCD_D1_CB are the callbacks
+         associated with the phase scale.  the "_SC_" form is only called
+         when the user releases the scale after dragging it.  The "_SCD_"
+         form is called at every drag event.  For this situation the 
+         "_SC_" function is left empty and only the "_SCD_" function
+         is being used.
+
+         When a drag event occurs on the "Phase" scale, PhaseScale_SCD_D1_CB
+         is called which updates the phase of the sine wave and calls
+         drawwave() which draws a new sine wave.
+                   
+         Similar with the AmpScale_SC_D1_CB and AmpScale_SCD_D1_CB functions.
+
+
+         Subroutine Reset_BTN_D1_CB is called when the reset button is pushed.
+         This function turns around and calls ResetDataSet() which is in
+         util.F and is discussed below.
+
+
+      util.F       
+         This is where all the real work is done.
+
+         ResetDataSet is called when the by Reset_BTN_D1_CB after the reset
+         button is pressed.  This function does the following:
+
+            - Locks tecplot
+            - clears out all frames in tecplot (i.e. does a $!NEWLAYOUT)
+            - Creates a dataset out of thin air and stuffs it into tecplot.
+            - Sets up an XY plot with a reasonable style.
+            - Draws the first sinewave
+
+
+         drawwave() does the following:
+
+            - Makes sure it is ok to draw.
+            - Gains access to the X and Y arrays inside of tecplot
+            - Calls calcxy() to update the X and Y arrays to new values.
+            - redraws the plot.  (NOTE: sinewave2 is more efficient on how the
+              plot is redrawn)
+
+
+
+         calcxy() simply calculates the x,y coordinates for a new sinewave given
+         the current amplitude and phase.

@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# Generic shell script for building an addon
+# call using "." notation
+# get LIBBASENAME from the 2nd line in AddOnInfo
+#
+
+#
+# Must first establish the TECADDONDEVDIR variable.
+#
+# This shell script must be run from an addon sub-directory
+# below the addon development root directory.
+#
+
+if test "$TECADDONDEVDIR" = "" ; then
+  echo "Err:  You must set TECADDONDEVDIR to be the root"
+  echo "      of your addon development directory tree."
+  echo "      See the section on building add-ons under unix"
+  echo "      in the ADK Users manaul."
+  exit -1
+fi
+
+ADDONUTILDIR=`dirname $0`
+
+
+if test ! -f AddOnInfo ; then
+  echo "Err: Missing AddOnInfo file"
+  exit
+fi
+
+LIBBASENAME="`awk 'NR == 2 {print}' ./AddOnInfo`"
+
+echo "Building $LIBBASENAME addon"
+
+echo " "
+echo " "
+echo " "
+echo " "
+
+. $ADDONUTILDIR/SetStartupVars 
+. $ADDONUTILDIR/SetGlobalVars 
+
+LIBTYPE=shlib
+
+LDFLAGS="$LDLINKFLAGS $BASELDFLAGS $LDSYMEXPORTFLAGS"
+CPPLDFLAGS="$LDLINKFLAGS $CPPBASELDFLAGS $LDSYMEXPORTFLAGS"
+
+if test -f ./CustomMake ; then
+  if test -x ./CustomMake ; then
+    . ./CustomMake
+  else
+    echo ""
+    echo "********************************************************** "
+    echo "*    WARNING: CustomMake exists but is not executable    *" 
+    echo "********************************************************** "
+    echo ""
+  fi
+fi
+
+. $ADDONUTILDIR/MakeAddOn

@@ -1,0 +1,200 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Quick Edit Line Plot Lines</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=608>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nSidebar Options\nQuick Edit Line Plot Lines");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Quick Edit Line Plot Lines</h1>
+
+<p>This area controls whether a line plot is provided for selected mappings, 
+ and if so, which type.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Line 
+ Show:</I></span> Display line plots for the selected maps. This option allows 
+ you to turn off just the Lines map layer for specific maps, without completely 
+ deactivating the maps. The following options are available:</p></li>
+	
+	<ul type="disc" class="whs1">
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Yes:</I></span> 
+ Show the line plots for the selected maps. If the Lines map layer is not 
+ currently active, a dialog appears asking if you wish it activated. Click 
+ OK to activate the Lines layer.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>No:</I></span> 
+ Turn off the line plots for the selected maps.</p></li>
+	</ul>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Line 
+ Type:</I></span> Choose a line type from the drop-down of the following choices:</p></li>
+	
+	<ul type="disc" class="whs1">
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Line 
+ Segment:</I></span> Tecplot connects all data points with a single polyline, 
+ using a straight line segment to connect point 1 with point 2, point 2 
+ with point 3, and so on.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Polynomial 
+ Fit:</I></span> Tecplot fits a polynomial curve to the data points. Use the 
+ Curves page to specify the degree of the polynomial.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Exponential 
+ Fit:</I></span> Tecplot fits an exponential curve to the data points. To use 
+ this line type, Y-values for the variable must be all positive or all 
+ negative.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Power 
+ Fit:</I></span> Tecplot fits a curve of the form Y=a*X**b to the data points. 
+ To use this curve type, Y-values for this variable must be all positive 
+ or all negative, and the X-values must all be positive.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Spline:</I></span> 
+ Tecplot fits a spline (a special type of smooth curve) through every data 
+ point. This curve type assumes that the points of the dependent variable 
+ represent functional values of the independent variable. That is, a spline 
+ is drawn through the data points after sorting in increasing values along 
+ the independent variable axis. The spline is a single-valued function 
+ of the independent variable. Use the Curves page of the Mapping Style 
+ dialog to specify whether the spline is clamped or unclamped.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Para 
+ Spline:</I></span> Tecplot fits a spline under the assumption that both X 
+ and Y are functions of some other independent variables, where s is the 
+ accumulated scaled distance between points (that is, (x,y)=F(s)). No sorting 
+ of the points is performed; the order of the data points from the data 
+ file is used.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Extended:</I></span> 
+ Tecplot uses an add-on to fit a curve to your data.</p></li>
+	</ul>
+</ul>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

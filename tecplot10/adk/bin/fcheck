@@ -1,0 +1,216 @@
+#!/bin/sh
+VoidFunctions1="\
+fextgetcharfromcstring \
+fextgetcharfromcstringptr \
+fextgetfglueversion \
+tecutiladdonregisterinfo \
+tecutildatanodegetrawptr \
+tecutildatanodegetref \
+tecutildatanodesetbyref \
+tecutildatanodesetbyzone \
+tecutildatasetgetvarloadmode \
+tecutildatasetisavailable \
+tecutildatasetrequiressaving \
+tecutildatavaluegetrawptr \
+tecutildatavaluegetref \
+tecutildatavaluesetbyref \
+tecutildialogdroppercentdone \
+tecutildialogerrmsg \
+tecutildialoglaunchpercentdone \
+tecutildialogsetpercentdonetext \
+tecutilframedeletetop \
+tecutilframefitalltopaper \
+tecutilframegetbackgroundcolor \
+tecutilframegetcount \
+tecutilframegetmode \
+tecutilframegetposandsize \
+tecutilframepushtop \
+tecutilgeom2dlinesegmentcreate \
+tecutilgeom2dmpolycreate \
+tecutilgeom2dmpolygetpoint \
+tecutilgeom2dmpolysetpoint \
+tecutilgeom2dmpolysetpolyline \
+tecutilgeom2dpolylinecreate \
+tecutilgeom2dpolylinegetpoint \
+tecutilgeom2dpolylinesetpoint \
+tecutilgeom3dlinesegmentcreate \
+tecutilgeom3dmpolycreate \
+tecutilgeom3dmpolygetpoint \
+tecutilgeom3dmpolysetpoint \
+tecutilgeom3dmpolysetpolyline \
+tecutilgeom3dpolylinecreate \
+tecutilgeom3dpolylinegetpoint \
+tecutilgeom3dpolylinesetpoint \
+tecutilgeomarccreate \
+tecutilgeomarrowheadsetangle \
+tecutilgeomarrowheadsetattach \
+tecutilgeomarrowheadsetsize \
+tecutilgeomarrowheadsetstyle \
+tecutilgeomcirclecreate \
+tecutilgeomcirclesetradius \
+tecutilgeomdelete \
+tecutilgeomellipsecreate \
+tecutilgeomellipsegetsize \
+tecutilgeomellipsesetnumpoints \
+tecutilgeomellipsesetsize \
+tecutilgeomgetbase \
+tecutilgeomgetnext \
+tecutilgeomgetprev \
+tecutilgeomgetxyzanchorpos \
+tecutilgeomrectanglecreate \
+tecutilgeomrectanglegetsize \
+tecutilgeomrectanglesetsize \
+tecutilgeomsetattached \
+tecutilgeomsetcolor \
+tecutilgeomsetfillcolor \
+tecutilgeomsetisfilled \
+tecutilgeomsetlinepattern \
+tecutilgeomsetlinethickness \
+tecutilgeomsetpatternlength \
+tecutilgeomsetpositioncoordsys \
+tecutilgeomsetscope \
+tecutilgeomsetxyzanchorpos \
+tecutilgeomsetzoneormap \
+tecutilgeomsquarecreate \
+tecutilgeomsquaresetsize \
+tecutilgettecplotversion \
+tecutilhelp \
+tecutilimportwriteloaderinstr \
+tecutillockgetcount \
+tecutillockison \
+tecutillockoff \
+tecutillockon \
+tecutilmacroisbatchmodeactive \
+tecutilmacroisrecordingactive \
+tecutilpicklistgetcount \
+tecutilpicklistgetframename \
+tecutilpicklistgetgeom \
+tecutilpicklistgetgeominfo \
+tecutilpicklistgettext \
+tecutilpicklistgetzoneindices \
+tecutilprobefieldgetcell \
+tecutilprobefieldgetplane \
+tecutilprobefieldgetzone \
+tecutilprobegetpointindex \
+tecutilprobexygetindvalue \
+tecutilprobexygetsourcemap \
+tecutilsetalloc \
+tecutilsetclear \
+tecutilsetdealloc \
+tecutilsetremovemember"
+
+
+VoidFunctions2="\
+tecutilsidebarautosensitivity \
+tecutilstatechanged \
+tecutilstringlistalloc \
+tecutilstringlistclear \
+tecutilstringlistcopy \
+tecutilstringlistdealloc \
+tecutilstringlistfromnlstring \
+tecutilstringlistgetstring \
+tecutilstringlistremovestring \
+tecutilstringlistremovestrings \
+tecutilstringlisttonlstring \
+tecutiltecend \
+tecutiltextboxgetposition \
+tecutiltextboxsetcolor \
+tecutiltextboxsetfillcolor \
+tecutiltextboxsetlinethickness \
+tecutiltextboxsetmargin \
+tecutiltextboxsettype \
+tecutiltextcreate \
+tecutiltextdelete \
+tecutiltextgetbase \
+tecutiltextgetnext \
+tecutiltextgetprev \
+tecutiltextgetxypos \
+tecutiltextsetanchor \
+tecutiltextsetangle \
+tecutiltextsetattached \
+tecutiltextsetcolor \
+tecutiltextsetcoordsysandunits \
+tecutiltextsetfont \
+tecutiltextsetheight \
+tecutiltextsetlinespacing \
+tecutiltextsetscope \
+tecutiltextsetxypos \
+tecutiltextsetzoneormap \
+tecutilzonegetinfo \
+guif_buttonsettext \
+guif_dialogdismiss \
+guif_dialoglaunch \
+guif_dialogsettitle \
+guif_labelsettext \
+guif_listappenditem \
+guif_listdeleteallitems \
+guif_listdeleteitematpos \
+guif_listdeselectallitems \
+guif_listgetselecteditems \
+guif_listgetstring \
+guif_listreplaceitem \
+guif_listsetselecteditem \
+guif_listsetselecteditems \
+guif_menuaddseparator \
+guif_menudeleteitem \
+guif_menuitemsettext \
+guif_menusettoggle \
+guif_optionmenuset \
+guif_radioboxsettoggle \
+guif_scalesetlimits \
+guif_scalesetvalue \
+guif_setsensitivity \
+guif_setvisibility \
+guif_textappendstring \
+guif_textfieldgetstring \
+guif_textfieldsetstring \
+guif_textgetstring \
+guif_textinsertstring \
+guif_textsetinsertpos \
+guif_textsetmaxinsertpos \
+guif_textsetmininsertpos \
+guif_textsetstring \
+guif_toggleset"
+
+
+ChangedFunctions="\
+TecUtilDataSetCreate \
+TecUtilDataSetGetInfo \
+TecUtilZoneGetInfo \
+TecUtilStateChanged "
+
+RemovedFunctions="\
+TEcUtilStateChangeDataSetReset \
+TecUtilProbeGetIsNearest \
+TecUtilSetFlagsOnVarValueChange \
+fextregistertimeout \
+fextremovetimeout"
+
+  for function in $VoidFunctions1
+  do
+    GrResult=`grep -li "= *$function" $*`
+    if test "$GrResult" != "" ; then
+      echo "Err: FORTRAN Subroutine coded to return a value.  Subroutine: $function,  File(s): $GrResult"
+    fi
+  done
+  for function in $VoidFunctions2
+  do
+    GrResult=`grep -li "= *$function" $*`
+    if test "$GrResult" != "" ; then
+      echo "Err: FORTRAN Subroutine coded to return a value.  Subroutine: $function,  File(s): $GrResult"
+    fi
+  done
+  for function in $ChangedFunctions
+  do
+    GrResult=`grep -li $function $*`
+    if test "$GrResult" != "" ; then
+      echo "Wrn: FORTRAN Subroutine/Function has changed parameters.  See UM.  Sub/Funct: $function,  File(s): $GrResult"
+    fi
+  done
+  for function in $RemovedFunctions
+  do
+    GrResult=`grep -li $function $*`
+    if test "$GrResult" != "" ; then
+      echo "Wrn: FORTRAN Subroutine/Function has been replaced.  See UM.  Sub/Funct: $function,  File(s): $GrResult"
+    fi
+  done

@@ -1,0 +1,109 @@
+#!/bin/sh
+#
+# Generic startup shell script.  Call using "." from other
+# shell scripts.
+#
+VALIDPLATFORMS="decalpha.32 \
+macx.101 \
+macx.102 \
+compaq.51 \
+hp7xx.11 \
+hp7xx64.11 \
+ibmx.43 \
+ibmx.51 \
+ibmx64.51 \
+linux.24 \
+linuxg23.24 \
+linuxi64.24 \
+linuxg23i64.24 \
+linux64.24 \
+linux.22 \
+linuxa.22 \
+sgix.65 \
+sgix64.65 \
+sgix2.65 \
+sgix.62 \
+sgix3.62 \
+sun4.57 \
+sun464.57"
+
+  FOREGROUND=y
+  COMPILEHOW=quick
+ ISENCRYPTED=n
+ISCLEANBUILD=n
+ OBJBUILDDIR=.
+    LOCALDIR=`pwd`
+     LOGFILE=$LOCALDIR/mlog
+      EXTRAS=
+
+#
+# NOTE: The hp does not like -DDEBUG_ALLOC or -DCRUDEALLOCVERIFY
+#
+if test $# -ge 1 ; then
+  platok=0
+  PLATFORM=$1      
+  for plat in $VALIDPLATFORMS
+  do
+    if test "$plat" = "$PLATFORM" ; then
+      platok=1
+    fi
+  done
+  if test $platok -eq 0 ; then
+    echo "$PLATFORM is not a valid platform"
+    echo "Choose one of: "
+    echo "$VALIDPLATFORMS"
+    exit
+  fi
+  shift
+elif test "$TECADDONDEVPLATFORM" != "" ; then
+  PLATFORM=$TECADDONDEVPLATFORM
+  COMPILEHOW=debug
+else
+  echo "Choose platform:"
+  echo " "
+  for plat in $VALIDPLATFORMS
+  do
+    echo " $plat"
+  done
+  echo "->\c"
+
+  read PLATFORM
+
+  echo " "
+  echo "Choose compile option:"
+  echo "  1.  Quick Compile"
+  echo "  2.  Release Compile"
+  echo "  3.  Debug Compile"
+
+  read compileoption
+
+  case $compileoption in
+    1) COMPILEHOW=quick;;
+    2) COMPILEHOW=release;;
+    3) COMPILEHOW=debug;;
+  esac
+fi
+
+while test $# -ge 1
+do
+  case $1 in
+    -r)          COMPILEHOW=release;;
+    -release)    COMPILEHOW=release;;
+    -q)          COMPILEHOW=quick;;
+    -quick)      COMPILEHOW=quick;;
+    -d)          COMPILEHOW=debug;;
+    -debug)      COMPILEHOW=debug;;
+    -encrypted)  ISENCRYPTED=1;;
+    -cleanbuild) ISCLEANBUILD=y;;
+    -background) FOREGROUND=n ;;
+    -objbuilddir)shift
+                 OBJBUILDDIR=$1 ;;
+    -foreground) FOREGROUND=y ;;
+    -fg)         FOREGROUND=y ;;
+    -D*)         EXTRAFLAGS="$EXTRAFLAGS $1";;
+    -O*)         EXTRAFLAGS="$EXTRAFLAGS $1";;
+    *)           EXTRAS="$EXTRAS $1";;
+  esac
+  shift
+done
+

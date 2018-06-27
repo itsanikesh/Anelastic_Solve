@@ -1,0 +1,9 @@
+To load the Touchstone demo file:
+
+1.  Under the File Menu, go to Import and choose General Text Loader.
+2.  In the Tecplot home directory, go to the Examples directory, then Loaders, then GeneralText. 
+     Choose to view Files of Type "All Files (*.*)".  Select the file NBB400.s2p and click Open. 
+3.  In the General Text Loader dialog, click the Load button, find the file Touchstone.lgc, and 
+     click Open. 
+4.  When you click OK, the General Text Loader will use all of the pre-defined parameters in 
+     configuration file Touchstone.lgc to correctly load the data from file NBB400.s2p.   

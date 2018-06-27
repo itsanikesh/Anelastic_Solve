@@ -1,0 +1,197 @@
+#!/bin/sh
+#
+# This shell script can be used to compile specific
+# addons on specific platforms.  An alternative is to
+# simply go into the sub-directory of the addon(s) you
+# wish to build and run Runmake.
+#
+#
+#     BuildAddOns [platform] [flags] [dirs]
+#
+# if platform is supplied then the following flags can be used:
+#
+#   -r or -release .......... compile release version
+#   -q or -quick ............ compile "quick" version (no opt)
+#   -d or -debug ............ include debugging info in compile.
+#   -buildall ............... build all addons available.
+#   -Dxxxx .................. add define -Dxxxx to the compile flags.
+#
+
+#
+# Make sure TECHOME is setup. Allow it to be overridden by TEC100HOME.
+#
+if test "$TEC100HOME" != "" ; then
+  # override any TECHOME setting.
+  TECHOME=$TEC100HOME
+  export TECHOME
+elif test "$TECHOME" = "" ; then
+  echo "$0: TECHOME environment variable is not set." 1>&2
+  exit 1
+fi
+
+#
+#   Edit the following variables to customize the build
+#   script for your environment.
+#
+echo "Using TECHOME=$TECHOME"
+
+#
+# This shell script MUST be run from the addon development
+# root directory....
+#
+
+TECADDONDEVDIR=`pwd`
+export TECADDONDEVDIR
+ADDONUTILDIR=$TECHOME/adk/bin
+CLEANBUILDFLAG=
+
+BUILDALLADDONS=n
+
+USEBACKC=`echo "\c" | wc -c`
+if test $USEBACKC -eq 0 ; then
+  EFLAG=
+  BACKC="\c"
+else
+  EFLAG=-n
+  BACKC=
+fi
+
+#
+# Initialize variables that can be changed via the
+# command line
+#
+#
+COMPILEHOW=quick
+OBJBUILDDIR=.
+OBJBUILDBASEDIR=
+
+if test $# -ge 1 ; then
+  PLATFORM=$1      
+  shift
+else
+  echo "Choose platform:"
+  echo " "
+  echo " compaq.51"
+  echo " hp7xx.11"
+  echo " hp7xx64.11"
+  echo " ibmx.43"
+  echo " ibmx.51"
+  echo " ibmx64.51"
+  echo " linuxg23.24"
+  echo " linux.24"
+  echo " linuxi64.24"
+  echo " linuxg23i64.24"
+  echo " linux.22"
+  echo " sgix.65"
+  echo " sgix64.65"
+  echo " sgix2.65"
+  echo " sgix.62"
+  echo " sgix3.62"
+  echo " sun4.57"
+  echo " sun464.57"
+  echo "->\c"
+
+  read PLATFORM
+
+  echo " "
+  echo "Choose compile option:"
+  echo "  1.  Quick Compile"
+  echo "  2.  Release Compile"
+  echo "  3.  Debug Compile"
+
+  read compileoption
+
+  case $compileoption in
+    1) COMPILEHOW=quick;;
+    2) COMPILEHOW=release;;
+    3) COMPILEHOW=debug;;
+  esac
+fi
+
+ADDONBUILDDIRS=
+while test $# -ge 1
+do
+  case $1 in
+    -r)          COMPILEHOW=release;;
+    -release)    COMPILEHOW=release;;
+    -q)          COMPILEHOW=quick;;
+    -quick)      COMPILEHOW=quick;;
+    -cleanbuild) CLEANBUILDFLAG=-cleanbuild;;
+    -d)          COMPILEHOW=debug;;
+    -debug)      COMPILEHOW=debug;;
+    -buildall)   BUILDALLADDONS=y;;
+    -objbuildaddonbasedir)shift 
+                 OBJBUILDBASEDIR=$1;;
+    -D*)         EXTRAFLAGS="$EXTRAFLAGS $1";;
+    -O*)         EXTRAFLAGS="$EXTRAFLAGS $1";;
+    *)           ADDONBUILDDIRS="$ADDONBUILDDIRS $1";;
+  esac
+  shift
+done
+
+if test "$ADDONBUILDDIRS" != "" ; then
+  BUILDALLADDONS=y
+else
+  ADDONBUILDDIRS=`/bin/ls`
+fi
+  
+
+#
+# determine the names of the libraries to be created
+#
+AddOnLibraries=
+AddOnDirs=
+for dir in $ADDONBUILDDIRS
+do
+  if test -f $dir/AddOnInfo ; then
+    if test "$BUILDALLADDONS" = "y" ; then
+      includeaddon=y
+    else
+      echo $EFLAG "Build addon in $dir? (y/n) $BACKC"
+      read includeaddon
+    fi
+    if test "$includeaddon" = "y" ; then
+      if test "$AddOnLibraries" != "" ; then
+        AddOnLibraries="$AddOnLibraries "
+        AddOnDirs="$AddOnDirs "
+      fi
+      AddOnLibraries="$AddOnLibraries`awk 'NR == 2 {print}' $dir/AddOnInfo`"
+      AddOnDirs="${AddOnDirs}$dir"
+    fi
+  fi
+done
+
+echo "Creating: PLATFORM =$PLATFORM "
+echo "          COMPILE  =$COMPILEHOW "
+echo " "
+
+  #
+  # Cycle through the add-ons and build them
+  #
+
+  echo "------------------------ Building Add-ons"
+  for dir in $AddOnDirs
+  do
+    #
+    # Addon may acutally be in a sub-directory below the addon-home directory.  First
+    # look in the top level then below.
+    #
+    curdir=`pwd`
+    if test -d $dir ; then
+      finaldir=$dir
+    else
+      if test -d */$dir ; then
+        finaldir=*/$dir
+      else
+        echo "Err: invalid addon name..."
+        exit
+      fi
+    fi
+    if test "$OBJBUILDBASEDIR" != "" ; then
+      OBJBUILDDIR=$OBJBUILDBASEDIR/$dir
+    fi
+
+    cd $finaldir
+    $ADDONUTILDIR/Runmake $PLATFORM -$COMPILEHOW $CLEANBUILDFLAG -objbuilddir $OBJBUILDDIR 
+    cd $curdir
+  done

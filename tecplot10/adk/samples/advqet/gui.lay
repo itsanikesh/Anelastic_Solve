@@ -1,0 +1,834 @@
+#!MC 1000
+$!SETSTYLEBASE FACTORY
+$!PAPER 
+  BACKGROUNDCOLOR = WHITE
+  ISTRANSPARENT = YES
+  ORIENTPORTRAIT = NO
+  SHOWGRID = YES
+  SHOWRULER = NO
+  SHOWPAPER = YES
+  PAPERSIZE = LETTER
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    CUSTOM1
+      {
+      WIDTH = 3
+      HEIGHT = 3
+      }
+    }
+  RULERSPACING = ONEINCH
+  PAPERGRIDSPACING = HALFINCH
+  REGIONINWORKAREA
+    {
+    X1 = -0.05
+    Y1 = -0.05
+    X2 = 11.05
+    Y2 = 8.55
+    }
+$!COLORMAP 
+  CONTOURCOLORMAP = SMRAINBOW
+$!COLORMAPCONTROL RESETTOFACTORY
+### Frame Number 1 ###
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = BLUE
+  XYPOS
+    {
+    X = 4
+    Y = 4
+    }
+  WIDTH = 4.5
+  HEIGHT = 1.5
+$!FRAMENAME  = 'ID=3 TITLE="Enter Text Box Margin" MODE=MODAL' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.99999999999900013314
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.33333333333300002588
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 5
+    Y = 72
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIER
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Enter the new text box margin:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 10
+    Y = 36
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIER
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextBoxMargin' 
+  TEXT = 'TF:                           ' 
+### Frame Number 2 ###
+$!CREATENEWFRAME 
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = CYAN
+  XYPOS
+    {
+    X = 4
+    Y = 6
+    }
+  WIDTH = 4.5
+  HEIGHT = 1.5
+$!FRAMENAME  = 'ID=4 TITLE="Enter Text Line Spacing" MODE=MODAL' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.99999999999900013314
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.33333333333300002588
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 5
+    Y = 78
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIER
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Enter the new text line spacing:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 10
+    Y = 42
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIER
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextLineSpacing' 
+  TEXT = 'TF:                           ' 
+### Frame Number 3 ###
+$!CREATENEWFRAME 
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = RED
+  XYPOS
+    {
+    X = 4
+    Y = 0
+    }
+  WIDTH = 4.5
+  HEIGHT = 3.5
+$!FRAMENAME  = 'ID=2 TITLE="Attachment Selection" MODE=MODAL' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 1.0000000000002855494
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = 0
+    RANGEMAX = 0.77777777777799994574
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 10
+    Y = 12.8571428571
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'ZoneOrMapList' 
+  TEXT = 'SLST:                                                         \n\n\n\n\n\n\n\n\n\n' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 5
+    Y = 87.4285714286
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Select Attachment:' 
+### Frame Number 4 ###
+$!CREATENEWFRAME 
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = GREEN
+  XYPOS
+    {
+    X = 0.015353
+    Y = -0.01531
+    }
+  WIDTH = 3.4584
+  HEIGHT = 6.7342
+$!FRAMENAME  = 'ID=1 Title="Advanced Quick Edit Tool" MODE=MODELESS' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = 0.00022598122870699999731
+    RANGEMAX = 0.69698870411400126734
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = -0.060652925215500003153
+    RANGEMAX = 1.2960841579599999829
+    GRSPACING = 0.5
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 57.4370117922
+    Y = 92.3805124124
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Text:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 8.78225806628
+    Y = 92.3975614665
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Geometry:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 17.4406204123
+    Y = 20.8837068581
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Left' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 38.0842882293
+    Y = 20.8837068581
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Cntr' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 58.4128005303
+    Y = 20.8837068581
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Right' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 74.8439843354
+    Y = 38.5732063915
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Head' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 74.8439843354
+    Y = 32.6767065471
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Mid' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 74.8442394809
+    Y = 26.7802067026
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Base' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 6.30438914253
+    Y = 6.06188384033
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Attachment:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 5.86046429013
+    Y = 12.7423979928
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Scope:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 12.9915590752
+    Y = 86.8869956013
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'GeomFPB' 
+  TEXT = 'Frame' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 12.9915590752
+    Y = 80.9904957568
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'GeomGPB' 
+  TEXT = 'Grid ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 44.0703526768
+    Y = 86.9736426152
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextFFPB' 
+  TEXT = 'Frame/Frame' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 44.0703526768
+    Y = 81.0771427707
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextFPPB' 
+  TEXT = 'Frame/Point' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 44.0703526768
+    Y = 75.1806429262
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextGGPB' 
+  TEXT = 'Grid/Grid  ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 44.0703526768
+    Y = 69.2841430817
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextGFPB' 
+  TEXT = 'Grid/Frame ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 17.4406204123
+    Y = 38.5732063916
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextHLPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 38.0840330838
+    Y = 38.5732063916
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextHCPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 58.4125453848
+    Y = 38.5732063915
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextHRPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 17.4403652668
+    Y = 32.6767065471
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextMLPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 38.0840330838
+    Y = 32.6767065471
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextMCPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 58.4125453848
+    Y = 32.6767065471
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextMRPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 17.4406204123
+    Y = 26.7802067026
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextBLPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 38.0840330838
+    Y = 26.7802067026
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextBCPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 58.4128005303
+    Y = 26.7802067026
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'TextBRPB' 
+  TEXT = '   ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 37.6718475225
+    Y = 13.2150771111
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'ScopeLPB' 
+  TEXT = 'Local ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 67.8109037522
+    Y = 13.2150771111
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIERBOLD
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'ScopeGPB' 
+  TEXT = 'Global' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 67.7431847818
+    Y = 6.40540426687
+    }
+  TEXTSHAPE
+    {
+    FONT = HELV
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Select... ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 8.51961055453
+    Y = 59.3472213613
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIER
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Text Box Margin...  ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 8.52763107182
+    Y = 52.0518290793
+    }
+  TEXTSHAPE
+    {
+    FONT = COURIER
+    HEIGHT = 14.67
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  TEXT = 'Text Line Spacing...' 
+$!ATTACHGEOM 
+  GEOMTYPE = RECTANGLE
+  POSITIONCOORDSYS = FRAME
+  ANCHORPOS
+    {
+    X = 5.51373032746
+    Y = 65.0252260315
+    }
+  MACROFUNCTIONCOMMAND = 'Coord Sys/Char Height' 
+  RAWDATA
+87.9200994968 31.8909496069 
+$!ATTACHGEOM 
+  GEOMTYPE = RECTANGLE
+  POSITIONCOORDSYS = FRAME
+  ANCHORPOS
+    {
+    X = 5.51373032746
+    Y = 18.6096862374
+    }
+  MACROFUNCTIONCOMMAND = 'Text Anchor Location' 
+  RAWDATA
+87.6126945019 26.6810417175 
+$!SETSTYLEBASE CONFIG

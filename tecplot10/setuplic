@@ -1,0 +1,363 @@
+#!/bin/sh
+#
+# Revision history
+#
+# 06-29-1999 (BDP) Changed startup time for tlmd from 60 seconds to 1 second.
+#
+#
+#
+umask 022
+LANG=C
+export LANG
+
+LICENSEOPTION=0
+INSTALLKEYONLY=0
+REDUNDANTSERVERFLAG=-r1
+EVALLICENSESUBOPTION=install
+SERVERHOSTCODEFLAG=
+
+
+RemoveCurrentNTBFile ()
+{
+  /bin/rm -f $TecHomeDir/otecplot.ntb > /dev/null 2>&1
+  /bin/mv -f $TecHomeDir/tecplot.ntb $TecHomeDir/otecplot.ntb
+}
+
+
+TecHomeDir=`pwd`
+
+while test $# -gt 0 
+do
+  case $1 in
+    restart)            LICENSEOPTION=4;;
+    installevallicense) LICENSEOPTION=1;;
+    showevalcode)       LICENSEOPTION=1
+                        EVALLICENSESUBOPTION=show;;
+    showlicensecode)    LICENSEOPTION=3;;
+    installkey)         INSTALLKEYONLY=1;;
+    redundant)          REDUNDANTSERVERFLAG=;;
+    locktohostid)       SERVERHOSTCODEFLAG="-j 130";;
+    locktohostname)     SERVERHOSTCODEFLAG="-j 256";;
+    locktoipaddress)    SERVERHOSTCODEFLAG="-j 64";;
+    *)                  TecHomeDir=$1;;
+  esac
+  shift;
+done
+
+TMPFILE="/tmp/$LOGNAME."`date +%H%M%S`
+ps -aux > $TMPFILE 2>&1
+PSRESULT=`head -1 $TMPFILE | grep unknown`
+/bin/rm $TMPFILE
+
+USEBACKC=`echo "\c" | wc -c`
+if test $USEBACKC -eq 0 ; then
+  EFLAG=
+  BACKC="\c"
+else
+  EFLAG=-n
+  BACKC=
+fi
+
+IsLMRunning ()
+{
+  BSDPS=`ps -auxwww 2>/dev/null | grep -v grep | grep -v msoftlmd | grep tlmd` 
+  SVPS=`ps -efo user,pid,args 2>/dev/null | grep -v grep | grep -v msoftlmd | grep tlmd`
+  SV2PS=`ps -ef 2>/dev/null | grep -v grep | grep -v msoftlmd | grep tlmd`
+
+  if test "$SVPS" != "" ; then
+    echo "$SVPS"
+  elif test "$BSDPS" != "" ; then
+    echo "$BSDPS"
+  elif test "$SV2PS" != "" ; then
+    echo "$SV2PS"
+  else
+    echo ""
+  fi
+}
+
+KillLM ()
+{
+  echo " "
+  echo "Attempting to kill the license manager. This may take a few minutes and"
+  echo 'may be accompanied by a number of "license server is down" messages'
+  echo " "
+  TLMHOST=@`hostname`
+  export TLMHOST
+  $TecHomeDir/tlm/tlmadmin -k
+}
+
+
+
+
+
+if test $LICENSEOPTION -ne 1 -o "$EVALLICENSESUBOPTION" = "install" ; then
+  echo ' '
+  echo '+---------------------------------------+'
+  echo '|                                       |'
+  echo '|                                       |'
+  echo '|         LICENSE INSTALLATION          |'
+  echo '|                                       |'
+  echo '|                                       |'
+  echo '+---------------------------------------+'
+  echo ' '
+  echo ' '
+fi
+
+
+InstallLogFile="$TecHomeDir/install.log"
+date  >> $InstallLogFile
+echo "Installing the license"  >> $InstallLogFile
+
+NumOpt=5
+if test $INSTALLKEYONLY -eq 1 ; then
+  NumOpt=2
+fi
+
+while test $LICENSEOPTION -lt 1 -o $LICENSEOPTION -gt $NumOpt
+do
+  echo " "
+  echo " "
+  echo "Choose license install option:"
+  echo " "
+  echo "  1.  Install evaluation license key"
+  echo "  2.  Install purchased license key"
+  if test $NumOpt -gt 2 ; then
+    echo "  3.  Display the server code"
+    echo "  4.  Restart the license manager"
+    echo "  5.  Kill the license manager"
+  fi
+  echo " "
+  echo $EFLAG "-->$BACKC"
+
+  read LICENSEOPTION
+done
+
+STARTTLM=N
+
+echo "install option         : $LICENSEOPTION" >> $InstallLogFile
+
+if test $LICENSEOPTION -eq 2 -o \
+        $LICENSEOPTION -eq 4 ; then
+  echo " "
+  echo "Checking to see if the license manager is already running..."
+  IsRunning=`IsLMRunning`
+  if test "$IsRunning" != "" ; then
+    echo " "
+    if test $LICENSEOPTION -eq 2 ; then
+      echo "It appears that the license manager is currently running.  The process"
+      echo "detected is:"
+      echo " "
+      echo "$IsRunning"
+      echo " "
+      echo "If this is the license manager associated with an older version of Tecplot "
+      echo "then it is highly advised that you terminate the license manager before proceeding."
+      echo " " 
+      echo " "
+      echo $EFLAG "Do you want to kill the license manager at this time? (y/n) $BACKC"
+
+      read oktokill
+    else
+      echo "It appears that the license manager is currently running."
+      oktokill=y
+    fi
+
+    if test "$oktokill" = "y" -o "$oktokill" = "Y" ; then
+      KillLM
+      IsRunning=
+    fi
+    echo " "
+  else
+    echo "License manager appears to be down...   it's ok to continue"
+  fi
+  echo " "
+fi
+
+
+
+echo " "
+
+case $LICENSEOPTION in
+  1) 
+     if test ! -x $TecHomeDir/bin/tecplot ; then
+       echo " "
+       echo " "
+       echo "Unable to launch tecplot to obtain the hostcode."
+       echo "Make sure you are executing setuplic from a valid"
+       echo "tecplot home directory"
+       echo " "
+       exit
+     fi
+ 
+     if test "$EVALLICENSESUBOPTION" = "install" ; then
+       if test ! -w $TecHomeDir ; then
+         echo " "
+         echo " "
+         echo "You must have write permission in the tecplot"
+         echo "home directory to install an evaluation license."
+         echo " "
+         exit
+       fi
+     fi
+
+#
+# Need to switch to dir where we have write permission in case TMPDIR is not defined.
+# this avoids a nasty error message from tecplot.  We will assume $TecHomeDir is writeable.
+#
+     if test "$TMPDIR" = "" ; then
+       TMPDIR=$TecHomeDir
+       export TMPDIR
+     fi
+     IPCODE=`$TecHomeDir/bin/tecplot -n -h $TecHomeDir |grep "Host Code" | sed "s/^.*=  *//"`
+
+     echo "IPCODE                 : $IPCODE" >> InstallLogFile
+     if test "$IPCODE" = "" ; then
+       echo " "
+       echo " "
+       echo " "
+       echo "Err:  Invalid tecplot executable.  You must install the "
+       echo "      tecplot license from the machine on which tecplot "
+       echo "      will be running.  Log onto that machine and rerun "
+       echo "      setuplic."
+       exit
+     fi
+
+     echo " "
+     echo " "
+     echo "The HOST CODE is:     $IPCODE"
+     echo " "
+     
+     if test "$EVALLICENSESUBOPTION" = "install" ; then
+       echo $EFLAG "Are you ready to enter the key now? (y/n) $BACKC"
+       read EnterKeyNow
+       echo " "
+       echo " "
+       if test "$EnterKeyNow" = "y" ; then
+         TECPASSWORD=
+         while test "$TECPASSWORD" = "" 
+         do
+           echo $EFLAG "Enter the key:   $BACKC"
+       
+           read TECPASSWORD
+         done
+
+         RemoveCurrentNTBFile
+         echo "$TECPASSWORD" > $TecHomeDir/tecplot.ntb
+         echo "License Key            : $TECPASSWORD" >> $InstallLogFile
+         echo " "
+         echo " "
+         echo "License key installed."
+         echo " "
+         echo " "
+       else
+         echo " "
+         echo "Contact Tecplot Inc. or one of its distributors."
+         echo "Be ready to tell them the HOST CODE listed above.  You"
+         echo "will then receive the license key.  After receiving the"
+         echo "key return to the tecplot home directory and run:"
+         echo " "
+         echo "             ./setuplic"
+         echo " "
+       fi
+     fi
+     ;;
+  2)
+     if test ! -x $TecHomeDir/tlm/tlmadmin ; then
+       echo " "
+       echo " "
+       echo "The license manager administration program is not"
+       echo "available.  Check the tlm sub-directory below the"
+       echo "Tecplot home directory for tlmadmin"
+       echo " "
+       exit
+     fi
+     if test ! -w $TecHomeDir/tlm; then
+       echo " "
+       echo " "
+       echo "You must have write permission in the tlm sub-directory"
+       echo "to install a tecplot license."
+       echo " "
+       exit
+     fi
+
+     if test "$REDUNDANTSERVERFLAG" != "" ; then
+       #
+       # Flaw in tlmadmin.  Doesn't print out server code if -r1 is specified.  Must do it by hand
+       #
+       ServerCode="`$TecHomeDir/tlm/tlmadmin -x -c -r-1 -e $TecHomeDir/tlm | sed 's/Code for.*:  //'`"
+       echo "The server code is: $ServerCode"
+     fi
+   
+     echo "Running: $TecHomeDir/tlm/tlmadmin $REDUNDANTSERVERFLAG -x -e $TecHomeDir/tlm -c 01=tecplot" >> $InstallLogFile
+
+     #
+     # NOTE:  SERVERHOSTCODEFLAG appears to be ignored in this instance.
+     #        not a real problem other than it can be confusing to the
+     #        customer.
+     #
+     $TecHomeDir/tlm/tlmadmin $REDUNDANTSERVERFLAG -x -c -e $TecHomeDir/tlm $SERVERHOSTCODEFLAG 01=tecplot
+   
+     RESULT=$?
+   
+     if test $RESULT -ne 0 ; then
+       echo " "
+       echo " "
+       echo "Errors occurred during license key installation."
+       echo "Please contact Tecplot Inc."
+       echo " "
+       exit
+     else
+       echo " "
+       echo " "
+       echo "Tecplot license key(s) installed." | tee -a $InstallLogFile
+       echo " "
+       echo " "
+       if test "$IsRunning" = "" ; then
+         echo $EFLAG "Do you want to start the license manager at this time? (y/n) $BACKC"
+         read STARTTLM
+       fi
+       RemoveCurrentNTBFile
+       echo "TLM" > $TecHomeDir/tecplot.ntb
+     fi
+     ;;
+  3) ServerCode="`$TecHomeDir/tlm/tlmadmin -x -c -r-1 -e $TecHomeDir/tlm $SERVERHOSTCODEFLAG | sed 's/Code for.*:  //'`"
+     echo "The server code is: $ServerCode"
+     exit;;
+  4) STARTTLM=Y
+     ;;
+  5) KillLM
+     ;;
+esac
+
+
+if test "$STARTTLM" = "y" -o "$STARTTLM" = "Y" ; then
+  if test ! -f $TecHomeDir/tlm/01.lic -a ! -f $TecHomeDir/tlm/00.lic ; then
+    echo "The license keys cannot be found.  If you have installed the"
+    echo "license keys in a non-standard location then you must launch"
+    echo "the license manager by hand using the command:"
+    echo " "
+    echo "<teplot-homedir>/tlm/tlmd -l <log-file> -e <keyfile-directory> [-r <resource-file>]"
+    echo " "
+    exit
+  fi
+  
+  if test -f $TecHomeDir/tlm/tlm.res ; then
+    ResFlag="-r $TecHomeDir/tlm/tlm.res"
+  else
+    ResFlag=
+  fi
+  $TecHomeDir/tlm/tlmd -l $TecHomeDir/tlm/tlm.log -e $TecHomeDir/tlm $ResFlag -s 1
+  echo "Running: $TecHomeDir/tlm/tlmd -l $TecHomeDir/tlm/tlm.log -e $TecHomeDir/tlm $ResFlag -s 1" >> $InstallLogFile
+  RESULT=$?
+  if test $RESULT -ne 0 ; then
+    echo "Errors detected trying to start the license manager"
+    echo "Contact Tecplot Inc."
+  else
+    echo " "
+    echo " "
+    echo "The license manager has been started.  Please wait"
+    echo "1 minute before trying to run tecplot"
+    echo " "
+    echo " "
+  fi
+fi
+

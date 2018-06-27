@@ -1,0 +1,48 @@
+Animate I Planes Addon Example:
+
+Description: This example animates the I-Planes of a selected
+             set of zones.
+
+Illustrates: Obtaining information about a dataset, working 
+             with sets, setting zone IJK mode, monitoring 
+             state changes, and creating and executing macro
+             commands.
+
+
+TecUtil Functions Used:
+             TecUtilAddOnRegisterInfo
+             TecUtilDataSetGetInfo
+             TecUtilDataSetIsAvailable
+             TecUtilDialogErrMsg
+             TecUtilDialogMessageBox
+             TecUtilDoubleBuffer
+             TecUtilGetTecplotVersion
+             TecUtilLockOff
+             TecUtilLockOn
+             TecUtilMacroAddCommandCallback
+             TecUtilMacroIsRecordingActive
+             TecUtilMacroRecordAddOnCommand
+             TecUtilMenuAddOption
+             TecUtilRedraw
+             TecUtilSetAddMember
+             TecUtilSetAlloc
+             TecUtilSetDealloc
+             TecUtilSetGetMember
+             TecUtilSetGetMemberCount
+             TecUtilStateChangeAddCallback
+             TecUtilStateChangeSetMode
+             TecUtilStringAlloc
+             TecUtilStringDealloc
+             TecUtilZoneGetInfo
+             TecUtilZoneGetName
+             TecUtilZoneIsEnabled
+             TecUtilZoneSetIJKMode
+
+GUI Builder Functions Used:
+             GUI_ListDeallocItemList
+             GUI_ListGetSelectedItems
+             GUI_TextFieldGetString
+             GUI_TextFieldSetString
+
+adktuil Functions Used:
+             Str_GetSet

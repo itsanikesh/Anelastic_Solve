@@ -1,0 +1,793 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Import PLOT3D</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=3420>
+<meta name=layout-width content=529>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold;}
+table.whs2 {x-cell-content-align: top; width: 100%; border-spacing: 0px; border-spacing: 0px;}
+col.whs3 {width: 21.701%;}
+col.whs4 {width: 39.757%;}
+col.whs5 {width: 38.542%;}
+tr.whs6 {x-cell-content-align: top; height: 28px;}
+td.whs7 {width: 21.701%; border-left-width: 1px; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs8 {width: 39.757%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs9 {width: 38.542%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+tr.whs10 {x-cell-content-align: top; height: 20px;}
+td.whs11 {width: 21.701%; padding-right: 10px; padding-left: 10px;}
+p.whs12 {font-size: 10pt;}
+td.whs13 {width: 39.757%; padding-right: 10px; padding-left: 10px;}
+td.whs14 {width: 38.542%; padding-right: 10px; padding-left: 10px;}
+tr.whs15 {x-cell-content-align: top; height: 38px;}
+tr.whs16 {x-cell-content-align: top; height: 23px;}
+td.whs17 {width: 21.701%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+td.whs18 {width: 39.757%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+td.whs19 {width: 38.542%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+col.whs20 {width: 50%;}
+tr.whs21 {x-cell-content-align: top;}
+td.whs22 {width: 50%; border-left-width: 1px; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs23 {width: 50%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs24 {width: 50%; padding-right: 10px; padding-left: 10px;}
+td.whs25 {width: 50%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+col.whs26 {width: 18.75%;}
+col.whs27 {width: 81.25%;}
+td.whs28 {width: 18.75%; border-left-width: 1px; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs29 {width: 81.25%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs30 {width: 18.75%; padding-right: 10px; padding-left: 10px;}
+td.whs31 {width: 81.25%; padding-right: 10px; padding-left: 10px;}
+td.whs32 {width: 18.75%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+td.whs33 {width: 81.25%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+col.whs34 {width: 25%;}
+td.whs35 {width: 25%; border-left-width: 1px; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs36 {width: 25%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs37 {width: 25%; padding-right: 10px; padding-left: 10px;}
+p.whs38 {font-family: 'Courier New', monospace; font-size: 10pt; font-weight: bold;}
+td.whs39 {width: 25%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+col.whs40 {width: 22.049%;}
+col.whs41 {width: 16.852%;}
+col.whs42 {width: 32.975%;}
+td.whs43 {width: 22.049%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs44 {width: 16.852%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs45 {width: 32.975%; border-top-style: Solid; border-top-color: #008000; border-top-width: 3px; border-right-width: 1px; border-bottom-style: Solid; border-bottom-width: 1px; border-bottom-color: #008000; padding-right: 10px; padding-left: 10px;}
+td.whs46 {width: 22.049%; padding-right: 10px; padding-left: 10px;}
+td.whs47 {width: 16.852%; padding-right: 10px; padding-left: 10px;}
+td.whs48 {width: 32.975%; padding-right: 10px; padding-left: 10px;}
+td.whs49 {width: 22.049%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+td.whs50 {width: 16.852%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+td.whs51 {width: 32.975%; border-bottom-width: 3px; border-bottom-color: #008000; border-bottom-style: Solid; padding-right: 10px; padding-left: 10px;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nFile Menu\nImport PLOT3D");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Import PLOT3D</h1>
+
+<p class="whs1">The PLOT3D Loader</p>
+
+<p>&nbsp;</p>
+
+<p>The PLOT3D data loader can import data files formatted for NASA's PLOT3D 
+ program. Some extensions such as unstructured data that are now available 
+ in FAST, the successor to PLOT3D, are also supported.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">File Combinations</p>
+
+<p>You may specify to load just the grid file, both the grid and solution 
+ files, or just solution files. The following table describes all six scenarios 
+ and what the PLOT3D Loader does:</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+<col class="whs5">
+
+<tr valign="top" class="whs6">
+<td width="21.701%" class="whs7">
+<p>LOAD</td>
+<td width="39.757%" class="whs8">
+<p>NOT APPENDING</td>
+<td width="38.542%" class="whs9">
+<p>APPENDING</td></tr>
+
+<tr valign="top" class="whs10">
+<td width="21.701%" class="whs11">
+<p class="whs12">Grid Only</td>
+<td width="39.757%" class="whs13">
+<p class="whs12">Existing data set is deleted and zones (one 
+ per grid are loaded).</td>
+<td width="38.542%" class="whs14">
+<p class="whs12">New zones are added (one per grid). Solution 
+ vars in new zones are zeroed out.</td></tr>
+
+<tr valign="top" class="whs15">
+<td width="21.701%" class="whs11">
+<p class="whs12">Grid And Solution</td>
+<td width="39.757%" class="whs13">
+<p class="whs12">Existing data set is deleted and zones (one 
+ for each grid in each solution file) are loaded. Each set of zones loaded 
+ shares spatial vars with the first set of grids loaded.</td>
+<td width="38.542%" class="whs14">
+<p class="whs12">Same as Not Appending except original data 
+ set is preserved. Existing data set must have at least as many variables 
+ as the number needed by the incoming data.</td></tr>
+
+<tr valign="top" class="whs16">
+<td width="21.701%" class="whs17">
+<p class="whs12">Solution Only</td>
+<td width="39.757%" class="whs18">
+<p class="whs12">A data set must already be present. The existing 
+ data set is reduced to contain the same number of zones as there are grids 
+ in each incoming solution file. Solution vars in the first solution file 
+ replace the solution variables in the original zones. Subsequent solution 
+ files create new sets of zones with spatial variables shared with the 
+ first set of zones. </td>
+<td width="38.542%" class="whs19">
+<p class="whs12">Same as Not Appending except original data 
+ set is preserved. Existing data set must have at least as many variables 
+ as the number contained in incoming solution file. Spatial variables are 
+ shared with last n original zones where n is the number of grids in each 
+ incoming solution file.</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Specifying Files Using URLs</p>
+
+<p>This is available however there is no file browsing so you must know 
+ the fully qualified path ahead of time. Just type in the file name in 
+ the file selection dialog(s) or, directly into the grid text field or 
+ solution file list.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Auto Detect</p>
+
+<p>The PLOT3D Loader auto detects most PLOT3D file variants. ASCII files 
+ are the most difficult to auto detect as there are a few combinations 
+ that have the exact same signature. Pure binary files also have some combinations 
+ that have the same signature. If all else fails use the manual settings 
+ to load in the files.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Plot Style</p>
+
+<p>If you cannot use Auto Detect then a plot style must be supplied. The 
+ following plot styles are available:</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs20">
+<col class="whs20">
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs22">
+<p>PLOT STYLE</td>
+<td width="50%" class="whs23">
+<p>DESCRIPTION</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Plot 3D Classic</td>
+<td width="50%" class="whs24">
+<p class="whs12">Classic Plot3D with field variables RHO,RHO-U,RHO-V,RHO-W,E</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Plot 3D Function</td>
+<td width="50%" class="whs24">
+<p class="whs12">Plot3D files with any number of field variables. 
+ Variables are not named.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Overflow</td>
+<td width="50%" class="whs24">
+<p class="whs12">Variation on classic plot3d file format to 
+ accommodate output from Overflow CFD solver.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs25">
+<p class="whs12">Swift</td>
+<td width="50%" class="whs25">
+<p class="whs12">Variation on classic plot3d file format to 
+ accommodate the SWIFT turbo-machinery flow analysis code.</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Unstructured Data Files</p>
+
+<p>You must manually specify the data structure for all unstructured solution 
+ files if loaded without an accompanying grid file. Auto detect presumes 
+ solution files are 3-D Whole if loaded by themselves.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">ASCII Files</p>
+
+<p>The following ASCII file conditions require special attention:</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs26">
+<col class="whs27">
+
+<tr valign="top" class="whs21">
+<td width="18.75%" class="whs28">
+<p>CONDITION</td>
+<td width="81.25%" class="whs29">
+<p>NOTES</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="18.75%" class="whs30">
+<p class="whs12">Double Precision</td>
+<td width="81.25%" class="whs31">
+<p class="whs12">You must tell the loader if the incoming file 
+ is single or double precision.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="18.75%" class="whs30">
+<p class="whs12">I-Blanking</td>
+<td width="81.25%" class="whs31">
+<p class="whs12">You must tell the loader if the incoming file 
+ contains I-blanking.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="18.75%" class="whs32">
+<p class="whs12">3-D Planar</td>
+<td width="81.25%" class="whs33">
+<p class="whs12">There are some cases where these files can 
+ appear exactly the same if they are 3-D Whole. The PLOT3D Loader always 
+ favors 3-D Whole. If you need to load in 3-D Planar ASCII files you must 
+ specify the data structure manually.</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Pure Binary Files</p>
+
+<p>The following pure binary files (binary files without record markers) 
+ require special attention.</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs26">
+<col class="whs27">
+
+<tr valign="top" class="whs21">
+<td width="18.75%" class="whs28">
+<p>CONDITION</td>
+<td width="81.25%" class="whs29">
+<p>NOTES</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="18.75%" class="whs32">
+<p>3-D Planar</td>
+<td width="81.25%" class="whs33">
+<p>There are some cases where these files can appear exactly the same if 
+ they are 3-D Whole. The PLOT3D Loader always favors 3-D Whole. If you 
+ need to load in 3-D Planar pure binary files you must specify the data 
+ structure manually </td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Data Subset</p>
+
+<p>You may limit the data being loaded by using the index range settings 
+ or grid set setting in the Data Subset page of the Plot3D loader. &nbsp;Each 
+ of I,J, or K indices may be restricted to a start, end, and skip, value. 
+ &nbsp;You may 
+ also select a set of grids to load in the Grid Set field. &nbsp;Here 
+ you may enter any valid set using a dash to specify a range of values. 
+ &nbsp;&nbsp;The 
+ set of grids specified will be applied to each solution file loaded (or 
+ to the grid file if it is the only file loaded). &nbsp;For 
+ example, if you read in a grid file with two solution files where all 
+ files define 30 grids and you specify 1-4,9,13 as the set then grids 1,2,3,4,9, 
+ and 13 will be loaded from each of the two solution files resulting in 
+ 12 zones in tecplot.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Macro Language</p>
+
+<p>This loader supports the syntax of the previous PLOT3D Loader (that 
+ is, syntax such as</p>
+
+<p><span style="font-family: 'Courier New', monospace;">'&quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-ISET</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>1</B></span><span 
+ style="font-family: 'Courier New', monospace;">,,</span><span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>1</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-JSET</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>1</B></span><span 
+ style="font-family: 'Courier New', monospace;">,,</span><span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>1</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-b</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-3DP</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-M</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-GF</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>3dp_nb_mg_bi.g</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>-SF</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot; &quot;</span><span 
+ style="font-family: 'Courier New', monospace; font-weight: bold;"><B>3dp_nb_mg_bi.q</B></span><span 
+ style="font-family: 'Courier New', monospace;">&quot;')</span>.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">New Instruction Syntax</p>
+
+<p>The new loader uses the Standard syntax, so layouts can be saved and 
+ automatically use relative paths for file names.</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs34">
+<col class="whs34">
+<col class="whs34">
+<col class="whs34">
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs35">
+<p>KEYWORD</td>
+<td width="25%" class="whs36">
+<p>VALUE(S)</td>
+<td width="25%" class="whs36">
+<p>DEFAULT</td>
+<td width="25%" class="whs36">
+<p>NOTES</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">STANDARDSYNTAX</td>
+<td width="25%" class="whs37">
+<p class="whs12">“1.0”</td>
+<td width="25%" class="whs37">
+<p class="whs12">None/Required</td>
+<td width="25%" class="whs37">
+<p class="whs12">Must be the first instruction.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">FILELIST_SOLUTIONFILES</td>
+<td width="25%" class="whs37">
+<p class="whs12">“n” &nbsp;“file-1” 
+ “file-2” .... “file-n”</td>
+<td width="25%" class="whs37">
+<p class="whs12">Empty</td>
+<td width="25%" class="whs37">
+<p class="whs12">&nbsp;</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">FILENAME_GRIDFILE</td>
+<td width="25%" class="whs37">
+<p class="whs12">“filename”</td>
+<td width="25%" class="whs37">
+<p class="whs12">Empty</td>
+<td width="25%" class="whs37">
+<p class="whs12">&nbsp;</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">IINDEXRANGE</td>
+<td width="25%" class="whs37">
+<p class="whs12">“indexrange”</td>
+<td width="25%" class="whs37">
+<p class="whs12">“1,,1”</td>
+<td width="25%" class="whs37">
+<p class="whs12">Start, End, Skip</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">JINDEXRANGE</td>
+<td width="25%" class="whs37">
+<p class="whs12">“indexrange”</td>
+<td width="25%" class="whs37">
+<p class="whs12">“1,,1”</td>
+<td width="25%" class="whs37">
+<p class="whs12">Start, End, Skip</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">KINDEXRANGE</td>
+<td width="25%" class="whs37">
+<p class="whs12">“indexrange”</td>
+<td width="25%" class="whs37">
+<p class="whs12">“1,,1”</td>
+<td width="25%" class="whs37">
+<p class="whs12">Start, End, Skip</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">APPEND</td>
+<td width="25%" class="whs37">
+<p class="whs12">“Yes” or “No”</td>
+<td width="25%" class="whs37">
+<p class="whs12">“No”</td>
+<td width="25%" class="whs37">
+<p class="whs12">&nbsp;</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">ASCIIISDOUBLE</td>
+<td width="25%" class="whs37">
+<p class="whs12">“Yes” or “No”</td>
+<td width="25%" class="whs37">
+<p class="whs12">“No”</td>
+<td width="25%" class="whs37">
+<p class="whs12">&nbsp;</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs38">ASCIIHASBLANK</td>
+<td width="25%" class="whs37">
+<p class="whs12">“Yes” or “No”</td>
+<td width="25%" class="whs37">
+<p class="whs12">“No”</td>
+<td width="25%" class="whs37">
+<p class="whs12">&nbsp;</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs39">
+<p class="whs38">FILEGRIDSET</td>
+<td width="25%" class="whs39">
+<p class="whs12">Set</td>
+<td width="25%" class="whs39">
+<p class="whs12">Empty</td>
+<td width="25%" class="whs39">
+<p class="whs12">Empty implies all grids are loaded</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Auto/Manual Settings</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs34">
+<col class="whs40">
+<col class="whs41">
+<col class="whs42">
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs35">
+<p>KEYWORD</td>
+<td width="22.049%" class="whs43">
+<p>VALUE(S)</td>
+<td width="16.852%" class="whs44">
+<p>DEFAULT</td>
+<td width="32.975%" class="whs45">
+<p>NOTES</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs12">AUTODETECT</td>
+<td width="22.049%" class="whs46">
+<p class="whs12">&quot;Yes&quot; or &quot;No&quot;</td>
+<td width="16.852%" class="whs47">
+<p class="whs12">&quot;Yes&quot;</td>
+<td width="32.975%" class="whs48">
+<p class="whs12">&nbsp;</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs12">DATASTRUCTURE</td>
+<td width="22.049%" class="whs46">
+<p class="whs12">&quot;<span style="font-style: italic;"><I>datastructure</I></span>&quot;</td>
+<td width="16.852%" class="whs47">
+<p class="whs12">--</td>
+<td width="32.975%" class="whs48">
+<p class="whs12">Required if AUTODETECT is “No” otherwise ignored.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs37">
+<p class="whs12">ISMULTIGRID</td>
+<td width="22.049%" class="whs46">
+<p class="whs12">&quot;Yes&quot; or &quot;No&quot;</td>
+<td width="16.852%" class="whs47">
+<p class="whs12">--</td>
+<td width="32.975%" class="whs48">
+<p class="whs12">Required if AUTODETECT is “No” otherwise ignored.</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="25%" class="whs39">
+<p class="whs12">STYLE</td>
+<td width="22.049%" class="whs49">
+<p class="whs12">&quot;<span style="font-style: italic;"><I>plot3dstyle</I></span>&quot;</td>
+<td width="16.852%" class="whs50">
+<p class="whs12">--</td>
+<td width="32.975%" class="whs51">
+<p class="whs12">Required if AUTODETECT is “No” otherwise ignored.</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Where:</p>
+
+<p>- <span style="font-style: italic;"><I>datastructure</I></span> is “<span style="font-weight: bold;"><B>1D</B></span>”, 
+ “<span style="font-weight: bold;"><B>2D</B></span>”, “<span style="font-weight: bold;"><B>3DP</B></span>”, 
+ “<span style="font-weight: bold;"><B>3DW</B></span>”, or “<span style="font-weight: bold;"><B>UNSTRUCTURED</B></span>”</p>
+
+<p>- <span style="font-style: italic;"><I>plot3dstyle</I></span> is “<span style="font-weight: bold;"><B>PLOT3DCLASSIC</B></span>”, 
+ “<span style="font-weight: bold;"><B>PLOT3DFUNCTION</B></span>”, or “<span style="font-weight: bold;"><B>OVERFLOW</B></span>”</p>
+
+<p>set is any number or combination of <span style="font-weight: bold;"><B>n,m</B></span> 
+ or <span style="font-weight: bold;"><B>n-m</B></span>. &nbsp;For 
+ example 1-4,9 will load in grids 1,2,3,4 and 9.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Auxiliary Data</p>
+
+<p>The following auxiliary data is created by the PLOT3D Loader:</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs20">
+<col class="whs20">
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs22">
+<p>AUXILIARY NAME</td>
+<td width="50%" class="whs23">
+<p>ASSIGNED TO</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.ReferenceMachNumber</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set and Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.AngleOfAttack</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set and Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.ReynoldsNumber</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set and Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.Time</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.DensityVar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.Uvar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.Vvar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.Wvar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.StagnationEnergyVar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.GammaVar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.TurbulentKineticEnergyVar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.TurbulentDissipationRateVar</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.VectorVarsAreVelocity</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">Common.SpeedOfSound</td>
+<td width="50%" class="whs24">
+<p class="whs12">Data Set</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">G (oveflow format only)</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">B (oveflow format only)</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">T (oveflow format only)</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">I (oveflow format only)</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">H (oveflow format only)</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs24">
+<p class="whs12">H1 (oveflow format only)</td>
+<td width="50%" class="whs24">
+<p class="whs12">Individual Zones</td></tr>
+
+<tr valign="top" class="whs21">
+<td width="50%" class="whs25">
+<p class="whs12">H2 (oveflow format only)</td>
+<td width="50%" class="whs25">
+<p class="whs12">Individual Zones</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Limitations</p>
+
+<p>The -ip,-jp,-kp options in older PLOT3D Loader are not supported in 
+ the initial release. Tecplot handles I-, J-, K-planes well, so loading 
+ 3-D Planar files as a single zone is typically sufficient.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

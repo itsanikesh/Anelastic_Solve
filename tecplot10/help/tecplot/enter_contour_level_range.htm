@@ -1,0 +1,196 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Enter Contour Level Range</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=608>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nSelection Dialogs\nEnter Contour Level Range");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Enter Contour Level Range</h1>
+
+<p>Use the Enter Contour Level Range dialog to either create a new set 
+ of contour levels, or add a range of contour levels to an existing set. 
+ Which action you do is determined by the push-button used to call up the 
+ dialog from the Contour Levels dialog: New Range or Add Range.</p>
+
+<p>&nbsp;</p>
+
+<p>The range can be specified in one of three ways, as follows:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Min, 
+ Max, and Number of Levels:</I></span> Select this to specify the minimum and 
+ maximum contour levels and the number of contour levels including the 
+ minimum and maximum levels. With this option, the contour levels are evenly 
+ spaced from minimum to maximum. The current minimum, maximum, and number 
+ of levels are displayed; you can accept these values by clicking OK, or 
+ enter new values in the appropriate text fields. You may also have Tecplot 
+ recalculate the default values for these parameters, by clicking Reset 
+ Range.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Min, 
+ Max, and Delta:</I></span> Select this to specify the minimum and maximum 
+ contour levels and the delta, or change in value between adjacent levels. 
+ The current minimum, maximum, and delta are displayed; you can accept 
+ these values by clicking OK, or enter new values in the appropriate text 
+ fields.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Exponential 
+ Distribution:</I></span> Select this to specify the minimum and maximum contour 
+ levels and the number of contour levels including the minimum and maximum 
+ levels. The minimum and maximum must be either both positive or both negative. 
+ With this option, the contour levels are exponentially distributed between 
+ the minimum and maximum. The current minimum, maximum, and number of levels 
+ are displayed; you can accept these values by clicking OK, or enter new 
+ values in the appropriate text fields.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>Depending on the option button selected, the following text fields are 
+ enterable:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Minimum 
+ Level:</I></span> Enter the minimum contour level. If Exponential Distribution 
+ is selected, it must also have the same sign as the Maximum Value. If 
+ you are adding a set of contour levels to an existing set, this is the 
+ minimum of the added levels.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Maximum 
+ Level:</I></span> Enter the maximum contour level. If Exponential Distribution 
+ is selected, it must also have the same sign as the Minimum Value. If 
+ you are adding a set of contour levels to an existing set, this is the 
+ maximum of the added levels.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Number 
+ of Levels (Min, Max, and Number of Levels or Exponential Distribution 
+ only):</I></span> Enter the number of contour levels decided. If you are creating 
+ a new set of contour levels, this is the total number of levels; if you 
+ are adding a set of contour levels to an existing set, this is the number 
+ of levels to add.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Delta 
+ (Min, Max, and Delta only):</I></span> Enter the change in contour variable 
+ value between adjacent contour levels. If you choose a delta larger than 
+ the difference between the minimum and maximum, you get only the minimum 
+ contour level.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>The following button is active only if the check box Min, Max, and New 
+ Number of Levels is selected:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Reset 
+ Range:</I></span> Select this button to have Tecplot recalculate its default 
+ choices for the minimum and maximum contour levels, using the default 
+ choice for number of levels.</p></li>
+</ul>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

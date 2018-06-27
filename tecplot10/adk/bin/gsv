@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Make sure TECHOME is setup. Allow it to be overridden by TEC100HOME.
+#
+if test "$TEC100HOME" != "" ; then
+  # override any TECHOME setting.
+  TECHOME=$TEC100HOME
+  export TECHOME
+elif test "$TECHOME" = "" ; then
+  echo "$0: TECHOME environment variable is not set." 1>&2
+  exit 1
+fi
+
+grep -i $1 $TECHOME/help/comlist

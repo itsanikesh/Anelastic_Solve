@@ -1,0 +1,59 @@
+readme.txt
+
+// uncomment the following line to debug symbols
+// sample.txt
+
+[!if AWP_CPPWITHMFC]
+root.cpp
+root.h
+root.def
+stdafx.h
+stdafx.cpp
+resource.h
+all.rc
+root.rc2
+[!endif]
+
+[!if AW_USETGB]
+gui.lay
+
+[!if AW_FORTRANLANGUAGE]
+guicb.inc
+guidefs.inc
+guibld.f
+guicb.f
+[!else]
+guicb.c
+guidefs.c
+GUIDEFS.h
+guibld.c
+[!endif]
+[!endif]
+
+[!if AW_HASENGINE]
+[!if AW_FORTRANLANGUAGE]
+engine.inc
+engine.f
+[!else]
+engine.c
+engine.h
+[!endif]
+[!endif]
+
+[!if MotifYes]
+addoninfo
+custommake
+makefile
+tgb.cfg
+symbols.exp
+[!endif]
+
+[!if AW_FORTRANLANGUAGE]
+addglbl.inc
+main.F
+[!else]
+addglbl.h
+main.c
+[!endif]
+
+

@@ -1,0 +1,31 @@
+General
+-------
+The Create SubFEZone utility is an example add-on for demonstrating some
+of the TecUtil ADK functionality to the add-on writer. Additionally, however,
+it provides the general user with the capability to create a sub-finite element
+zone from one or more existing FE zones.
+
+Access to the Create SubFEZone is achieved by selecting it from Tecplot's
+"Tools" menu. If the option can not be found under the "Tools"
+menu then Tecplot was not instructed to load the add-on. Edit the
+"tecplot.add" file, insert the following line, and restart Tecplot
+(see the ADK Reference manual for details):
+
+  $!LoadAddOn "crsfez"
+
+A single push button labeled "Create" directs the utility to create a
+finite element zone from one or more finite element zones within the
+current data view. If no finite element zones are within the current
+data view then the button is desensitized. The current data view can
+be changed by using Tecplot's data zoom tool or any of the standard
+facilities within Tecplot used for adjusting the data view.
+
+A cell is included in the sub-finite element zone if it is
+entirely within the data view boundary. If any vertex of the cell
+lies outside the data view boundary the cell is excluded from the
+list of cells used to create the zone.
+
+The choice of names, Create Sub-FEZone, was perhaps not optimal because
+the utility can just as easily be used for combining two or more finite
+element zones into one superset by ensuring that the data view encompasses
+both sets of data.

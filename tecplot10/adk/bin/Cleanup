@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# must be in the addon development root directory to run this.
+#
+for dir in *
+do
+  if test -f $dir/Makefile ; then
+    cd $dir
+      make clean
+    cd ..
+  fi
+done

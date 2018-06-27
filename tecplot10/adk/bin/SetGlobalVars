@@ -1,0 +1,431 @@
+#!/bin/sh
+#
+# Generic shell script.  This shell script is never run by itself
+# and is typically called using dot "." from another script
+# (most likely Runmake) to preset basic platform specific variables.
+# This script assumes that PLATFORM, COMPILEHOW, and DEVDIR are
+# already defined.  
+#
+# You must create an environment variable called TECADDONDEVDIR 
+# to identify the parent directory below which all addon development
+# takes place.  The shared libraries built will be stored in the lib
+# sub-directory according to model and build style.
+#
+
+#
+# Make sure TECHOME is setup. Allow it to be overridden by TEC100HOME.
+#
+if test "$TEC100HOME" != "" ; then
+  # override any TECHOME setting.
+  TECHOME=$TEC100HOME
+  export TECHOME
+elif test "$TECHOME" = "" ; then
+  echo "$0: TECHOME environment variable is not set." 1>&2
+  exit 1
+fi
+
+# Identify the location of Tecplot's libraries.
+TECLIBDIR="$TECHOME/lib"
+
+#
+# We want called scripts to be aware of $SOURCEDIR so export it.
+#
+SOURCEDIR=`pwd`
+export SOURCEDIR
+
+if test "$TECADDONDEVDIR" = "" ; then
+  echo "Err: TECADDONDEVDIR undefined...."
+  exit;
+fi
+
+if test ! -d $TECADDONDEVDIR ; then
+  echo "invalid addon development root directory:  $TECADDONDEVDIR"
+  exit;
+fi
+
+#
+# NOTE:
+#   The default parameter expansion syntax is for the EXTBASEDIR shell variable
+#   below because there are times when an addon developer needs to be able
+#   to customize the EXTBASEDIR from the command line and not from a static
+#   script like an addon's CustomMake file.
+#
+  EXTBASEDIR=${EXTBASEDIR:-"$TECHOME/lib/ext"}
+        DATE="'"'"'`date "+%m-%d-%Y"`'"'"'"
+        TIME="'"'"'`date "+%H:%M:%S"`'"'"'"
+     MAKECMD="make -f Makefile"
+    OPTLIMIT=
+       CCOMP=cc
+          LD=ld
+          AR=ar
+       FCOMP=f77
+       FLIBS=
+     OPTFLAG=-O2
+     ARFLAGS=-r
+  PLATCFLAGS=
+  PLATFFLAGS=
+  EXTRAFLAGS=
+ LDLINKFLAGS=
+ LDSTRIPFLAG=-s
+ BASELDFLAGS=
+LDSYMEXPORTFLAGS=
+   NOOPTFLAG=
+FINCLUDEFLAG=-I
+
+
+#
+# Get a list of the symbols to export.  This list may be used with some platforms
+#
+if test -f $LOCALDIR/symbols.exp ; then
+  Symfile=$LOCALDIR/symbols.exp
+else
+  Symfile=$LOCALDIR/lib$LIBBASENAME.exp
+fi
+if test -f $Symfile ; then
+  ExportedSymbols=`tail +2 $Symfile`
+else
+  ExportedSymbols=
+fi
+
+
+
+case $PLATFORM in
+ macx*) LIBEXT=so
+        BASELDFLAGS="-bundle -flat_namespace -undefined suppress"
+        PLATCFLAGS="-I/usr/X11R6/include -Wall -DIPC -DDARWIN -DIGNOREMOSTXERRORS -DUSEENUM -fno-common -no-cpp-precomp"
+        PLATCPPFLAGS="$PLATCFLAGS"
+        LDLINKFLAGS="-L/usr/X11R6/lib"
+        CPPBASELDFLAGS=$BASELDFLAGS
+        CPPCOMP=c++
+        CPPLD=$CPPCOMP
+        CCOMP=cc
+        LD=$CCOMP
+        LDSTRIPFLAG=-Wl,-x
+        AR=/usr/bin/libtool
+        ARFLAGS="-static -o"
+
+        #
+        # The following are untested by Tecplot Inc.
+        #
+        PLATFFLAGS="-qextname=flush"  # Likely not necessary.
+        FCOMP=xlf
+        FLIBS="/opt/ibmcmp/xlf/8.1/lib/libxlf90.dylib /opt/ibmcmp/xlf/8.1/lib/libxlfmath.dylib"
+
+        ;;
+
+  sgi*) NOOPTFLAG=-O0
+        OPTLIMIT="-Olimit 1500 -Wf,-XNd8500"
+        PLATCFLAGS="-DIPC -DIRISX -USVR3 -DUSEENUM"
+        BASELDFLAGS="-shared"
+        CPPCOMP=CC
+        CPPLD=$CPPCOMP
+        CCOMP=cc
+        LD=$CCOMP
+        LIBEXT=so
+        if test "$PLATFORM" = "sgix.52" ; then
+          PLATCFLAGS="-fullwarn -prototypes -I/usr/include/bsd $PLATCFLAGS"
+          FLIBS="-lF77 -lI77 -lisam"
+          CPPBASELDFLAGS="$BASELDFLAGS"
+          FINCLUDEFLAG=-Wf,-I
+        elif test "$PLATFORM" = "sgix2.65" ; then
+          SGIFLAGS="-o32"
+          PLATCFLAGS="$PLATCFLAGS -DIRIX65 $SGIFLAGS -fullwarn -woff 3322 -DNeedFunctionPrototypes"
+          BASELDFLAGS="$SGIFLAGS $BASELDFLAGS"
+          PLATFFLAGS="$SGIFLAGS -fullwarn"
+          FLIBS="-lftn"
+          CPPBASELDFLAGS="$BASELDFLAGS -Wl,-U"
+          BASELDFLAGS="$BASELDFLAGS -Wl,-U"
+        else
+          if test "$PLATFORM" = "sgix3.62" ; then
+            SGIFLAGS="-n32 -mips3"
+            PLATCFLAGS="$PLATCFLAGS -DIRIX62"
+          elif test "$PLATFORM" = "sgix64.65" ; then
+            SGIFLAGS="-64 -mips4"
+            PLATCFLAGS="$PLATCFLAGS -DLONGIS64 -DIRIX65"
+          else
+            SGIFLAGS="-n32 -mips4"
+            PLATCFLAGS="$PLATCFLAGS -DIRIX65"
+          fi
+          PLATCFLAGS="$PLATCFLAGS -OPT:Olimit=2132 $SGIFLAGS -fullwarn -DNeedFunctionPrototypes -woff 1174,1110,1209,1233,1506,3322"
+          BASELDFLAGS="$SGIFLAGS $BASELDFLAGS"
+          PLATFFLAGS="$SGIFLAGS -fullwarn -woff 2034,2026,2032,2079,2104,2272,2273,2274,2271"
+          FLIBS="-lftn"
+          CPPBASELDFLAGS="$BASELDFLAGS -Wl,-U"
+          BASELDFLAGS="$BASELDFLAGS -Wl,-U"
+        fi
+#
+# NOTE: If f90 is used then set FLIBS to be -lfortran    
+#
+        PLATCPPFLAGS="$PLATCFLAGS -LANG:ansi-for-init-scope=ON"
+        LDSYMEXPORTFLAGS="-exports_file $Symfile"
+        ;;
+ ibm*)  PLATCFLAGS="-DIPC -DIBMRS6000X -DUSEENUM "
+        PLATCPPFLAGS="$PLATCFLAGS"
+        # shared objects are very sensitive to LIBPATH; unset it
+        unset LIBPATH
+#       BASELDFLAGS="-bM:SRE -lc -L$TECLIBDIR -berok -bnolibpath -bbigtoc"
+        BASELDFLAGS="-G -lc -L$TECLIBDIR -bnolibpath -bbigtoc -bM:SRE"
+        if test "$PLATFORM" = "ibmx64.51"; then
+          PLATCFLAGS="$PLATCFLAGS -DLONGIS64 -q64"
+          PLATCPPFLAGS="$PLATCPPFLAGS -DLONGIS64 -q64"
+          LDLINKFLAGS="$LDLINKFLAGS -q64"
+          BASELDFLAGS="$BASELDFLAGS -q64"
+          ARFLAGS="$ARFLAGS -X64"
+        fi
+        #
+        # NOTE EXTRA FLAGS ARE ADDED LATER IN RUNMAKE
+        #
+        CCOMP=xlc
+        LIBEXT=so
+        FLIBS="-lxlf90"
+        LD=$CCOMP
+        CPPBASELDFLAGS=$BASELDFLAGS
+        CPPCOMP=xlC
+        CPPLD=$CPPCOMP
+        LDSYMEXPORTFLAGS="-bE:$Symfile -lXm -lXt -lX11 -lm -lbsd"
+        ;;
+ compaq*)LIBEXT=so
+        BASELDFLAGS="-Wl,-S -shared -lc"
+        FLIBS="-lfor"
+        OPTLIMIT="-Olimit 1500"
+        PLATCFLAGS="-DIPC -DCOMPAQALPHAX -DUSEENUM -std1 -I/usr/include"
+        PLATCPPFLAGS="-x cxx -DIPC -DCOMPAQALPHAX -DUSEENUM -I/usr/include"
+        CPPBASELDFLAGS="-shared -lc"
+        CPPCOMP=cxx
+        CPPLD=cxx
+        CCOMP=cc
+        LD=$CCOMP
+        if test "$ExportedSymbols" != "" ; then
+          LDSYMEXPORTFLAGS="-hidden"
+          for sym in $ExportedSymbols
+          do
+            LDSYMEXPORTFLAGS="$LDSYMEXPORTFLAGS -exported_symbol $sym"
+          done
+        fi
+        ;;
+ dec*)  LIBEXT=so
+        BASELDFLAGS="-Wl,-S -shared -lc"
+        FLIBS="-lfor"
+        OPTLIMIT="-Olimit 1500"
+        # NOTE: -std1 added in V9 release.
+        PLATCFLAGS="-DIPC -DDECALPHAX -DUSEENUM -std1 -I/usr/include"
+        PLATCPPFLAGS="-x cxx -DIPC -DDECALPHAX -DUSEENUM -I/usr/include"
+        CPPBASELDFLAGS="-shared -lc"
+        CPPCOMP=cxx
+        CPPLD=cxx
+        CCOMP=cc
+        LD=$CCOMP
+        if test "$ExportedSymbols" != "" ; then
+          LDSYMEXPORTFLAGS="-hidden"
+          for sym in $ExportedSymbols
+          do
+            LDSYMEXPORTFLAGS="$LDSYMEXPORTFLAGS -exported_symbol $sym"
+          done
+        fi
+        ;;
+  hp*)  LIBEXT=sl
+        BASELDFLAGS="-b"
+        CCOMP=c89
+        FCOMP=f90
+        LD=$CCOMP
+        OPTFLAG=+O2
+        PLATFFLAGS="+Z"
+        FLIBS="-lcl"
+        if test "$PLATFORM" = "hp7xx64.11" ; then
+          LDLINKFLAGS="-L/usr/lib/pa20_64 -L/usr/lib/X11R6/pa20_64 -L/usr/lib/Motif2.1/pa20_64 -Wl,+s "
+        else
+          LDLINKFLAGS="-L/usr/lib/X11R6 -L/usr/lib/Motif2.1 -Wl,+s "
+        fi
+        PLATCFLAGS="+Z -I/usr/include/X11R6 -I/usr/include/Motif2.1 -DIPC -DHPX -D_HPUX_SOURCE -DUSEENUM"
+        PLATCPPFLAGS="$PLATCFLAGS -AA"
+        if test "$PLATFORM" = "hp7xx64.11" ; then
+          HP64BITFLAGS="-DLONGIS64 +DA2.0W +DD64 +DS2.0W"
+          LDLINKFLAGS="$LDLINKFLAGS -AA +DA2.0W +DD64 +DS2.0W"
+          PLATCFLAGS="$PLATCFLAGS $HP64BITFLAGS"
+          PLATCPPFLAGS="$PLATCPPFLAGS $HP64BITFLAGS"
+          PLATFFLAGS="$PLATFFLAGS $HP64BITFLAGS"
+        else
+          HP32BITFLAGS="+DAportable"
+          LDLINKFLAGS="$LDLINKFLAGS -AA +DAportable"
+          PLATCFLAGS="$PLATCFLAGS $HP32BITFLAGS"
+          PLATCPPFLAGS="$PLATCPPFLAGS $HP32BITFLAGS"
+          PLATFFLAGS="$PLATFFLAGS $HP32BITFLAGS"
+          FLIBS="$FLIBS -lisamstub"
+        fi
+        CPPBASELDFLAGS=$BASELDFLAGS
+        CPPCOMP=aCC
+        CPPLD=$CPPCOMP
+        if test "$ExportedSymbols" != "" ; then
+          LDSYMEXPORTFLAGS="-Wl,+e,_shlInit"
+          for sym in $ExportedSymbols
+          do
+            LDSYMEXPORTFLAGS="$LDSYMEXPORTFLAGS -Wl,+e,$sym"
+          done
+        fi
+        #
+        # Added +e flag on 09-18-2003 so long long could be supported.  Added
+        # -ext flag on 10/22/2003 to C++ flag set for the same reason.
+        #
+        PLATCFLAGS="$PLATCFLAGS +e"
+        PLATCPPFLAGS="$PLATCPPFLAGS -ext"
+        #
+        # Added these defines on 11-10-2003 and link option to allow for the
+        # use of the standard template library with aCC. If the addon is
+        # actually creating user threads then the "-lcma" flag may also be
+        # needed.
+        #
+        PLATCPPFLAGS="$PLATCPPFLAGS -D_RWSTD_MULTI_THREAD -D_REENTRANT"
+        CPPBASELDFLAGS="$CPPBASELDFLAGS -lpthread"
+        ;;
+sun*)   LIBEXT=so
+        #
+        # Changed to -Bsymbolic from -B symbolic 10/14/03 because CC compiler
+        # wants it w/o the space.
+        #
+        BASELDFLAGS="-G -Bsymbolic"
+        if test "$PLATFORM" = "sun464.57"; then
+          BASELDFLAGS="$BASELDFLAGS -KPIC -xarch=v9"
+        fi
+        OPTFLAG=-xO2
+        PLATCFLAGS="-Dsun -I/usr/openwin/include -I/usr/dt/include -DUSEENUM -DIPC"
+        PLATFFLAGS="-w "
+        MAKECMD='/usr/ccs/bin/make -f Makefile'
+        CCOMP='/opt/SUNWspro/bin/cc'
+        LD=$CCOMP
+        AR=/usr/ccs/bin/ar
+        if test "$PLATFORM" = "sun4.54" ; then
+          PLATCFLAGS="$PLATCFLAGS -DSUNSOLARISX"
+          LDLINKFLAGS="-L/usr/openwin/lib -L/usr/dt/lib -R/usr/openwin/lib:/usr/dt/lib"
+        elif test "$PLATFORM" = "sun4.55"; then
+          PLATCFLAGS="$PLATCFLAGS -DSUNSOLARISX"
+          LDLINKFLAGS="-L/usr/openwin/lib -L/usr/dt/lib -R/usr/openwin/lib:/usr/dt/lib"
+          FLIBS="-Y P,/opt/SUNWspro/lib:/opt/SUNWspro/SC4.0/lib:/usr/ccs/lib:/usr/lib -lF77 -lsunmath"
+        elif test "$PLATFORM" = "sun4.57"; then
+          PLATCFLAGS="$PLATCFLAGS -DSUNSOLARISX"
+          LDLINKFLAGS="-L/usr/openwin/lib -L/usr/dt/lib -R/usr/openwin/lib:/usr/dt/lib"
+          FLIBS="-Y P,/opt/SUNWspro/lib:/opt/SUNWspro/SC4.0/lib:/usr/ccs/lib:/usr/lib -lF77 -lsunmath"
+        elif test "$PLATFORM" = "sun464.57"; then
+          PLATCFLAGS="$PLATCFLAGS -DSUNSOLARISX -DLONGIS64 -KPIC -xarch=v9"
+          LDLINKFLAGS="-L/usr/openwin/lib/sparcv9 -L/usr/dt/lib/sparcv9 -R/usr/openwin/lib/sparcv9:/usr/dt/lib/sparcv9"
+          FLIBS="-Y P,/opt/SUNWspro/lib/v9:/opt/SUNWspro/SC4.0/lib/v9:/usr/ccs/lib/sparcv9:/usr/lib/sparcv9 -lF77 -lsunmath"
+        elif test "$PLATFORM" = "sun86.54" ; then
+          PLATCFLAGS="$PLATCFLAGS -DSUNSOLARIS86X"
+          LDLINKFLAGS="-L/usr/openwin/lib -L/usr/dt/lib -R/usr/openwin/lib:/usr/dt/lib"
+        fi
+
+        #
+        # C++ flags are identical to C flags except for one exception:
+        #   We discovered that on the 64 bit Suns C++ add-ons would not load if
+        #   they used the C++ std library (any part of the std library, not
+        #   just templates). We discovered by reading the CC documentation that
+        #   the old Rogue Wave C++ standard library needs to be turned off and
+        #   the new one turned on.
+        PLATCPPFLAGS="$PLATCFLAGS -library=libC -library=Cstd -library=no%rwtools7 -library=no%rwtools7_dbg"
+        CPPBASELDFLAGS="$BASELDFLAGS -library=libC -library=Cstd -library=no%rwtools7 -library=no%rwtools7_dbg"
+
+        CPPCOMP='/opt/SUNWspro/bin/CC'
+        CPPLD=$CPPCOMP
+        ;;
+linux*) LIBEXT=so
+        #
+        # had miserable time trying to resolve the "stat()" function when using
+        # ld on linux 2.4.  Solution was to link using gcc instead.  Note the
+        # need for -Wl to pass link flags onto the linker.
+        #
+        CPPCOMP=g++
+        CPPLD=$CPPCOMP
+        CCOMP=gcc
+        LD=$CCOMP
+        #
+        # VERY IMPORTANT: You might be tempted here to put a -Wl option in
+        #                 front of the -shared flag but this would be folly.
+        #                 It was discovered through much pain that when we
+        #                 use gcc or g++ we must use -shared as it apparently
+        #                 adds some extra glue code to the dlopen/dlclose
+        #                 so that it works properly with C++ static destructors.
+        #
+        BASELDFLAGS="-shared -Wl,-warn-once"
+        #
+        # VERY IMPORTANT:  -Bsymbolic forces symbols to resolve tight with the
+        #                  addon and not "jump ship" and resolve to any exposed
+        #                  symbols in tecplot first.  
+        #
+        #                  Added --retain-symbols-file 08/13/03.
+        #                  This superceeds the old -Bsymbolic flag.  -Bsymbolic
+        #                  gives us nothing but trouble on the itanium platform.
+        #
+        #                  09/04/03 bdp
+        #                  Reinstated -Bsymbolic at least for non-itanium builds
+        #                  because using the --retain-symbols only option still
+        #                  has the symbol grabbing problem where, for example,
+        #                  the cgns loader would access the ArrayList functions
+        #                  from in tecplot and not its own.
+        #
+        case $PLATFORM in
+          linux*i64.*) LDSYMEXPORTFLAGS="-Wl,--retain-symbols-file -Wl,$Symfile" ;;
+            linux*.22) LDSYMEXPORTFLAGS="-Wl,-Bsymbolic" ;;
+           linux64.24) LDSYMEXPORTFLAGS="-Wl,-Bsymbolic" ;;
+            linux*.24) LDSYMEXPORTFLAGS="-Wl,-Bsymbolic" ;;
+                    *) echo "Err: need to determine best flags" 
+                       exit ;;
+        esac
+        #
+        #                  -fPIC tells gcc/g++ to create position independent
+        #                  code which is required for creating shared object
+        #                  libraries.
+        #
+        PLATCFLAGS="-Wall -fPIC -DIPC -DLINUX -DIGNOREMOSTXERRORS -DUSEENUM"
+        PLATCPPFLAGS="-Wall -DIPC -fPIC -DLINUX -DIGNOREMOSTXERRORS -DUSEENUM"
+        if test "$PLATFORM" = "linuxa.22" ; then
+          PLATCFLAGS="$PLATCFLAGS -DLINUXALPHA"
+          PLATCPPFLAGS="$PLATCPPFLAGS -DLINUXALPHA"
+        elif test "$PLATFORM" = "linuxi64.24" -o \
+                  "$PLATFORM" = "linuxg23i64.24" ; then
+          PLATCFLAGS="$PLATCFLAGS -DLINUXI64"
+          PLATCPPFLAGS="$PLATCPPFLAGS -DLINUXI64"
+        elif test "$PLATFORM" = "linux64.24" ; then
+          PLATCFLAGS="$PLATCFLAGS -DLINUX64"
+          PLATCPPFLAGS="$PLATCPPFLAGS -DLINUX64"
+        fi
+        LDLINKFLAGS="-L/usr/X11R6/lib"
+        CPPBASELDFLAGS=$BASELDFLAGS
+        ;;
+esac
+
+
+   BASECFLAGS="-c -I$TECHOME/include -DNETRESTRICT -DTHREED $EXTRAFLAGS -DADDON -DDATE=$DATE"
+   CPPFLAGS="$BASECFLAGS $PLATCPPFLAGS"
+   CFLAGS="$BASECFLAGS $PLATCFLAGS"
+   FFLAGS="-c ${FINCLUDEFLAG}$TECHOME/include ${FINCLUDEFLAG}$LOCALDIR $PLATFFLAGS"
+
+
+case $COMPILEHOW in
+release)  LDLINKFLAGS="$LDLINKFLAGS $LDSTRIPFLAG"
+          CFLAGS="$CFLAGS -DNDEBUG"
+          CPPFLAGS="$CPPFLAGS -DNDEBUG"
+          OFLAG="$OPTFLAG $OPTLIMIT"
+          OBJSUBDIR=release
+          ;;
+debug)    CFLAGS="$CFLAGS -g"
+          CPPFLAGS="$CPPFLAGS -g"
+          FFLAGS="$FFLAGS -g"
+          OFLAG=
+          OBJSUBDIR=test
+          ;;
+quick)    OFLAG="$NOOPTFLAG"
+          OBJSUBDIR=test
+          ;;
+esac
+
+if test ! -d $TECADDONDEVDIR/lib ; then
+  mkdir $TECADDONDEVDIR/lib
+fi
+
+if test ! -d $TECADDONDEVDIR/lib/$PLATFORM ; then
+  mkdir $TECADDONDEVDIR/lib/$PLATFORM
+fi
+
+ADDONLIBDIR="$TECADDONDEVDIR/lib/$PLATFORM/$OBJSUBDIR"
+if test ! -d $ADDONLIBDIR ; then
+  mkdir $ADDONLIBDIR
+fi

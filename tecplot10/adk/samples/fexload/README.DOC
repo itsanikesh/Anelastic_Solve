@@ -1,0 +1,29 @@
+This addon demonstrates how to write a data loader using
+fortran.  This dataloader is extremely simple.  The 
+loader will load files that look like:
+
+NumVars
+NumDataPoints
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+.
+.
+.
+.
+
+The instructions this loader takes are:
+
+-FILENAME "filename"
+[-SKIP n]
+
+
+For example, the following instructions are valid:
+
+
+'-FILENAME "myfile.dat" -SKIP 2'
+
+'-FILENAME "myfile.dat"'

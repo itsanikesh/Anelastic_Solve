@@ -1,0 +1,162 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Curve Fit Extended General</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=608>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nPlot\nCurve Fit Extended General");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Curve Fit Extended General</h1>
+
+<p>The <span style="font-weight: bold;"><B>General Curve Fit add-on</B></span> 
+ fits an equation composed of a linear combination of user-specified sub-functions 
+ to the data in the specified map. </p>
+
+<p>&nbsp;</p>
+
+<p>It then computes the (least squares) optimal curve fit coefficients 
+ multiplying these sub-functions.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Number 
+ of Coefficients:</I></span> Specify the number of coefficients (and number 
+ of sub-functions) for the desired curve fit. The default is three. You 
+ must specify a sub-function for each coefficient in the text fields labeled 
+ f1(x) through fn(x), where n is the number of coefficients.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>f1(x) 
+ through f8(x):</I></span> Enter the sub-functions for the curve fit using 
+ the syntax described below. In these equations use the variable x as the 
+ independent variable, even if x is specified as the dependent variable 
+ in the Curves Fit Attributes dialog.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Normalize 
+ X:</I></span> Causes the curve to be fit using a normalized independent variable. 
+ In particular, the independent variable will be translated and scaled 
+ to vary from zero at the smallest value of the independent variable to 
+ one at the largest value of the independent variable. For most curves 
+ other than polynomials, this option will alter the shape of the curve 
+ fit. It is useful when you get the “Rank reduced for at least one curve 
+ fit” warning message, but otherwise not recommended.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Normalize 
+ Y:</I></span> Causes the curve to be fit using a normalized dependent variable. 
+ In particular, the dependent variable will be translated and scaled to 
+ vary from zero at the smallest value of the dependent variable to one 
+ at the largest value of the dependent variable. For most curves other 
+ than polynomials, this option will alter the shape of the curve fit. It 
+ is useful when you get the “Rank reduced for at least one curve fit” warning 
+ message, but otherwise not recommended.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>For more information, please refer to the Tecplot Users Manual.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

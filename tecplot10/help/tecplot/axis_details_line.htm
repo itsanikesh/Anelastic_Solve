@@ -1,0 +1,182 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Axis Details Line</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=835>
+<meta name=layout-width content=401>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nPlot\nAxis Details Line");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Axis Details Line</h1>
+
+<p>Use the <span style="font-weight: bold;"><B>Line</B></span> page of the <span 
+ style="font-weight: bold;"><B>Axis Details dialog</B></span> to control whether 
+ the axis line is displayed, and if so, in what color and thickness. This 
+ page also controls the edge assignment of <span style="font-weight: bold;"><B>3-D 
+ axes</B></span>.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p><span style="font-size: 10pt; font-weight: bold;"><font size=2 style="font-size:10pt;"><B>Show 
+ Axis Line:</B></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> Select this check box 
+ to display the axis.</font></span></p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Show 
+ Line on Opposite Edge (3D Cartesian only):</B></span> If selected, a line 
+ the same color and thickness as the axis line is drawn on the edge opposite 
+ the main axis edge. For auto-edge assignment, this will result in both 
+ edges of the grid area hexagon having axis lines. Note: This line is always 
+ drawn if any of the faces adjacent to it have grid lines or are filled, 
+ or are part of the axis box. In that case, this toggle has no effect.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Color:</B></span> 
+ Choose the color for the axis line from the Select Color dialog.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Thickness 
+ (%):</B></span> Specifies the thickness of the line pattern as a percentage 
+ of the frame width. You can enter a value in the text field, or choose 
+ one of the values in the drop-down. The default values available are: 
+ 0.02, 0.1, 0.4, 0.8, 1.5. You can alter these default values from the 
+ Size Preferences dialog.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Show 
+ Axis Box (3D Cartesian only):</B></span> If selected, all edges of all axes 
+ are shown.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Auto 
+ 3-D Edge Assignment (3D Cartesian only):</B></span> When selected, the axis 
+ line edge is determined by Tecplot for all axes. The determining factor 
+ is which of the two axis edges that is part of the grid area hexagon (defined 
+ by the three back planes of the axis box) is closer to the bottom of the 
+ frame.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Show 
+ Viewport Border (2D Cartesian, XY Line, Sketch only):</B></span> If selected, 
+ a line is drawn around the viewport.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Show 
+ Grid Border (Polar Line only):</B></span> If selected, a line is drawn around 
+ the grid area (the lines R=RMin, R=RMax, Theta=ThetaMin, and Theta=ThetaMax). 
+ This line is drawn using the line color and thickness of the axis line.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Align 
+ Axis with:</B></span> Specifies where to draw the Theta-axis.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>X-Axis 
+ Value:</B></span> Defines the R-value for aligning the Theta-axis. The axis 
+ is draw from Theta=Theta-Min to Theta=Theta-Max along the circle defined 
+ by R-value. If the R-value is less than R-Min, R-Min circle is used. If 
+ the R-value is more than R-Max, R-Max is used.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Offset 
+ (%):</B></span> Enter the offset of the line from the axis.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Position 
+ (%):</B></span> Change where the axis line is positioned.</p></li>
+</ul>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

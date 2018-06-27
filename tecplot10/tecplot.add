@@ -1,0 +1,74 @@
+#!MC 1000
+#
+# This file contains commands that instruct Tecplot on
+# the "standard" add-ons to load for all users.
+#
+# In order for Tecplot to load an add-on, there must be no
+# comment sign "#" at the beginning of the "LoadAddon" line.
+#
+# To register additional add-ons for specific users it is usually
+# recommended that users create their own personal tecplot.add file
+# (.tecplot.add for unix users) in their home directory.  You can 
+# also specify an alternate tecplot.add file using "-addonfile <fname>" 
+# on the command line.  A specific addon can be loaded via the 
+# command line by using "-loadaddon <StandardAddOnName>" or
+# "-loadaxaddon <ActiveXAddOnName>" (windows only) on the command 
+# line.
+#
+#
+$!If "|PLATFORM|" == "WINDOWS"
+  $!LoadAddon "WinGUI"      # WinGUI loaded as add-on so version appears in Help->About Add-Ons
+$!Endif
+
+###############################################
+# Standard Tecplot Loaders                    #
+###############################################
+#$!If "|PLATFORM|" != "LINUXALPHA"
+#  $!LoadAddon "loadcgns"    # CGNS file loader
+#$!Endif
+$!LoadAddon "loaddem"     # DEM Data loader
+#$!LoadAddon "loaddxf"     # DXF Loader
+#$!If "|PLATFORM|" == "WINDOWS"
+#  $!LoadAddon "loadxls"     # Simple Excel file loader
+#$!Endif
+#$!LoadAddon "fluent"      # Fluent file loader
+#$!LoadAddon "loadgen"     # General Text Loader
+#$!LoadAddon "gridgen"     # Simple gridgen file data loader
+#$!LoadAddon "loadhdf"     # HDF Data loader
+#$!If "|PLATFORM|" != "MACINTOSH"
+#  $!LoadAddon "h5load"      # HDF 5 Data loader
+#$!Endif
+#$!LoadAddon "plot3d"      # Plot3d Data Loader
+#$!LoadAddon "loadply"     # PLY file loader
+#$!LoadAddon "loadss"      # Simple Spreadsheet data loader
+ 
+##############################################
+#      Other add-ons provided by Amtec       #
+##############################################
+
+# Grid/Zone generation 
+# $!LoadAddon "prismgrid"   # Create FE-Volume "prism" mesh from river bed measurements.
+# $!LoadAddon "tetragrid"   # Create tetrahedral mesh from well data.
+# $!LoadAddOn "extrud"      # Create new zone by extruding from existing 1D or 2D zone.
+# $!LoadAddon "crsfez"      # Extract finite-element sub-zone
+
+# Extended Curve fits
+  $!LoadAddon "crvakima"    # Akima Curve Fit
+  $!LoadAddon "crvgen"      # Generic Curve Fit
+  $!LoadAddon "stineinterp" # Stineman Interpolation Curve Fit
+
+# Misc.
+  $!LoadAddon "extendmcr"   # Extends tecplot macro language (see extendmcr.txt)
+  $!LoadAddon "advqet"      # Advanced Quick Edit Dialog
+# $!LoadAddon "exdxf"       # Export DXF
+# $!LoadAddon "sort"        # Sort data by one or more variables.
+# $!LoadAddOn "stats"       # Statisics.
+# $!LoadAddon "cstream"     # Circle stream (place streamtraces in a circular pattern)
+# $!LoadAddon "viewbin"     # Binary datafile viewer
+# $!LoadAddon "mulframe"    # Creates array of frames in the workarea
+#
+# Addon development tools:
+# $!LoadAddOn "statechg"    # State Change monitoring tool
+# $!LoadAddon "guibld"      # Tecplot GUI Builder (TGB)
+#
+

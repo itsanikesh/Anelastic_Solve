@@ -1,0 +1,1097 @@
+(0 "fluent5.3.18")
+
+(0 "Machine Config:")
+(4 (60 0 0 1 2 4 4 4 8 4 4))
+
+(0 "Dimensions:")
+(2 2)
+
+(0 "Variables:")
+(37 (
+(smooth-mesh/min-skew 0.4)
+(adapt/coarsen/marker/visible? #f)
+(adapt/coarsen/cell/visible? #t)
+(adapt/coarsen/cell/filled? #t)
+(adapt/refine/marker/visible? #f)
+(adapt/refine/cell/visible? #t)
+(adapt/refine/cell/filled? #t)
+(heatxc/ntu-approach? #f)
+(heatxc/verbosity 0)
+(heatxc/sv-ratio 1)
+(heatxc/on? #f)
+(turbulence-expert? #f)
+(large-eddy-simulation? #t)
+(case-file-units "si")
+(planar-conduction? #f)
+(icepak? #f)
+(export/marked-cells? #f)
+(monitor/commands ())
+(monitor/surfaces ())
+(statistics/window 0)
+(statistics/plot? #f)
+(statistics/print? #f)
+(statistics/monitors #f)
+(fmon/cm/rvz 0)
+(fmon/cm/rvy 0)
+(fmon/cm/rvx 0)
+(fmon/cm/about-axis "Z-Axis")
+(fmon/cm/window 3)
+(fmon/cm/plot? #f)
+(fmon/cm/file-name "cm-history")
+(fmon/cm/write? #f)
+(fmon/cm/print? #f)
+(fmon/cm/data? #f)
+(fmon/cm/thread-list ())
+(fmon/cl/fvz 0)
+(fmon/cl/fvy 1)
+(fmon/cl/fvx 0)
+(fmon/cl/window 2)
+(fmon/cl/plot? #f)
+(fmon/cl/file-name "cl-history")
+(fmon/cl/write? #f)
+(fmon/cl/print? #f)
+(fmon/cl/data? #f)
+(fmon/cl/thread-list ())
+(fmon/cd/window 1)
+(fmon/cd/fvz 0)
+(fmon/cd/fvy 0)
+(fmon/cd/fvx 1)
+(fmon/cd/plot? #f)
+(fmon/cd/file-name "cd-history")
+(fmon/cd/write? #f)
+(fmon/cd/print? #f)
+(fmon/cd/data? #f)
+(fmon/cd/thread-list ())
+(autosave/filename "")
+(autosave/frequency/data 0)
+(autosave/frequency/case 0)
+(soot/two-magnus 4)
+(soot/two-beta 8e-14)
+(soot/two-alpha 100000)
+(soot/two-activ-energ 90000)
+(soot/two-exp 2.32e+17)
+(soot/two-linear 1e-15)
+(soot/two-branch 100)
+(soot/two-limit 1e-10)
+(soot/one-magnus 4)
+(soot/one-activ-energ 20000)
+(soot/one-equi-max 3)
+(soot/one-equi-min 1.67)
+(soot/one-equi-exp 3)
+(soot/one-cf 1.5)
+(soot/oxid-soot "")
+(soot/fuel-soot "")
+(soot/fuel-stoich 3.6363)
+(soot/soot-stoich 2.6667)
+(soot/soot-mean-dens 2000)
+(soot/soot-mean-diam 2.2e-08)
+(soot/radio-soot-general? #f)
+(soot/radio-soot-none? #t)
+(soot/two-step? #f)
+(soot/one-step? #f)
+(nuclei/patch 0)
+(soot/patch 0)
+(hcn/patch 0)
+(no/patch 0)
+(vpollut #(#f #f #f #f #f))
+(nox/fuel-chartono #f)
+(nox/fuel-sarea 25000)
+(nox/fuel-nchar 0)
+(nox/fuel-nvol 0)
+(nox/turbulent-pdf-hot #f)
+(nox/turbulent-nint 10)
+(nox/turbulent-mode 0)
+(nox/turbulent? #f)
+(nox/fuel-specie "")
+(nox/reburn-nox? #f)
+(nox/solid-fuel-nox? #f)
+(nox/liquid-fuel-nox? #f)
+(nox/prompt-nox? #f)
+(nox/thermal-nox? #f)
+(nox/prompt-equivalence-ratio 1)
+(nox/prompt-carbon-number 1)
+(nox/thermal-equil-model "partial-equilibrium")
+(pollutant/patch (0 0 0 0 0))
+(pollutant/default (0 0 0 0 0))
+(pollutant/cycle-type (0 0 0 0 0))
+(pollutant/amg-beta (0.1 0.1 0.1 0.1 0.1))
+(pollutant/amg-alpha (0.1 0.1 0.1 0.1 0.1))
+(pollutant/scheme (0 0 0 0 0))
+(pollutant/relax (0.8 0.8 0.8 0.8 0.8))
+(pollutant/solve? (#t #t #t #t #t))
+(dpm/coupled-update? #f)
+(dpm/report-sig-fig 5)
+(dpm/track-in-absolute-frame? #f)
+(dpm/write-particle-history? #f)
+(dpm/summary ())
+(dpm/saffman-lift? #f)
+(dpm/cunningham-correction 1)
+(dpm/brownian-motion? #f)
+(dpm/drag-law "spherical")
+(dpm/shape-factor 1)
+(dpm/accumulate-rates? #f)
+(dpm/erosion-accretion? #f)
+(dpm/sort-file-append? #f)
+(dpm/unsteady-stop 0)
+(dpm/unsteady-start 0)
+(dpm/unsteady-in-domain? #f)
+(dpm/unsteady-tracking? #f)
+(dpm/thermophoretic? #f)
+(dpm/radiation-p #f)
+(dpm/ensemble-average? #t)
+(dpm/correlation-func 1)
+(dpm/max-steps 500)
+(dpm/length-scale 0.01)
+(dpm/step-length-factor 20)
+(dpm/use-length-scale? #t)
+(dpm/injections-list ())
+(dpm/relax 0.5)
+(dpm/niter 10)
+(dpm/is-dpm-on #f)
+(dpm/random-pool-size 0)
+(dpm/particle-cache-size 0)
+(dpm/source-cache-size 0)
+(periodic/bulk-temperature 300)
+(periodic/niter 2)
+(periodic/relax 0.5)
+(periodic/flow-dir-z 0)
+(periodic/flow-dir-y 0)
+(periodic/flow-dir-x 1)
+(periodic/pressure-derivative 0)
+(periodic/mass-flow 0)
+(periodic/specify-mass-flow? #f)
+(mg/coarsen-interval 1)
+(mg/max-cluster-print 16)
+(mg/verbosity 1)
+(mg/print-level 0)
+(mg/sequence-level 0)
+(mg/grid-levels 0)
+(mg/smooth 0.5)
+(mg/relax 0.6)
+(mg/cfl-factor 0.9)
+(mg/iter/interp 0)
+(mg/iter/fine 1)
+(fas-c/cycle-type 1)
+(fas-c/amg-beta 0.7)
+(fas-c/amg-alpha 0.1)
+(amg-c/cfl-reduction-factor 0.1)
+(amg-c/cycle-type 3)
+(amg-c/amg-beta 0.7)
+(amg-c/amg-alpha 0.1)
+(amg-c/scheme 1)
+(amg/global-solve? #t)
+(amg/sweep-exchange -1)
+(amg/schwarz? #f)
+(amg/tolerance 5e-06)
+(amg/divergence-epsilon 1000)
+(amg/neighbor-optimization-level 1)
+(amg/scale-corrections? #t)
+(amg/parallel/merge-level -1)
+(amg/parallel/sync-interval 1)
+(amg/parallel/method 0)
+(amg/group-within-cluster? #t)
+(amg/relax-sweeps 2)
+(amg/clustering-direction 0)
+(amg/coordinate-clustering? #f)
+(amg/freeze-coarse-levels? #f)
+(amg/fixed-cycles -1)
+(amg/max-cycles 30)
+(amg/max-coarse-relaxations 50)
+(amg/max-fine-relaxations 30)
+(amg/group-size 2)
+(amg/max-coarse-levels 20)
+(amg/post-relaxations 1)
+(amg/pre-relaxations 0)
+(amg/verbosity 0)
+(relaxation-method "gauss-seidel")
+(use-operating-density? #f)
+(operating-density 1.225)
+(operating-temperature 288.16)
+(body-force/relax 1)
+(implicit-bf? #f)
+(delh/patch 0)
+(delh/solve? #f)
+(delh/n-sweeps 5)
+(delh/default 0)
+(delh/relax 0.9)
+(premixc/default 1)
+(premixc/patch 0)
+(premixc/cycle-type 0)
+(premixc/amg-beta 0.7)
+(premixc/amg-alpha 0.1)
+(premixc/scheme 0)
+(premixc/relax 0.9)
+(premixed/solve? #t)
+(fvar2/default 0)
+(fvar2/patch 0)
+(fvar2/cycle-type 0)
+(fvar2/amg-beta 0.7)
+(fvar2/amg-alpha 0.1)
+(fvar2/scheme 0)
+(fvar2/relax 0.9)
+(fvar/default 0)
+(fvar/patch 0)
+(fvar/cycle-type 0)
+(fvar/amg-beta 0.7)
+(fvar/amg-alpha 0.1)
+(fvar/scheme 0)
+(fvar/relax 0.9)
+(fmean2/default 0)
+(fmean2/patch 0)
+(fmean2/cycle-type 0)
+(fmean2/amg-beta 0.7)
+(fmean2/amg-alpha 0.1)
+(fmean2/scheme 0)
+(fmean2/relax 1)
+(fmean/default 0)
+(fmean/patch 0)
+(fmean/cycle-type 0)
+(fmean/amg-beta 0.7)
+(fmean/amg-alpha 0.1)
+(fmean/scheme 0)
+(fmean/relax 1)
+(pdf/function-type 0)
+(pdf/n-iter 10)
+(pdf/filename "")
+(pdf/solve? #t)
+(cdvar 2)
+(cgvar 2.86)
+(drsm/default 0)
+(drsm/patch 0)
+(drsm/cycle-type 0)
+(drsm/amg-beta 0.7)
+(drsm/amg-alpha 0.1)
+(drsm/scheme 0)
+(drsm/relax 0.5)
+(drsm/solve? #t)
+(drsm/secondary-gradient? #f)
+(epsilon/default 1)
+(epsilon/patch 1)
+(epsilon/cycle-type 0)
+(epsilon/amg-beta 0.7)
+(epsilon/amg-alpha 0.1)
+(epsilon/scheme 0)
+(epsilon/relax 0.8)
+(k/default 1)
+(k/patch 1)
+(k/cycle-type 0)
+(k/amg-beta 0.7)
+(k/amg-alpha 0.1)
+(k/scheme 0)
+(k/relax 0.8)
+(turb-viscosity/relax 1)
+(ke/buoyancy-production? #f)
+(ke/solve? #t)
+(ke/secondary-gradient? #f)
+(nut/default 0.1)
+(nut/patch 0.1)
+(nut/cycle-type 0)
+(nut/amg-beta 0.7)
+(nut/amg-alpha 0.1)
+(nut/scheme 0)
+(nut/relax 0.8)
+(nut/damping? #t)
+(nut/solve? #t)
+(nut/secondary-gradient? #f)
+(w-swirl/cycle-type 0)
+(w-swirl/amg-beta 0.7)
+(w-swirl/amg-alpha 0.1)
+(w-swirl/scheme 0)
+(w-swirl/relax 0.9)
+(w-swirl/solve? #t)
+(density/scheme 0)
+(density/relax 1)
+(mp/drift/diam 1e-05)
+(drift/relax 1)
+(drift/solve? #t)
+(mp/cvt/n-bubbles 10000)
+(mp/cvt/vapor-p 2367.8)
+(cvt/relax 1)
+(cvt/solve? #t)
+(mp/terminal-velocity 0)
+(mp/wall-adhesion? #f)
+(mp/surface-tension-coeff 0.0735)
+(mp/surface-tension? #f)
+(mp/default (0 0 0 0 0))
+(mp/patch (1 0 0 0 0))
+(mp/cycle-type 0)
+(mp/amg-beta 0.7)
+(mp/amg-alpha 0.1)
+(mp/scheme 0)
+(mp/relax 1)
+(mp/courant-number 0.25)
+(mp/scheme-type 4)
+(mp/every-iter? #f)
+(mp/solve? #t)
+(mp/materials (air))
+(mp/n-materials 1)
+(mp/frozen-flux? #f)
+(sg-vflux? #f)
+(face-pressure/scheme 0)
+(piso/scheme 0)
+(piso/iter 1)
+(piso/neighbor? #t)
+(piso/skew? #t)
+(flow/scheme 20)
+(uds/unsteady-fcn "default")
+(uds/flux-fcn "none")
+(uds/default (0))
+(uds/patch (0))
+(uds/cycle-type (0))
+(uds/amg-beta (0.7))
+(uds/amg-alpha (0.1))
+(uds/scheme (0))
+(uds/relax (1))
+(uds/solve? (#t))
+(uds/n-uds 0)
+(species/thermal-diffusion? #f)
+(species/multicomponent-diffusion? #f)
+(species/inlet-diffusion? #t)
+(species/mixture-material-name "")
+(species/surface-heat-react? #t)
+(species/sct 0.7)
+(reactions/relax 1)
+(reactions/solve? #t)
+(species/kinetics-data-set "generic")
+(species/default ())
+(species/patch ())
+(species/cycle-type ())
+(species/amg-beta ())
+(species/amg-alpha ())
+(species/scheme ())
+(species/relax ())
+(species/solve? ())
+(enthalpy/default 0)
+(enthalpy/patch 0)
+(enthalpy/cycle-type 0)
+(enthalpy/amg-beta 0.7)
+(enthalpy/amg-alpha 0.1)
+(enthalpy/scheme 0)
+(enthalpy/relax 1)
+(enthalpy/solve? #t)
+(disco/bands ())
+(disco/inner-iterations 2)
+(disco/reduced-storage? #f)
+(disco/pixel/nphi 1)
+(disco/pixel/ntheta 1)
+(disco/interior-pixels? #f)
+(disco/nphi 2)
+(disco/ntheta 2)
+(disco/type "finite-volume")
+(disco/scheme 0)
+(disco/cycle-type 0)
+(disco/amg-beta 0.7)
+(disco/amg-alpha 0.1)
+(disco/relax 1)
+(disco/solve? #t)
+(g/default 0)
+(g/patch 0)
+(p1/cycle-type 0)
+(p1/amg-beta 0.7)
+(p1/amg-alpha 0.1)
+(p1/relax 0.8)
+(p1/solve? #t)
+(vfr/partial-enclosure-emissivity 1)
+(vfr/partial-enclosure-t 300)
+(vfr/partial-enclosure? #f)
+(dtrm/rays-file "")
+(dtrm/face-glob-size 1)
+(dtrm/glob-size 1)
+(dtrm/tol 0.001)
+(dtrm/n-sweeps 1)
+(dtrm/n-iter 10)
+(temperature/secondary-gradient? #t)
+(temperature/skew-grid? #f)
+(temperature/max-limit 5000)
+(temperature/min-limit 1)
+(temperature/default 300)
+(temperature/patch 0)
+(temperature/cycle-type 0)
+(temperature/amg-beta 0.7)
+(temperature/amg-alpha 0.1)
+(temperature/scheme 0)
+(temperature/relax 1)
+(temperature/solve? #t)
+(energy/inlet-diffusion? #t)
+(energy/kinetic? #f)
+(energy/pressure-work? #f)
+(energy/conservative-form? #t)
+(energy/species-diffusion? #t)
+(viscous-energy-dissipation? #f)
+(continuity/surf-spe-source? #f)
+(sigma-sbc 5.669e-08)
+(pressure/unsteady? #t)
+(pressure/extrapolate-inlet? #t)
+(pressure/extrapolate-all? #f)
+(pressure/max-limit 5000000)
+(pressure/min-limit 1)
+(pressure/default 0)
+(pressure/patch 0)
+(pressure/cycle-type 1)
+(pressure/amg-beta 0.7)
+(pressure/amg-alpha 0.1)
+(pressure/relax 0.3)
+(pressure/scheme 10)
+(z-velocity/default 0)
+(y-velocity/default 0)
+(x-velocity/default 10)
+(z-velocity/patch 0)
+(y-velocity/patch 0)
+(x-velocity/patch 0)
+(z-mom/cycle-type 0)
+(z-mom/amg-beta 0.7)
+(z-mom/amg-alpha 0.1)
+(y-mom/cycle-type 0)
+(y-mom/amg-beta 0.7)
+(y-mom/amg-alpha 0.1)
+(x-mom/cycle-type 0)
+(x-mom/amg-beta 0.7)
+(x-mom/amg-alpha 0.1)
+(mom/scheme 0)
+(mom/relax 0.7)
+(roe-dissipation? #f)
+(solve-absolute-velocities? #t)
+(correct-velocity? #t)
+(flow/solve? #t)
+(residuals/scale? #t)
+(residuals/normalize? #f)
+(residuals/debug? #f)
+(residuals/n-display 1000)
+(residuals/n-save 1000)
+(residuals/window 0)
+(residuals/plot? #t)
+(residuals/print? #t)
+(residuals/n-maximize-norms 5)
+(residuals/settings ((continuity #t 0 #t 0.001) (x-velocity #t 0 #t 0.001) (y-velocity #t 0 #t 0.001)))
+(patch/vof? #f)
+(patch-relative? #t)
+(init-relative? #t)
+(profile/morphing? #f)
+(profile/update-interval 1)
+(real-gas/dataname "")
+(real-gas/datafile "")
+(real-gas/datadir "")
+(real-gas/libdir "")
+(real-gas? #f)
+(udf/slip-velocity-fcn "none")
+(udf/drift-diam-fcn "constant")
+(udf/mass-source-adjust-fcn "none")
+(udf/dpm/n-reals 0)
+(udf/dpm/scalar-fcn "none")
+(udf/dpm/erosion-fcn "none")
+(udf/dpm/output-fcn "none")
+(udf/dpm/source-fcn "none")
+(udf/dpm/body-force-fcn "none")
+(udf/dpm/drag-fcn "none")
+(udf/heat-flux-fcn "none")
+(udf/sr-rate-fcn "none")
+(udf/vr-rate-fcn "none")
+(udf/adjust-fcn "none")
+(udf/init-fcn "none")
+(udf/libname "")
+(udf/listing? #t)
+(udf/stack-size 10000)
+(udf/cpp-command "cpp")
+(udf/filename "")
+(user-fan/program-name "fan-model")
+(user-fan/update-interval 10)
+(user-fan/profile-points 20)
+(user-fan/fan-zones ())
+(title "")
+(dynamesh/grid/epsilon 0.001)
+(dynamesh/grid/itermax 20)
+(dynamesh/grid/relax 0.4)
+(dynamesh/deforming? #f)
+(dynamesh/omega 0)
+(dynamesh/node-grids ())
+(non-reflecting/verbosity 1)
+(non-reflecting/recon? #t)
+(non-reflecting/omega 0)
+(non-reflecting-bcs? #f)
+(mixing-plane/omega 1)
+(mixing-planes ())
+(vector-mode? #f)
+(nonconformal/common-edges 0)
+(nonconformal/cell-faces 1)
+(nonconformal/feature-angle 100)
+(nonconformal/proj-move-node-tol 0.1)
+(nonconformal/boundary-move-node-tol 0.05)
+(nonconformal/move-node-tol 0.05)
+(nonconformal/max-surface-distance-tol 0.3)
+(sliding-interfaces ())
+(materials ((air fluid (chemical-formula . #f) (density (constant . 1.225) (premixed-combustion 1.225 300)) (specific-heat (constant . 1006.43)) (thermal-conductivity (constant . 0.0242)) (viscosity (constant . 1.7894e-05) (sutherland 1.7894e-05 273.11 110.56) (power-law 1.7894e-05 273.11 0.666)) (molecular-weight (constant . 28.966)) (lennard-jones-length (constant . 3.711)) (lennard-jones-energy (constant . 78.6)) (therm-exp-coeff (constant . 0)) (degrees-of-freedom (constant . 0))) (aluminum solid (chemical-formula . al) (density (constant . 2719)) (specific-heat (constant . 871)) (thermal-conductivity (constant . 202.4)) (formation-entropy (constant . 164448.08)))))
+(proximity/threads ())
+(proximity/faces-per-twig 50)
+(partition/encapsulate-node-pairs? #t)
+(partition/load-vector ())
+(partition/across-zones? #t)
+(partition/interface-owner -1)
+(partition/encapsulate-si-level -1)
+(partition/recompute-si-flux? #f)
+(partition/restrict-children? #t)
+(partition/verbosity 1)
+(partition/origin/z 0)
+(partition/origin/y 0)
+(partition/origin/x 0)
+(partition/read? #t)
+(partition/count 1)
+(partition/method "Principal Axes")
+(partition/pre-test? #f)
+(partition/smooth-iter 3)
+(partition/smooth? #t)
+(partition/merge-iter 3)
+(partition/merge? #f)
+(partition/expert? #f)
+(partition/cell-function "")
+(parallel/init-io-buffers-before-read? #t)
+(parallel/case-read-use-pack? #t)
+(parallel/debug-case? #f)
+(parallel/auto-spawn? #t)
+(parallel/rc-failed? #f)
+(parallel/trace-level 0)
+(parallel/max-spawn 8)
+(parallel/time-out 50)
+(parallel/nprocs_string "")
+(parallel/ruser "")
+(parallel/rhost "")
+(parallel/path "")
+(parallel/function "")
+(parallel/sync-interval 10)
+(parallel/print-verbosity 1)
+(parallel/max-messages 16)
+(parallel/mask ())
+(parallel/hostsfile "")
+(parallel/machines ())
+(checkpoint/exit? #f)
+(checkpoint/write-case? #t)
+(checkpoint/restart-filename "")
+(checkpoint/filename "")
+(case-config ((rp-atm? . #f) (rp-axi? . #f) (rp-dpm-cache? . #f) (rp-unsteady? . #f) (rp-dual-time? . #f) (rp-amg? . #f) (rf-energy? . #f) (rp-ke? . #f) (rp-les? . #f) (rp-lsf? . #f) (rp-net? . #f) (rp-react? . #f) (rp-sa? . #f) (rp-seg? . #t) (rp-spe? . #f) (rp-spe-surf? . #f) (rp-turb? . #f) (rp-absorbing-media? . #f) (rp-visc? . #t) (sg-cylindrical? . #f) (sg-disco? . #f) (sg-bee-gees? . #f) (sg-dpm? . #f) (sg-dtrm? . #f) (sg-dynmesh? . #f) (sg-network? . #f) (sg-melt? . #f) (sg-mphase? . #f) (sg-p1? . #f) (sg-pdf? . #f) (sg-pollut? . #f) (sg-premixed? . #f) (sg-rosseland? . #f) (sg-rsm? . #f) (sg-soot? . #f) (sg-swirl? . #f) (sg-uds? . #f) (sg-vfr? . #f) (rp-3d? . #f) (rp-double? . #f) (rp-graphics? . #t) (rp-host? . #f) (rp-thread? . #f) (dpm-cache? . #t)))
+(iteration-chunk 1)
+(reference-thread 1)
+(reference-viscosity 1.7894e-05)
+(reference-velocity 1)
+(reference-temperature 288.16)
+(reference-pressure 0)
+(reference-length 1)
+(reference-enthalpy 0)
+(reference-density 1.225)
+(reference-depth 1)
+(reference-area 1)
+(pressure-reference/z 0)
+(pressure-reference/y 0)
+(pressure-reference/x 0)
+(gravity/z 0)
+(gravity/y 0)
+(gravity/x 0)
+(gravity? #f)
+(operating-pressure 101325)
+(positivity-limit 0.2)
+(viscosity-ratio-limit 100000)
+(k-limit 1e-10)
+(boundary-values? #t)
+(grid/partitions? #f)
+(grid/level 0)
+(streamf/nit 8)
+(flowf-expert? #f)
+(node/level 0)
+(adapt/yp/min 50)
+(adapt/yp/max 500)
+(adapt/yp/type 0)
+(refine/maxs 1)
+(refine/maxv 1)
+(adapt/max-passes 10)
+(adapt/region/shape "hexahedron")
+(adapt/region/inside? #t)
+(adapt/region/radius 0)
+(adapt/region/zmax 0)
+(adapt/region/zmin 0)
+(adapt/region/ymax 0)
+(adapt/region/ymin 0)
+(adapt/region/xmax 0)
+(adapt/region/xmin 0)
+(adapt/boundary/volume-decay 1)
+(adapt/boundary/volume-target 1)
+(adapt/boundary/distance-threshold 0)
+(adapt/boundary/number-of-cells 1)
+(adapt/coarsen/volume-threshold 0)
+(adapt/coarsen/all-cells-marked? #t)
+(adapt/coarsen/nodes/refn/remove-periodic? #t)
+(adapt/coarsen/nodes/refn/remove-boundary? #t)
+(adapt/coarsen/nodes/refn/remove-internal? #t)
+(adapt/coarsen/nodes/orig/remove-periodic? #f)
+(adapt/coarsen/nodes/orig/remove-boundary? #f)
+(adapt/coarsen/nodes/orig/remove-internal? #f)
+(adapt/coarsen/marker/color "cyan")
+(adapt/coarsen/marker/size 0.1)
+(adapt/coarsen/marker/symbol "@")
+(adapt/coarsen/bit 3)
+(adapt/coarsen? #t)
+(adapt/refine/marker/color "red")
+(adapt/refine/marker/size 0.1)
+(adapt/refine/marker/symbol "@")
+(adapt/refine/bit 2)
+(adapt/refine? #t)
+(adapt/hanging-node? #t)
+(adapt/gradient/volume-weight 1)
+(adapt/maxc 0)
+(adapt/minv 0)
+(adapt/threshold/volume-change 2.5)
+(adapt/threshold/coarsen 0.0099999998)
+(adapt/threshold/refine 0.1)
+(adapt/propogate-edge-split? #t)
+(adapt/threads ())
+(prmx-adiabatic? #t)
+(prmxmfuel 0)
+(prmxheat 0)
+(prmxgcr 1e+08)
+(prmxtad 300)
+(prmxul 0.2)
+(prmxmu 0.26)
+(prmxa 0.52)
+(prmxcd 0.37)
+(drsm-c5-ssg 0.4)
+(drsm-c4-ssg 1.25)
+(drsm-c3s-ssg 1.3)
+(drsm-c3-ssg 0.8)
+(drsm-c2-ssg 4.2)
+(drsm-c1s-ssg 1.8)
+(drsm-c1-ssg 3.4)
+(drsm-c2-wall 0.3)
+(drsm-c1-wall 0.5)
+(drsm-c2 0.6)
+(drsm-c1 1.8)
+(drsm-cs 0.22)
+(drsm-ssg-ps? #f)
+(drsm-aniso-diff? #f)
+(drsm-wall-factor-clip? #t)
+(drsm-ps-wall? #t)
+(drsm-tke-solve? #t)
+(rng-swirl-const 0.07)
+(rng-swirl-on? #f)
+(rng-alpha0 1)
+(rng-kec2 1.68)
+(rng-kec1 1.42)
+(rng-kecmu 0.0845)
+(rng-visc-mod-on? #f)
+(rng-ke-on? #f)
+(ke-time-marching? #t)
+(ke-uncoupled? #t)
+(ke-comp-wf #f)
+(ke-std-wall? #t)
+(ke-non-eqm #f)
+(ke-prod-mod #f)
+(ke-source-mod #t)
+(realizable-epsilon? #f)
+(ke-realizability-on? #f)
+(ke-compress-const 1)
+(rsm-ssg-kec2 1.83)
+(rke-kesige 1.2)
+(rke-kec2 1.9)
+(keprt 0.85)
+(kesige 1.3)
+(kesigk 1)
+(kec2 1.92)
+(kec1 1.44)
+(kecmu 0.09)
+(lowre-ke-index 2)
+(ke-low-re? #f)
+(ke-two-layer-boundary 200)
+(ke-two-layer-on? #f)
+(nut-imp-diff? #t)
+(nut-prod-const 2)
+(nut-prod-modify? #f)
+(nut-kappa 0.41)
+(nut-ct4 2)
+(nut-ct3 0)
+(nut-cw3 2)
+(nut-cw2 0.3)
+(nut-prt 0.667)
+(nut-cv1 7.1)
+(nut-cb2 0.622)
+(nut-cb1 0.1355)
+(number-of-samples 0)
+(save-time-statistics? #f)
+(les-rng-sgs-on? #f)
+(les-rng-const 0.157)
+(les-smag-const 0.1)
+(omega/nk 1)
+(omega/nj 0)
+(omega/ni 0)
+(omega 0)
+(residual-smoothing/iterations 0)
+(residual-smoothing/factor 0.5)
+(precon/n-update-uref2 10)
+(mg/relax-spe 1)
+(solid/relax 1)
+(recon/enthalpy? #t)
+(recon/density? #t)
+(recon/length-based? #f)
+(recon/limit/node-extrema? #f)
+(recon/limit/epsilon 0.01)
+(recon/limit? #t)
+(recon/k-exact? #f)
+(recon/freeze? #f)
+(recon/off? #f)
+(ms-levels/viscous (#t #t #f #f #f))
+(ms-levels/dissipation (#t #t #f #f #f))
+(ms-coefficients (0.25 0.166666 0.375 0.5 1))
+(residual-verbosity 0)
+(flow-warnings? #t)
+(limiter-warnings? #t)
+(precondition? #t)
+(max-iterations-per-step 20)
+(time-step 0)
+(physical-time-step 1)
+(courant-number/implicit 5)
+(courant-number/explicit 1)
+(matching-tolerance 0.05)
+(max-flow-time -1)
+(flow-time 0)
+(smooth-mesh/boundary-nodes? #f)
+(smooth-mesh/method "skewness")
+(smooth-mesh/only-marked-cells? #f)
+(smooth-mesh/relax 0.1)
+(smooth-mesh/niter 4)
+(draw/domain/list ())))
+
+(0 "Cortex variables:")
+(38 ((
+(surfaces/groups ((wall.1 (3)) (pressure_inlet.2 (2)) (pressure_outlet.3 (1)) (default-interior (0))))
+(cx-virtual-id-list (1124 1125 1126 1127))
+(cx-surface-id-map ((3 1127) (2 1126) (1 1125) (0 1124)))
+(cx-surface-def-list ((1127 () (zone-surface 1127 2) #f) (1126 () (zone-surface 1126 3) #f) (1125 () (zone-surface 1125 4) #f) (1124 () (zone-surface 1124 6) #f)))
+(cx-surface-list #((0 ((zid 6) (type zone-surf) (name default-interior) (status susp) (facet-info (0 0 0)))) (1 ((zid 4) (type zone-surf) (name pressure_outlet.3) (status susp) (facet-info (0 0 0)))) (2 ((zid 3) (type zone-surf) (name pressure_inlet.2) (status susp) (facet-info (0 0 0)))) (3 ((zid 2) (type zone-surf) (name wall.1) (status susp) (facet-info (0 0 0)))) #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f #f))
+(view-list ((front ((1 1 10.5) (1 1 0) (0 1 0) 4.2 4.2 "Perspective") #(1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1)) (back ((1 1 -10.5) (1 1 0) (0 1 0) 4.2 4.2 "Perspective") #(1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1))))
+(render/surfaces (0))
+(cx-case-version (3 3 2)))))
+
+(0 "Grid:")
+
+(12 (0 1 59a 0))
+(13 (0 1 90e 0))
+(10 (0 1 317 0 2))
+
+(2012 (1 1 549 1 1)
+End of Binary Section   2012)
+
+(2012 (5 54a 59a 20 1)
+End of Binary Section   2012)
+
+(2058 (54a 59a 5 1)
+(   "  #    $     %  Ä  &  '     Å  Ç  É  (     Ñ  )  *  +     ,  -  .  /     0  Ö  1  2     3  4  Ü  5     á  à  â  ä     6  7  8  9     :  ;  <  =     >  ?  @  ã     A  B  C  D     E  å  ç  F     é  G  è  H     I  J  K  L     M  N  O  P     ê  Q  ë  R     S  T  U  í     ì  î  V  ï     ñ  ó  W  ò     X  Y  ô  Z     [  ö  \  ]     ^  _  `  a     b  c  d  e     f  g  h  i     j  k  l  m     n  o  p  q     r  s  t  u     v  w  x  y     z  {  |  }     ~    Ä  Å     Ç  É  Ñ  Ö     Ü  á  à  â     ä  ã  å  ç     é  è  ê  ë     í  ì  î  ï     ñ  ó  ò  ô     ö  õ  ú  ù     û  ü  †  °     ¢  £  §  •     ¶  ß  ®  ©     ™  ´  ¨  ≠     Æ  Ø  ∞  ±     ≤  ≥  ¥  µ     ∂  ∑  ∏  π     ∫  ª  º  Ω     æ  ø  ¿  ¡     ¬  √  ƒ  ≈     ∆  «  »  …        À  Ã  Õ     Œ  œ  –  —     “  ”  ‘  ’     ÷  ◊  ÿ  Ÿ     ⁄  €  ‹  ›     ﬁ  ﬂ  ‡  ·     ‚  „  ‰  Â     Ê  Á  Ë  È     Í  Î  Ï  Ì     Ó  Ô    Ò     Ú  Û  Ù  ı     ˆ  ˜  ¯  ˘     ˙  ˚  ¸  ˝     ˛  ˇ                           	     
+                                                              !     "  #  $  %     &  '  (  )     *  +  ,  -     .  /  0  1     2  3  4  5     6  7  8  9     :  ;  <  =     >  ?  @  A     B  C  D  E     F  G  H  I  )
+End of Binary Section   2058)
+
+(2013 (2 1 62 3 2)
+(      G            H            I            K            M            O         	   Q      	   
+   S      
+      U            W            Y            [            ]            _            a            c            e            g            i            k            m            o            q            s            u            w            y            {             }          !            "   Å      #      É      !   $   Ö      "   %   á      %   &   â      '   #   ã      $   (   ç      (   )   è      *   '   ë      &   +   ï      +   ,   ú      )   -   †      .   *   ¢      -   /   §      0   .   ¶      ,   1   ™      2   3   Æ      4   2   ¥      1   5   ∂      6   0   ∏      /   7   ∫      5   8   æ      9   4   ¬      :   6   ƒ      7   ;   ∆      ;   <   »      =   :          >   9   ‘      ?   @   ÷      A   ?   ÿ      8   B   ⁄      C   A   ‹      B   D   ﬁ      E   >   ‡      @   F   ‚      <   G   Ï      H   =   Ó      G   I         J   H   Ú      K   E   ˙      F   L   ¸      M   C          D   N         O   M         N   P   
+      L   Q         R   K         I   S         T   J         U   O         V   T         P   W         S   X         Q   Y          Y   R   !      Z   [   X      [      Y      \   ]   [      3   ^   b      ^   \   c         _   “      _      ”      `   a   *      a   b   +      b   c   .      c   Z   /      ]   d   F      d   `   G      )
+End of Binary Section   2013)
+
+(2013 (3 63 76 4 2)
+(e   f   ì      f   g   ó      g   h   ô      i   e   û      j   i   ®      h   k   ¨      l   j   ∞      k   m   ≤      n   l   º      m   o   ¿      p   n   –      o   q   “      q   r   ‰      s   p   Í      t   s   ¯      r   u   ˛      v   t         u   w         w   U         W   v         )
+End of Binary Section   2013)
+
+(2013 (4 77 80 5 2)
+(x   y   Ã      y   z   Œ      {   x   Ê      z   |   Ë      }   {   Ù      |   ~   ˆ         }         ~   Ä         Ä   V         X            )
+End of Binary Section   2013)
+
+(2013 (6 81 85f 2 2)
+(Å   Ç         É   Ñ         Ñ   Ç         Ö   Ü         á   à         â   à   	      ä   à   
+   	   ä   ã      
+   å   á         ç   é         ä   ç         ä   é         â   ä      	   á   â         ã   à      
+   à   å         è   à         ç   ã         ê   ç         ç   ë         í   ç         ì   Ü         ê   í         ê   î         å   ï         ñ   â         â   é         ó   â         ê   ò         ê   ô         é   ê         ö   Ü          õ   ö          ï   ú   !      ú   õ   "      ù   ú   "   !   ë   ã   #      ã   è   $      û   ã   $   #   ü   ï   %      ï   ù   &   !   †   ï   &   %   å   ü   '      å   °   (   '   è   å   (      í   ë   )      î   í   *      í   ¢   +   )   £   í   +   *   ü   †   ,   %   ü   §   -   ,   °   ü   -   '   ò   î   .      ò   •   /   .   ¶   ß   1   0   ®   ß   2   1   é   ô   4      é   ©   5   4   ó   é   5      ™   Å   6      ™   ´   7   6   ¨   ´   8   7   ≠   ´   9   8   ≠   Æ   :   9   Ø   Æ   ;   :   Ø   ∞   <   ;   ±   ∞   =   <   ±   ≤   >   =   ≥   ≤   ?   >   ≥   ¥   @   ?   µ   ¥   A   @   µ   ∂   B   A   ∑   ∂   C   B   ∑   ∏   D   C   π   ∏   E   D   ∫   ª   F   3   º   ª   G   F   º   Ω   H   G   æ   Ω   I   H   π   æ   I   E   Ω   ª   J   G   ª   ø   K   3   ª   ¿   L   K   ¡   ª   L   J   ß   ¬   M   0   ß   √   N   M   ø   ß   N   2   ø   √   O   N   ¿   ø   O   K   ¬   ƒ   Q   P   √   ¬   Q   M   ƒ   ≈   R   P   ∆   ≈   S   R   ∆   «   T   S   »   «   U   T   »   …   V   U       …   W   V       À   X   W   Ã   À   Y   X   Ã   Õ   Z   Y   Œ   Õ   [   Z   Œ   œ   \   [   –   œ   ]   \   –   —   ^   ]   “   —   _   ^   “   ”   `   _   ‘   ”   a   `   ‘   ’   b   a   ÷   ’   d   b   ◊   ÷   d   c   Ü   ÿ   e      ÿ   ◊   f   c   Ÿ   ÿ   f   e   õ   Ü   g       Ü   Ÿ   h   e   ⁄   Ü   h   g   ù   õ   i   "   õ   ⁄   j   g   €   õ   j   i   †   ù   k   &   ù   €   l   i   ‹   ù   l   k   §   †   m   ,   †   ‹   n   k   ›   †   n   m   ÿ   Ö   o      ÿ   ﬁ   p   o   ÷   ÿ   p   c   ¬   ¶   q   0   ¬   ﬂ   r   q   ≈   ¬   r   P   Ö   ì   s      è   °   t   (   è   ‡   u   t   û   è   u   $   °   §   v   -   °   ·   w   v   ‡   °   w   t   ¢   ë   x   )   ë   û   y   #   ‚   ë   y   x   ò   „   z   /   ò   ‰   {   z   ô   ò   {      î   £   |   *   î   Â   }   |   •   î   }   .   §   ›   ~   m   §   Ê      ~   §   Á   Ä      ·   §   Ä   v   ®   ø   Å   2   ø   ∫   Ç   3   Ë   ø   Ç   Å   „   •   É   /   „   È   Ñ   É   Í   È   Ö   Ñ   Í   Î   Ü   Ö   Ï   Î   á   Ü   Ï   Ì   à   á   Ó   Ì   â   à   Ó   Ô   ä   â      Ô   ã   ä   ¶   ®   å   1   £   ¢   ç   +   ∫   º   é   F   ∫   Ò   è   é   Ë   ∫   è   Ç   º   æ   ê   H   º   Ú   ë   ê   Ò   º   ë   é   æ   ∏   í   E   æ   Û   ì   í   Ú   æ   ì   ê   ∏   ∂   î   C   ∏   Ù   ï   î   Û   ∏   ï   í   ∂   ¥   ñ   A   ∂   ı   ó   ñ   Ù   ∂   ó   î   ¥   ≤   ò   ?   ¥   ˆ   ô   ò   ı   ¥   ô   ñ   ≤   ∞   ö   =   ≤   ˜   õ   ö   ˆ   ≤   õ   ò   ∞   Æ   ú   ;   ∞   ¯   ù   ú   ˜   ∞   ù   ö   Æ   ´   û   9   Æ   ˘   ü   û   ¯   Æ   ü   ú   ´   Å   †   6   ´   ˙   °   †   ˘   ´   °   û   Å   Ñ   ¢      Å   ˚   £   ¢   ˙   Å   £   †   Ñ   ¸   §      Ñ   ˝   •   §   ˚   Ñ   •   ¢   û   ‡   ¶   u   û   ˛   ß   ¶   ‚   û   ß   y   ‡   ·   ®   w   ‡   ˇ   ©   ®   ˛   ‡   ©   ¶   ·   Á   ™   Ä   ·      ´   ™   ˇ   ·   ´   ®   «   ≈   ¨   S   ≈   ﬂ   ≠   r     ≈   ≠   ¨   …   «   Æ   U   «     Ø   ¨     «   Ø   Æ   À   …   ∞   W   …     ±   Æ     …   ±   ∞   Õ   À   ≤   Y   À     ≥   ∞     À   ≥   ≤   œ   Õ   ¥   [   Õ     µ   ≤     Õ   µ   ¥   —   œ   ∂   ]   œ     ∑   ¥     œ   ∑   ∂   ”   —   ∏   _   —     π   ∂     —   π   ∏   ’   ”   ∫   a   ”     ª   ∏     ”   ª   ∫   ◊   ’   º   d   ’     Ω   ∫   	  ’   Ω   º   Ÿ   ◊   æ   f   ◊   	  ø   º   
+  ◊   ø   æ   ⁄   Ÿ   ¿   h   Ÿ   
+  ¡   æ     Ÿ   ¡   ¿   €   ⁄   ¬   j   ⁄     √   ¿     ⁄   √   ¬   ‹   €   ƒ   l   €     ≈   ¬     €   ≈   ƒ   ›   ‹   ∆   n   ‹     «   ƒ     ‹   «   ∆   Ê   ›   »   ~   ›     …   ∆     ›   …   »   Á   Ê          Ê     À   »     Ê   À       Á     Ã       Á     Õ   Ã      Á   Õ   ™   „   Í   Œ   Ñ   „     œ   Œ   ‰   „   œ   z   Í   Ï   –   Ü   Í     —   –     Í   —   Œ   Ï   Ó   “   à   Ï     ”   “     Ï   ”   –   Ó      ‘   ä   Ó     ’   ‘     Ó   ’   “   ‘   ÷   ÷   b   ÷   ﬁ   ◊   p     ÷   ◊   ÷   “   ‘   ÿ   `   ‘     Ÿ   ÷     ‘   Ÿ   ÿ   –   “   ⁄   ^   “     €   ÿ     “   €   ⁄   Œ   –   ‹   \   –     ›   ⁄     –   ›   ‹   Ã   Œ   ﬁ   Z   Œ     ﬂ   ‹     Œ   ﬂ   ﬁ       Ã   ‡   X   Ã     ·   ﬁ     Ã   ·   ‡   »       ‚   V         „   ‡         „   ‚   ∆   »   ‰   T   »     Â   ‚     »   Â   ‰   ƒ   ∆   Ê   R   ∆     Á   ‰     ∆   Á   Ê   √   ƒ   Ë   Q   ƒ     È   Ê     ƒ   È   Ë   ¿   √   Í   O   √     Î   Ë      √   Î   Í   ¡   ¿   Ï   L   ¿      Ì   Í   !  ¿   Ì   Ï   Ω   ¡   Ó   J   ¡   !  Ô   Ï   "  ¡   Ô   Ó   π   Ω      I   Ω   "  Ò   Ó   #  Ω   Ò      ∑   π   Ú   D   π   #  Û      $  π   Û   Ú   µ   ∑   Ù   B   ∑   $  ı   Ú   %  ∑   ı   Ù   ≥   µ   ˆ   @   µ   %  ˜   Ù   &  µ   ˜   ˆ   ±   ≥   ¯   >   ≥   &  ˘   ˆ   '  ≥   ˘   ¯   Ø   ±   ˙   <   ±   '  ˚   ¯   (  ±   ˚   ˙   ≠   Ø   ¸   :   Ø   (  ˝   ˙   )  Ø   ˝   ¸   ¨   ≠   ˛   8   ≠   )  ˇ   ¸   *  ≠   ˇ   ˛   ™   ¨      7   ¨   *    ˛   +  ¨        Ç   ™        ™   +       ,  ™       É   Ç        Ç   ,      -  Ç       ¢   ‚     x   ¢   .      /  ¢     ç   ©   ô   	  4   ô   ‰   
+  {   0  ô   
+  	  ﬂ   ¶     q   ¶   1    å   ¶   2      3  ¶       É   -      É   4      ¸   É        É   5      6  É       ˝   ¸     §   7  ¸       ¸   6      8  ¸       1  ®     å   ®   Ë     Å   9  ®       Â   £     |   £   /    ç   :  £       È   •     É   •   Â     }   ;  •       Î   È     Ö   È   ;      <  È       Ì   Î     á   Î   <      =  Î       Ô   Ì     â   Ì   =       >  Ì        ?  Ô   !  ã   Ô   >  "    @  Ô   "  !  ?  @  #  !     ?  $  ã   ?  A  %  #  B  ?  %  $       &  ‘      B  '  $     C  (  '  D     (  &      )  Ã   ‰     *  œ   ‰   E  +  *  0  ‰   +  
+      ,  —     F  -  ,  E    -  *      .  ”     G  /  .  F    /  ,      0  ’     H  1  0  G    1  .  ‚   ˛   2  ß   ‚   I  3  2  .  ‚   3    ˛   ˇ   4  ©   ˛   J  5  4  I  ˛   5  2  ˇ      6  ´   ˇ   K  7  6  J  ˇ   7  4       8  Õ      L  9  8  K     9  6  8  6  :    6  5  ;    6  M  <  ;  N  6  <  :  3  2  =    2  1  >    2  O  ?  >  P  2  ?  =  O  1  @  >  1  9  A    Q  1  A  @  :  /  B    R  /  C  B  /  .  D    S  /  D  C  B  A  E  %  C  B  F  '  B  T  G  E  U  B  G  F    D  H  &    V  I  H  H    I  0    W  J  )    X  K  J  L    K  8  Ë   Ò   L  è   Ë   Y  M  L  9  Ë   M      ﬁ   N  ◊   Z  ﬁ   O  N      P  Ÿ     Z  Q  N  [    Q  P      R  €       S  ›     \  T  R  ]    T  S      U  ﬂ     ]  V  S  ^    V  U      W  ·     ^  X  U  _    X  W      Y  „     _  Z  W  `    Z  Y      [  Â     `  \  Y  a    \  [      ]  Á     a  ^  [  b    ^  ]      _  È     b  `  ]  c    `  _       a  Î     c  b  _  d    b  a  !     c  Ì      d  d  a  e     d  c    ﬂ   e  ≠   ﬂ   3  f    f  ﬂ   f  e      g  Ø     f  h  e  g    h  g      i  ±     g  j  g  h    j  i      k  ≥     h  l  i  i    l  k  "  !  m  Ô   !  e  n  c  j  !  n  m      o  µ     i  p  k  k    p  o      q  ∑     k  r  o  l    r  q  #  "  s  Ò   "  j  t  m  m  "  t  s  Ò   Ú   u  ë   Ò   n  v  u  Y  Ò   v  L  $  #  w  Û   #  m  x  s  o  #  x  w  Ú   Û   y  ì   Ú   p  z  y  n  Ú   z  u      {  π     l  |  q  q    |  {  %  $  }  ı   $  o  ~  w  r  $  ~  }  Û   Ù     ï   Û   s  Ä    p  Û   Ä  y      Å  ª     q  Ç  {  t    Ç  Å  &  %  É  ˜   %  r  Ñ  }  u  %  Ñ  É  	    Ö  Ω     t  Ü  Å  v    Ü  Ö  Ù   ı   á  ó   Ù   w  à  á  s  Ù   à    '  &  â  ˘   &  u  ä  É  x  &  ä  â  ı   ˆ   ã  ô   ı   y  å  ã  w  ı   å  á  
+  	  ç  ø   	  v  é  Ö  z  	  é  ç  (  '  è  ˚   '  x  ê  â  {  '  ê  è    
+  ë  ¡   
+  z  í  ç  |  
+  í  ë  ˆ   ˜   ì  õ   ˆ   }  î  ì  y  ˆ   î  ã  )  (  ï  ˝   (  {  ñ  è  ~  (  ñ  ï  ˜   ¯   ó  ù   ˜     ò  ó  }  ˜   ò  ì      ô  √     |  ö  ë  Ä    ö  ô  *  )  õ  ˇ   )  ~  ú  ï  Å  )  ú  õ  ;  Â   ù    Â   :  û    Ç  Â   û  ù      ü  ≈     Ä  †  ô  É    †  ü  ¯   ˘   °  ü   ¯   Ñ  ¢  °    ¯   ¢  ó  +  *  £    *  Å  §  õ  Ö  *  §  £      •  «     É  ¶  ü  Ü    ¶  •  <  ;  ß    ;  Ç  ®  ù  á  ;  ®  ß  ˘   ˙   ©  °   ˘   à  ™  ©  Ñ  ˘   ™  °  ,  +  ´    +  Ö  ¨  £  â  +  ¨  ´  ˙   ˚   ≠  £   ˙   ä  Æ  ≠  à  ˙   Æ  ©  =  <  Ø    <  á  ∞  ß  ã  <  ∞  Ø      ±  …     Ü  ≤  •  å    ≤  ±  -  ,  ≥    ,  â  ¥  ´  ç  ,  ¥  ≥      µ  À     å  ∂  ±  é    ∂  µ  >  =  ∑     =  ã  ∏  Ø  è  =  ∏  ∑  ˚   ˝   π  •   ˚   ê  ∫  π  ä  ˚   ∫  ≠  4  -  ª    -  ç  º  ≥  ë  -  º  ª  ˝   7  Ω    ˝   í  æ  Ω  ê  ˝   æ  π  @  >  ø  "  >  è  ¿  ∑  ì  >  ¿  ø  W    ¡  )    é  ¬  µ  î    ¬  ¡  5  4  √    4  ë  ƒ  ª  ï  4  ƒ  √  V  D  ≈  H  D  C  ∆  (  ñ  D  ∆  ≈  X  W  «  J  W  î  »  ¡  ó  W  »  «  A  @  …  #  @  ì     ø  ò  @     …  7  8  À    7  ô  Ã  À  í  7  Ã  Ω  5  ï  Õ  √  5  ö  Œ  Õ  M  5  Œ  ;  ô  8  œ  À  8  N  –  :  õ  8  –  œ  0  E  —  +  E  F  “  -  E  ú  ”  “  ù  E  ”  —  F  G  ‘  /  F  û  ’  ‘  ú  F  ’  “  G  H  ÷  1  G  ü  ◊  ÷  û  G  ◊  ‘  H  V  ÿ  I  H  †  Ÿ  ÿ  ü  H  Ÿ  ÷  V  ñ  ⁄  ≈  V  °  €  ⁄  †  V  €  ÿ  .  I  ‹  3  .  ¢  ›  ‹  S  .  ›  D  I  J  ﬁ  5  I  £  ﬂ  ﬁ  ¢  I  ﬂ  ‹  J  K  ‡  7  J  §  ·  ‡  £  J  ·  ﬁ  K  L  ‚  9  K  •  „  ‚  §  K  „  ‡  L  X  ‰  K  L  ¶  Â  ‰  •  L  Â  ‚  X  ó  Ê  «  X  ß  Á  Ê  ¶  X  Á  ‰  A  ò  Ë  …  A  ®  È  Ë  T  A  È  E  ñ  C  Í  ∆  C  U  Î  F  ©  C  Î  Í  9  Y  Ï  M  9  ™  Ì  Ï  Q  9  Ì  A  Y  n  Ó  v  Y  ´  Ô  Ó  ™  Y  Ô  Ï  n  p    z  n  ¨  Ò    ´  n  Ò  Ó  p  s  Ú  Ä  p  ≠  Û  Ú  ¨  p  Û    s  w  Ù  à  s  Æ  ı  Ù  ≠  s  ı  Ú  w  y  ˆ  å  w  Ø  ˜  ˆ  Æ  w  ˜  Ù  y  }  ¯  î  y  ∞  ˘  ¯  Ø  y  ˘  ˆ  }    ˙  ò  }  ±  ˚  ˙  ∞  }  ˚  ¯    Ñ  ¸  ¢    ≤  ˝  ¸  ±    ˝  ˙  Ñ  à  ˛  ™  Ñ  ≥  ˇ  ˛  ≤  Ñ  ˇ  ¸  à  ä     Æ  à  ¥       ≥  à    ˛  ä  ê    ∫  ä  µ      ¥  ä       ê  í    æ  ê  ∂      µ  ê      í  ô    Ã  í  ∑      ∂  í      [  Z    Q  ]  \  
+  T  \  ∏    	  π  \    
+  ^  ]    V  ]  π    
+  ∫  ]      _  ^    X  ^  ∫      ª  ^      `  _    Z  _  ª      º  _      a  `    \  `  º      Ω  `      b  a    ^  a  Ω      æ  a      c  b    `  b  æ      ø  b      d  c    b  c  ø      ¿  c      e  d    d  d  ¿      ¡  d      j  e    n  e  ¡      ¬  e      m  j    t  j  ¬      √  j      o  m     x  m  √  !    ƒ  m  !     r  o  "  ~  o  ƒ  #     ≈  o  #  "  u  r  $  Ñ  r  ≈  %  "  ∆  r  %  $  x  u  &  ä  u  ∆  '  $  «  u  '  &  {  x  (  ê  x  «  )  &  »  x  )  (  ~  {  *  ñ  {  »  +  (  …  {  +  *  Å  ~  ,  ú  ~  …  -  *     ~  -  ,  Ö  Å  .  §  Å     /  ,  À  Å  /  .  â  Ö  0  ¨  Ö  À  1  .  Ã  Ö  1  0  ç  â  2  ¥  â  Ã  3  0  Õ  â  3  2  ë  ç  4  º  ç  Õ  5  2  Œ  ç  5  4  ï  ë  6  ƒ  ë  Œ  7  4  œ  ë  7  6  Ç  :  8  û  :  R  9  B  –  :  9  8  á  Ç  :  ®  Ç  –  ;  8  —  Ç  ;  :  ã  á  <  ∞  á  —  =  :  “  á  =  <  è  ã  >  ∏  ã  “  ?  <  ”  ã  ?  >  ì  è  @  ¿  è  ”  A  >  ‘  è  A  @  ò  ì  B     ì  ‘  C  @  ’  ì  C  B  f  3  D  f  3  P  E  =  ÷  3  E  D  g  f  F  h  f  ÷  G  D  ◊  f  G  F  h  g  H  j  g  ◊  I  F  ÿ  g  I  H  i  h  J  l  h  ÿ  K  H  Ÿ  h  K  J  k  i  L  p  i  Ÿ  M  J  ⁄  i  M  L  l  k  N  r  k  ⁄  O  L  €  k  O  N  q  l  P  |  l  €  Q  N  ‹  l  Q  P  t  q  R  Ç  q  ‹  S  P  ›  q  S  R  v  t  T  Ü  t  ›  U  R  ﬁ  t  U  T  z  v  V  é  v  ﬁ  W  T  ﬂ  v  W  V  |  z  X  í  z  ﬂ  Y  V  ‡  z  Y  X  Ä  |  Z  ö  |  ‡  [  X  ·  |  [  Z  É  Ä  \  †  Ä  ·  ]  Z  ‚  Ä  ]  \  Ü  É  ^  ¶  É  ‚  _  \  „  É  _  ^  å  Ü  `  ≤  Ü  „  a  ^  ‰  Ü  a  `  é  å  b  ∂  å  ‰  c  `  Â  å  c  b  î  é  d  ¬  é  Â  e  b  Ê  é  e  d  ó  î  f  »  î  Ê  g  d  Á  î  g  f  ß  ó  h  Ê  Ë  ó  i  h  ó  Á  j  f  È  ó  j  i  °  ñ  k  ⁄  ñ  ©  l  Í  ñ  Í  m  l  Î  ñ  m  k  ®  ò  n  Ë  Ï  ò  o  n  ò  ’  p  B  Ì  ò  p  o  ô  õ  q  œ  ∑  ô  r    ô  Ó  s  q  Ô  ô  s  r  ö  ï  t  Õ    ï  u  t  ï  œ  v  6  Ò  ï  v  u  P  O  w  ?  O  Q  x  @  O  Ú  y  x  Û  O  y  w  U  T  z  G  U  Ù  {  z  R  S  |  C  ı  S  }  |  N  M  ~  <  ˆ  M    ~  ÷  P  Ä  E  P  Û  Å  w  ˜  P  Å  Ä  ◊  ÷  Ç  G  ÷  ˜  É  Ä  ¯  ÷  É  Ç  ÿ  ◊  Ñ  I  ◊  ¯  Ö  Ç  ˘  ◊  Ö  Ñ  Ÿ  ÿ  Ü  K  ÿ  ˘  á  Ñ  ˙  ÿ  á  Ü  ⁄  Ÿ  à  M  Ÿ  ˙  â  Ü  ˚  Ÿ  â  à  €  ⁄  ä  O  ⁄  ˚  ã  à  ¸  ⁄  ã  ä  ‹  €  å  Q  €  ¸  ç  ä  ˝  €  ç  å  ›  ‹  é  S  ‹  ˝  è  å  ˛  ‹  è  é  ﬁ  ›  ê  U  ›  ˛  ë  é  ˇ  ›  ë  ê  ﬂ  ﬁ  í  W  ﬁ  ˇ  ì  ê     ﬁ  ì  í  ‡  ﬂ  î  Y  ﬂ     ï  í    ﬂ  ï  î  ·  ‡  ñ  [  ‡    ó  î    ‡  ó  ñ  ‚  ·  ò  ]  ·    ô  ñ    ·  ô  ò  „  ‚  ö  _  ‚    õ  ò    ‚  õ  ö  ‰  „  ú  a  „    ù  ö    „  ù  ú  Â  ‰  û  c  ‰    ü  ú    ‰  ü  û  Ê  Â  †  e  Â    °  û    Â  °  †  Á  Ê  ¢  g  Ê    £  †    Ê  £  ¢  È  Á  §  j  Á    •  ¢  	  Á  •  §  S  ¢  ¶  ›  S  
+  ß  ¶    S  ß  }  ¢  £  ®  ﬂ  ¢    ©  ®  
+  ¢  ©  ¶  £  §  ™  ·  £    ´  ™    £  ´  ®  §  •  ¨  „  §    ≠  ¨    §  ≠  ™  •  ¶  Æ  Â  •    Ø  Æ    •  Ø  ¨  ¶  ß  ∞  Á  ¶    ±  ∞    ¶  ±  Æ  ß  Ë  ≤  h  ß    ≥  ≤    ß  ≥  ∞  Ë  È  ¥  i  Ë    µ  ¥    Ë  µ  ≤    È  ∂  ¥  È  	  ∑  §    È  ∑  ∂  ©  U  ∏  Î  U    π  {    U  π  ∏  Í  ©  ∫  l  ©    ª  ∏    ©  ª  ∫  ù  ú  Ω  ”  ù    æ  Ω    ù  æ  º  ú  û  ø  ’  ú    ¿  ø    ú  ¿  Ω  û  ü  ¡  ◊  û    ¬  ¡    û  ¬  ø  ü  †  √  Ÿ  ü    ƒ  √    ü  ƒ  ¡  †  °  ≈  €  †    ∆  ≈    †  ∆  √  °  Î  «  k  °    »  «    °  »  ≈  Î  Í  …  m  Î       …    Î     «    Í  À  …  Í    Ã  ∫    Í  Ã  À  –  R  Õ  9  R  ı  Œ  |     R  Œ  Õ  —  –  œ  ;  –     –  Õ  !  –  –  œ  “  —  —  =  —  !  “  œ  "  —  “  —  ”  “  ”  ?  “  "  ‘  —  #  “  ‘  ”  ‘  ”  ’  A  ”  #  ÷  ”  $  ”  ÷  ’  ’  ‘  ◊  C  ‘  $  ÿ  ’  %  ‘  ÿ  ◊  Ì  ’  Ÿ  p  ’  %  ⁄  ◊  &  ’  ⁄  Ÿ  T  ®  €  È  T  '  ‹  €  Ù  T  ‹  z  ®  Ï  ›  n  ®  (  ﬁ  ›  '  ®  ﬁ  €  Ï  Ì  ﬂ  o  Ï  )  ‡  ﬂ  (  Ï  ‡  ›  )  Ì  ·  ﬂ  Ì  &  ‚  Ÿ  *  Ì  ‚  ·  Q  ™  „  Ì  Q  +  ‰  „  Ú  Q  ‰  x  ™  ´  Â  Ô  ™  ,  Ê  Â  +  ™  Ê  „  ´  ¨  Á  Ò  ´  -  Ë  Á  ,  ´  Ë  Â  ¨  ≠  È  Û  ¨  .  Í  È  -  ¨  Í  Á  ≠  Æ  Î  ı  ≠  /  Ï  Î  .  ≠  Ï  È  Æ  Ø  Ì  ˜  Æ  0  Ó  Ì  /  Æ  Ó  Î  Ø  ∞  Ô  ˘  Ø  1    Ô  0  Ø    Ì  ∞  ±  Ò  ˚  ∞  2  Ú  Ò  1  ∞  Ú  Ô  ±  ≤  Û  ˝  ±  3  Ù  Û  2  ±  Ù  Ò  ≤  ≥  ı  ˇ  ≤  4  ˆ  ı  3  ≤  ˆ  Û  ≥  ¥  ˜    ≥  5  ¯  ˜  4  ≥  ¯  ı  ¥  µ  ˘    ¥  6  ˙  ˘  5  ¥  ˙  ˜  µ  ∂  ˚    µ  7  ¸  ˚  6  µ  ¸  ˘  ∂  ∑  ˝    ∂  8  ˛  ˝  7  ∂  ˛  ˚  ∑  Ô  ˇ  r  ∑  9     ˇ  8  ∑     ˝  õ  N    –  N  ˆ    ~  :  N      Ó  õ    q  õ  :      ;  õ      Ô  Ó    s  Ó  ;      <  Ó      Ô  <      Ô  =      9  Ô    ˇ  ª  ∫  
+    >  ∫    
+  º  ª      ª  >    
+  ?  ª      Ω  º      º  ?      @  º      æ  Ω      Ω  @      A  Ω      ø  æ      æ  A      B  æ      ¿  ø      ø  B      C  ø      ¡  ¿      ¿  C      D  ¿      ¬  ¡      ¡  D      E  ¡      √  ¬      ¬  E      F  ¬      ƒ  √    !  √  F      G  √      ≈  ƒ    #  ƒ  G      H  ƒ      ∆  ≈     %  ≈  H  !    I  ≈  !     «  ∆  "  '  ∆  I  #     J  ∆  #  "  »  «  $  )  «  J  %  "  K  «  %  $  …  »  &  +  »  K  '  $  L  »  '  &     …  (  -  …  L  )  &  M  …  )  (  À     *  /     M  +  (  N     +  *  Ã  À  ,  1  À  N  -  *  O  À  -  ,  Õ  Ã  .  3  Ã  O  /  ,  P  Ã  /  .  Œ  Õ  0  5  Õ  P  1  .  Q  Õ  1  0  œ  Œ  2  7  Œ  Q  3  0  R  Œ  3  2  Ò  œ  4  v  œ  R  5  2  S  œ  5  4  M  ö  6  Œ  M  T  7  6  U  M  7    ö    8  t  ö  V  9  8  T  ö  9  6    Ò  :  u    W  ;  :  V    ;  8  W  Ò  <  :  Ò  S  =  4  X  Ò  =  <      >  ∂  )  *  ?  ·      @  À  W  X  A  <  =  <  B    Û  Ú  C  y  ı    D  }  ˆ  U  E      Ù  F  {  Y     J  I  >  Y  J    >     K  J  >     L  K  ?  >  L    ?     M  L  ?     N  M  @  ?  N    @     O  N  @     P  O  A  @  P    A     Q  P  A  	   R  Q  B  A  R    B  	   S  R  B  
+   T  S  C  B  T    C  
+   U  T  C     V  U  D  C  V    D     W  V  D     X  W  E  D  X       Ú  Y  C  Ú  +  Z  ‰     Ú  Z  Y  Û     [  C  Û     \  [  ˜  Û  \  Å  E     ]  X  E     ^  ]  F  E  ^       +  _  Z  +  ,  `  Ê     +  `  _  ˜     a  \  ˜     b  a  ¯  ˜  b  É  ¯     c  b  ¯     d  c  ˘  ¯  d  Ö  ˘     e  d  ˘     f  e  ˙  ˘  f  á  ˙     g  f  ˙     h  g  ˚  ˙  h  â  ˚     i  h  ˚     j  i  ¸  ˚  j  ã  F     k  ^  F     l  k  G  F  l       ,  m  `  ,  -  n  Ë     ,  n  m     -  o  n  -  .  p  Í     -  p  o  G     q  l  G     r  q  H  G  r    ¸     s  j  ¸     t  s  ˝  ¸  t  ç  ˝     u  t  ˝     v  u  ˛  ˝  v  è  ˛     w  v  ˛     x  w  ˇ  ˛  x  ë     .  y  p  .  /  z  Ï     .  z  y     /  {  z  /  0  |  Ó     /  |  {  H     }  r  H      ~  }  I  H  ~  !  I        ~  I  !   Ä    J  I  Ä  #  ˇ     Å  x  ˇ  "   Ç  Å     ˇ  Ç  ì     0  É  |  0  1  Ñ    #   0  Ñ  É  J  !   Ö  Ä  J  $   Ü  Ö  K  J  Ü  %     "   á  Ç     %   à  á       à  ï    %   â  à    &   ä  â      ä  ó  #   1  ã  Ñ  1  2  å  Ú  '   1  å  ã  K  $   ç  Ü  K  (   é  ç  L  K  é  '  L  (   è  é  L  )   ê  è  M  L  ê  )  '   2  ë  å  2  3  í  Ù  *   2  í  ë  f     ì  D    
+  î  ß  e     î  ì    &   ï  ä    +   ñ  ï      ñ  ô  ı  f   ó  D  ı  g   ò  ó     ı  ò  Œ     g   ô  ò     h   ö  ô  !     ö  –      õ  æ    +   ú  ñ    ,   ù  ú      ù  õ  e   
+  û  î  
+    ü  ©  i   
+  ü  û  M  )   †  ê  M  -   °  †  N  M  °  +  *   3  ¢  í  3  4  £  ˆ  .   3  £  ¢  N  -   §  °  N  /   •  §  O  N  •  -  .   4  ¶  £  4  5  ß  ¯  0   4  ß  ¶  i     ®  ü      ©  ´  j     ©  ®    ,   ™  ù    1   ´  ™      ´  ù  !  h   ¨  ö  !  k   ≠  ¨  "  !  ≠  “  3     Æ  õ      Ø  ¿  2     Ø  Æ  j     ∞  ©      ±  ≠  l     ±  ∞  "  k   ≤  ≠  "  m   ≥  ≤  #  "  ≥  ‘  2     ¥  Ø      µ  ¬  4     µ  ¥    1   ∂  ´    5   ∑  ∂      ∑  ü  0   5  ∏  ß  5  6  π  ˙  6   5  π  ∏  O  /   ∫  •  O  7   ª  ∫  P  O  ª  /  l     º  ±      Ω  Ø  n     Ω  º    5   æ  ∑    8   ø  æ      ø  °  #  m   ¿  ≥  #  o   ¡  ¿  $  #  ¡  ÷  4     ¬  µ      √  ƒ  9     √  ¬  6   6  ƒ  π  6  7  ≈  ¸  :   6  ≈  ƒ  P  7   ∆  ª  P  ;   «  ∆  Q  P  «  1  Q  ;   »  «  Q  <   …  »  R  Q  …  3  :   7     ≈  7  8  À  ˛  =   7  À     y   U  Ã  E  U  T  Õ  7  x   U  Õ  Ã  ˆ  y   Œ  E  ˆ  z   œ  Œ  :  ˆ  œ    n     –  Ω      —  ±  p     —  –  $  o   “  ¡  $  q   ”  “  %  $  ”  ÿ  9     ‘  √      ’  ∆  >     ’  ‘    ?   ÷  F    @   ◊  ÷      ◊  π  ?   Ù  ÿ  F  Ù  '  Ÿ  ‹  A   Ù  Ÿ  ÿ    8   ⁄  ø    B   €  ⁄      €  £  A   '  ‹  Ÿ  '  (  ›  ﬁ  C   '  ›  ‹    B   ﬁ  €    D   ﬂ  ﬁ  	    ﬂ  •  >     ‡  ’      ·  »  E     ·  ‡    @   ‚  ◊    F   „  ‚      „  ª  %  q   ‰  ”  %  r   Â  ‰  &  %  Â  ⁄  x   T  Ê  Õ  T  V  Á  9  {   T  Á  Ê  :  z   Ë  œ  :  |   È  Ë  ;  :  È    p     Í  —      Î  ≥  s     Î  Í  R  <   Ï  …  R  G   Ì  Ï  S  R  Ì  5  =   8  Ó  À  8  9  Ô     H   8  Ô  Ó  S  G     Ì  S  I   Ò    X  S  Ò  =  H   9  Ú  Ô  9  =  Û    J   9  Û  Ú  {   V  Ù  Á  V  W  ı  ;  }   V  ı  Ù  ;  |   ˆ  È  ;  ~   ˜  ˆ  <  ;  ˜    s     ¯  Î      ˘  µ  t     ˘  ¯  E     ˙  ·      ˚     K     ˚  ˙    F   ¸  „    L   ˝  ¸      ˝  Ã  &  r   ˛  Â  &  u   ˇ  ˛  *  &  ˇ  ‚  C   (     ›  (  )    ‡  M   (       	  D     ﬂ  	  N         	    ∑  }   W    ı  W  Z    A     W      <  ~     ˜  <  Ä       [  <    B  M   )      )  \  	  ?  O   )  	      N   
+      P     
+  ]      >  t       ˘    ]    >  v           L     ˝    Q       ^      @  K       ˚    ^    @  R         *  u     ˇ  *  w       \  *    ?  X  I     Ò  X  S       Z  X    A  J   =    Û  =  [    B  T   =      O   \    	  \  w       U   \      [  Ä       [  V       T   [      ]  P       ]  W       v   ]      Z  S       Z  X          Z      ^  Q        ^  Y   !     R   ^  !    _  `  "  l  `  ñ   #  k  a  ñ   ~  #  _  b  r  "  b  `  $  "  `  a  $  #  ì   c  %  x  d  e  Ñ  &  d  f  &  s   f  ì   %  s   f  c  '  %  e  f  '  &  g  ©   )  á  h  i  î  *  i  ©   í  )  j  h  Ø  *  g  i  +  )  i  j  +  *  k  l  ,    l  m  -    n  o  >  .  o  m  ?  -  k  p  ñ  ,  p  n  ó  .  p  l  /  ,  l  o  /  -  o  p  /  .  q  r  0  ò  q  s  3  0  s  t  4  1  s  r  2  0  u  s  2  1  v  q  3  õ  v  s  5  3  s  w  5  4  Z  x  6  ™  x  y  7  ¨  z  {  ∂  8  {  y  ∑  7  z  |  8    |  Z  6    |  x  9  6  x  {  9  7  {  |  9  8  [  }  :    }  z  ;    ∏  ~  ∫  <  ~  z  ª  ;  ∏    <  	    [  :  	    }  =  :  }  ~  =  ;  ~    =  <  Ä  Å  ∞  @  Å  m  Æ  ?  n  Ç  S  >  Ç  Ä  T  @  h  É  A  º  É    B  º  Ä  Ñ  ^  C  Ñ    _  B  Ä  Ö  C  ∞  Ö  h  A  Ø  Ö  É  D  A  É  Ñ  D  B  Ñ  Ö  D  C  Ü  á  E  ≥  Ü  w  F  E  à  â  G  ¥  ä  â  ∆  G  à  ä  H  G  π  ã  I    ã  ∏  J    å  ç  ƒ  K  ç  ∏  ¬  J  π  é  	  I  é  å  	  K  é  ã  L  I  ã  ç  L  J  ç  é  L  K  ∫  è  M    è  π  N    Y  ê  	  O  ê  π  	  N  ∫  ë    M  ë  Y    O  ë  è  P  M  è  ê  P  N  ê  ë  P  O  í  n  S  Q  u  í  R  Q  ì  Ä  \  T  î     «  Y  ï  [   Z  X  [   î  Z  Y  \   ñ  `  [  ñ  Ä  ^  \  ñ  ]   ]  [  ì  ñ  ]  \  \   ó  c  `  ó    d  _  ñ  Ñ  a  ^  Ñ  ó  a  _  ó  ñ  a  `  3   ò  õ  b  ò    õ  d  ò  ^   e  b  ^   ó  e  c  ó  ò  e  d  ï   ô  f     ô  á   g     _  ö  l  h  ö  á   j  g  ï   õ     f  õ  _     h  õ  ô  i  f  ô  ö  i  g  ö  õ  i  h  á   ú  j     ú  ñ   k     ö  ú  m  j  ú  `  m  k  `  ö  m  l  ú   ù  n     ù  _  o     ö   û  t  p  û  _  r  o  ú   ü     n  ü  ö      p  ü  ù  q  n  ù  û  q  o  û  ü  q  p  ö   †  v  t  †  °  w  s  û  b  u  r  b  †  u  s  †  û  u  t  ì   ¢  x     ¢  ö   v     ¢  †  y  v  †  c  y  w  c  ¢  y  x  ñ   £  z     £  ó   {     k  §    |  §  ó     {  ñ   •  ~  z  •  k    |  •  £  }  z  £  §  }  {  §  •  }  |  a  •  Å  ~  •  ¶  Å    ¶  a  Å  Ä  d  ß  ö  Ñ  ß  q  õ  É  e  ®  Ö  Ç  ®  ß  Ö  É  ß  e  Ö  Ñ  ó   ©  Ü  5   ©  ©   á  5   ó   ™    Ü  ™  m    à  ™  ©  â  Ü  ©  g  â  á  g  ™  â  à  Ö   ´  ä  s   ´  d  ã  s   ¨  ≠  †  å  ≠  d  û  ã  Ö   Æ  é  ä  Æ  ¨  è  å  Æ  ´  ç  ä  ´  ≠  ç  ã  ≠  Æ  ç  å  ﬁ   Ø  O  ê  Ø  ¨  O  è  ﬁ   ∞  ê  o   ∞  Ö   é  o   ∞  Æ  ë  é  Æ  Ø  ë  è  Ø  ∞  ë  ê  ©   ±  í  	  ±  0  ì  	  h  ≤  ®  î  ≤  0  ¶  ì  i  ±  ï  í  ±  ≤  ï  ì  ≤  i  ï  î  ≥  p  ô  ñ  p  r  ô  ó  r  ≥  ô  ò  d  ¥  û  ö  ¥  á  ü  ú  ¥  ß  ù  ö  ß  v  ù  õ  v  ¥  ù  ú  ≠  ¥  °  û  ¥  µ  °  ü  µ  ≠  °  †    ∂  ¢  P  ∂  [  £  P  \  ∑  	  §  ∑  [  	  £  \  ∏  §  R  ∏    ¢  R  ∏  ∂  •  ¢  ∂  ∑  •  £  ∑  ∏  •  §  0  π  ¶  —  π  ù  ß  —  h  ∫  º  ®  ∫  ù  º  ß  ≤  π  ©  ¶  π  ∫  ©  ß  ∫  ≤  ©  ®  Z  ª  ™  O  ª  ¨  ´  O  x  ª  ≠  ™  ª  º  ≠  ´  º  x  ≠  ¨  Å  j  ±  Æ  j  Ö  ±  Ø  Ö  Å  ±  ∞  à  Ω  µ  ≤  Ω  Ü  µ  ≥  Ü  à  µ  ¥  z  æ  æ  ∂  æ  ø  ø  ∏  æ  {  π  ∂  {  ¿  π  ∑  ¿  æ  π  ∏  ¡  ¬  ¿  º  ¬  z  æ  ª  ∏  √  ¬  ∫  √  ¡  √  º  √  ~  Ω  ∫  ~  ¬  Ω  ª  ¬  √  Ω  º  ¡  ƒ  Ã  ¿  ƒ  ø     ø  ¬  æ  ¡  æ  æ  ƒ  ¡  ø  ƒ  ¬  ¡  ¿  å  ≈  –  ƒ  ≈  ¡  Œ  √  ç  √  ≈  ¬  √  ≈  ≈  √  ≈  ç  ≈  ƒ  ø  ∆  G  »  ∆     G  «  ä  î  …  ∆  î  ∆  …  «  ∆  ä  …  »  ø  «     G  «     À  G  ¡  »  H  Ã  »     H  À  ƒ  «  Õ     «  »  Õ  À  »  ƒ  Õ  Ã  ¡  …  Œ  H  …     œ  H  å     ‘  –        “  œ  ≈  …  —  Œ  …     —  œ     ≈  —  –  å  À  ÷  ‘  À     ◊  ”     _   ’  “  _   À  ’  ”  À     ’  ‘  Y  Ã  I  ÿ  Ã     I  ◊  Y  Õ  ÿ  	  Õ  å  ÷  	  Õ  À  Ÿ  ÷  À  Ã  Ÿ  ◊  Ã  Õ  Ÿ  ÿ  a  Œ  $  €  Œ  b  $  ⁄  °  œ  Ä  ‹  œ  a  Ä  €  b  –  s  ⁄  –  °  s  ‹  –  Œ  ›  ⁄  Œ  œ  ›  €  œ  –  ›  ‹  c  —  ﬁ  w  —  °  ﬂ  w  e  “  Ç  ‡  “  °  Ç  ﬂ  c  ”  '  ﬁ  ”  e  '  ‡  ”  —  ·  ﬁ  —  “  ·  ﬂ  “  ”  ·  ‡  °  ‘  ‚  Ä  ‘  ¶  „  Ä  ®  ’  (  ‰  ’  ¶  (  „  °  ÷  Ç  ‚  ÷  ®  Ç  ‰  ÷  ‘  Â  ‚  ‘  ’  Â  „  ’  ÷  Â  ‰  ¶  ◊  Ê    ◊  k  Á    ≥  ÿ  ñ  Ë  ÿ  k  ñ  Á  ¶  Ÿ  (  Ê  Ÿ  ≥  (  Ë  Ÿ  ◊  È  Ê  ◊  ÿ  È  Á  ÿ  Ÿ  È  Ë  ≥  ⁄  (  Î  ⁄  ®  (  Í  q  €  ò  Ï  €  ≥  ò  Î  ®  ‹  É  Í  ‹  q  É  Ï  ‹  ⁄  Ì  Í  ⁄  €  Ì  Î  €  ‹  Ì  Ï  m  ›  Ó  à  ›  g  Ô  à  j  ﬁ  +    ﬁ  g  +  Ô  m  ﬂ  Æ  Ó  ﬂ  j  Æ    ﬂ  ›  Ò  Ó  ›  ﬁ  Ò  Ô  ﬁ  ﬂ  Ò    r  ‡  Ú  ó  ‡  n  Û  ó  u  ·  Q  Ù  ·  n  Q  Û  r  ‚  2  Ú  ‚  u  2  Ù  ‚  ‡  ı  Ú  ‡  ·  ı  Û  ·  ‚  ı  Ù  w  „  5  ˜  „  v  5  ˆ  á  ‰  E  ¯  ‰  w  E  ˜  á  Â  ¯  ú  Â  v  ˆ  ú  Â  „  ˘  ˆ  „  ‰  ˘  ˜  ‰  Â  ˘  ¯  ¨  Ê  ˙  †  Ê  µ  ˚  †  º  Á    ¸  Á  µ    ˚  º  Ë  ¸  ´  Ë  ¨  ˙  ´  Ë  Ê  ˝  ˙  Ê  Á  ˝  ˚  Á  Ë  ˝  ¸  µ  È  ˛  ü  È  á  ˇ  ü  Ω  Í  ≥     Í  á  ≥  ˇ  µ  Î    ˛  Î  Ω       Î  È    ˛  È  Í    ˇ  Í  Î       Ω  Ï      Ï  º      y  Ì  ≤    Ì  Ω  ≤    y  Ó    ¨  Ó  º    ¨  Ó  Ï      Ï  Ì      Ì  Ó      Î  Ï  	    Ï  Á  	    Á  Î  	    Å  Ô  
+  @  Ô  Ç    @  Ç      >    o    >  o  Ò    ?  Ò  Å  
+  ?  Ò  Ô    
+  Ô          Ò      w  Ú    4  Ú  t    4  Û  Ù  8    Ù  t  6    w  ı  F    ı  Û  F    ı  Ú      Ú  Ù      Ù  ı      Û  ˆ  F    ˆ  Ü  F    â  ˜  W    ˜  Û  W    â  ¯    ¥  ¯  Ü    ¥  ¯  ˆ      ˆ  ˜      ˜  ¯      y  ˘    ≤  ˘  à    ≤  ¿  ˙  H    ˙  à  H    ¿  ˚    ∑  ˚  y    ∑  ˚  ˘      ˘  ˙      ˙  ˚      ä  ¸  H    ¸  ¿  H    ø  ˝  »    ˝  ä  »    ø  ˛    ∏  ˛  ¿    ∏  ˛  ¸      ¸  ˝      ˝  ˛      t  ˇ    1  ˇ  u    1       R       u  R    t    V         V       ˇ  !    ˇ    !        !     í    R  #       R  "  `     U  $    í  U  #       ,  "    `   *  $      %  "      %  #      %  $  ì    &  U    í  '  U  í    '  S    Ç  (  S  Ç    (  T    ì  &  T      )  &      )  '      )  (     	  3  ,  	  b   4  +    a   -  *  a   	  -  +  	    -  ,  
+    :  0    Z   ;  /  b     4  .    
+  2  0    c   1  .  c     1  /      1  0  
+    2  V       3  V      5  2    	  5  3  	    5  4  t    6  V    
+  7  V  Û    ?  8    
+  @  7  Ù    9  6      9  7    Ù  9  8  ï    X  <    Z   X  ;  
+    @  :    ï  >  <      =  :      =  ;      =  <  ï    >  W    Û  ?  W      A  >      A  ?      A  @  î    Z  C    ï  Z  B  â    ∆  D    î  ∆  C  â    D  W    ï  B  W      E  B      E  C      E  D  `     G  U    ì  H  U  ]     ]  F    ì  ]  H    d   I  F  d     I  G      I  H  )
+End of Binary Section   2013)
+
+(2013 (8 860 867 1f 2)
+(`   Z   \      Z      ^      \   `   _      3   \   a            }      `   b   ì      b   Z   î      ]   `   ö      )
+End of Binary Section   2013)
+
+(2013 (7 868 90e 1f 2)
+(_  ñ   J  c  °  ñ   h  J  _  °  e  J  ì   °  K  f  d  °  i  K  d  ì   K  s   °  k  L  h  q  k  n  L  °  q  i  L  m  ©   M  j  h  ©   m  M  m  h  t  M  k  m  N    n  m  T  N  k  n  n  N  q  n  O  n  t  n  Z  O  q  t  P  O  á  t  V  P  á  q  P  o  ¨  á  Q  p  y  á  u  Q  y  ¨  Q  s  Z  y  R  s  z  y  v  R  z  Z  R    [  z  S    ∏  z  w  S  ∏  [  S  	  Ä  m  t  T  n  Ä  [  T  h    U  º  Ä    `  U  Ä  h  U  t  â  t  ]  V  â  á  V  u  y  â  W  u  ø  â  z  W  ø  y  W  v  π  ∏  X    å  ∏  y  X  π  å  	  X  ∫  π  Y    Y  π  	  Y  ∫  Y    Y  `   n  [  Z  t  `   \  Z  `   Ä  _  [  t  Z   ]  \  â  Z   ^  ]  â     z  ^  \   Ä  `  _  \     a  `  3     õ  a  ï   á   b     _  á   c  b  ï   _     b  á   ñ   c     ú   _  d     ö   _  e  d  ú   ö      d  ö   °  f  e  ì   ö   f     ñ   ó   g     k  ó     g  ñ   k  h  g  d  q  o  i  ó   ©   j  5   ó   m    j  Ö   d  k  s   ¨  d  p  k  Ö   ¨  l  k  ﬁ   ¨  O  l  ﬁ   Ö   l  o   ©   0  m  	  h  0  r  m  d  á  p  o    [  q  P  \  [  	  q  \    q  R  0  ù  r  —  h  ù  º  r  Z  ¨  s  O  z  ø  x  v  ¡  z  x  w  ∏  ¡  y  w  ¡  ø  {  x  å  ¡  |  y  ø     G  z  ø     {  G  ¡     H  {  ¡     |  H  å     }  |  å     ~  }  Y     I  ~  Y  å  ~  	  a  b  $    °  a  Ä    b  °  s    c  °  Ä  w  e  °  Ç  Ä  c  e  '  Ä  °  ¶  Å  Ä  ®  ¶  (  Å  °  ®  Ç  Å  ¶  k  Ç    ≥  k  ñ  Ç  ¶  ≥  (  Ç  ≥  ®  (  É  q  ≥  ò  É  ®  q  É  É  m  g  Ñ  à  j  g  +  Ñ  m  j  Æ  Ñ  r  n  Ö  ó  u  n  Q  Ö  r  u  2  Ö  w  v  5  Ü  á  w  E  Ü  á  v  Ü  ú  ¨  µ  á  †  º  µ  ä  á  º  ¨  á  ´  µ  á  à  ü  Ω  á  ≥  à  µ  Ω  ä  à  Ω  º  ä  â  y  Ω  ≤  â  y  º  â  ¨  Å  Ç  ã  @  Ç  o  ã  >  o  Å  ã  ?  w  t  å  4  Û  t  ñ  å  w  Û  F  å  Û  Ü  F  ç  â  Û  W  ç  â  Ü  ç  ¥  y  à  é  ≤  ¿  à  H  é  ¿  y  é  ∑  ä  ¿  H  è  ø  ä  »  è  ø  ¿  è  ∏  t  u  ê  1     u  R  ê  t     V  ê  í     R  ë  `   í  U  ë     `   ì  ë  ì  í  í  U  í  Ç  í  S  Ç  ì  í  T     b   ï  ì  
+  Z   ó  î  b   
+  ï  î  
+     ï  V  t  
+  ñ  V  Û  
+  ò  ñ  ï  Z   X  ó  
+  ï  ò  ó  ï  Û  ò  W  î  ï  Z  ô  â  î  ∆  ô  â  ï  ô  W  `   ì  ö  U  ]   ì  ]  ö  )
+End of Binary Section   2013)
+
+(2059 (860 867 8 2)
+(   e  f     V   W      X   g     Y   Z      [   \      ]   ^      _   `      a   b   )
+End of Binary Section   2059)
+
+(2059 (868 90e 7 6)
+(   f  g     …  h     i        l  À     m  Ã     n  o     Œ  —     ’  “     –  ÷     ◊  r     s  t     Ÿ  u     x  y     z  {     |  }     Å  ⁄     ¯  €     Ç  É     ﬁ  Ï     ﬂ  Ü     ‡  „     Á  ‰     Ë  ‚     â  ä     ã  å     ç  é     í  ì     î  ï     ñ  ó     õ  ú     ù  û     ü  †     °  ¢     £  §       Ì     Ò  ®     Ú  ™     ˆ  ´     ˜  Ù     ≠  Æ     Ø  ∞     ±  ≤     ∂  ∑     ∏  π     ∫  ª     ¸  ø     ˙  ˝     	  ¡     	  	     	  	     	  ¬     ≈  ∆     …        Œ  œ     ”  ‘     ’  ÷     ◊  ÿ     ‹  ›     ·  ‚     „  ‰     Â  Ê     Í  Î     Ô       Ù  ı     ˆ  ˜     ¯  ˘                                                                            &  '     .  /     0  1     2  3     7  8     9  :     >  ?     I  J     N  O     P  Q     U  V     Z  [     _  `     d  e     f  g     k  l     m  n     r  s     w  x     y  z     ~       Ä  Å     Ç  É     á  à     â  ä     ã  å     ê  ë     í  ì     î  ï     ô  ö     õ  ú     ù  û     ¢  £     §  •     ¶  ß     ´  ¨     ≠  Æ     Ø  ∞     ¥  µ     ∂  ∑     ∏  π     Ω  æ     ø  ¿     ¡  ¬     ∆  «     »  …        À     œ  –     —  “     ”  ‘     ÿ  Ÿ     ⁄  €     ‹  ›     ‰  Â     Ê  Á     Ë  È     Ì  Ó     Ô       Ò  Ú     ˆ  ˜     ¯  ˘     ˙  ˚     ˇ                        	     
+                                                        #  $     %  &     '  (     ,  -     1  2     3  4     8  9     =  >     ?  @     D  E     F  G     K  L     P  Q     R  S     T  U     Y  Z     [  \  )
+End of Binary Section   2059)
+
+(2010 (1 1 317 1 2)
+(ÕÃL>  Ä?öôô>  Ä?ÕÃÃ>  Ä?   ?  Ä?öô?  Ä?333?  Ä?ÕÃL?  Ä?fff?  Ä?  Ä?  Ä?ÕÃå?  Ä?öôô?  Ä?ff¶?  Ä?ff¶?   @öôô?   @ÕÃå?   @33≥?  Ä?33≥?   @  Ä?   @fff?   @ÕÃL?   @333?   @öô?   @  ¿?  Ä?  ¿?   @ÕÃÃ?   @ÕÃÃ?  Ä?   ?   @ÕÃÃ>   @öôô>   @öôŸ?   @ffÊ?   @öôŸ?  Ä?ffÊ?  Ä?ÕÃL>   @33Û?   @33Û?  Ä?ÕÃÃ=   @       @   @   @   @  Ä?ff@  Ä?ff@   @ÕÃÃΩ   @ÕÃLæ   @ÕÃ@  Ä?ÕÃ@   @33@  Ä?33@   @öôôæ   @    333?    ÕÃL?    öô?ÕÃÃæ   @öô@   @öô@  Ä?   ø   @       ?   @   @   @  Ä?ff&@  Ä?ff&@   @    ÕÃÃ>   ø    ÕÃÃæ    öôø    öôø   @333ø    333ø   @    öôô>öôôæ    ÕÃ,@  Ä?ÕÃ,@   @333@  Ä?333@   @    ÕÃL>ÕÃLæ    ÕÃLø    ÕÃLø   @fffø    fffø   @ÕÃÃΩ        ÕÃÃ=öô9@  Ä?öô9@   @  Äø      @@   @  Äø   @  @@  Ä?        ÕÃÃ=  Ä?öô>  Ä?    fff?    33s?    öôY?ffÊ>  Ä?      Ä?ÕÃÃ<  Ä?ÕÃL=  Ä?öôô=  Ä?    öôy?  ÄøÕÃå?  Äø  Ä?  Äøfff?  ÄøÕÃL?  Äøöôô?  Äøff¶?  Äø333?  Äø33≥?  Äøöô?  Äø  ¿?  Äø   ?  ÄøÕÃÃ?  ÄøÕÃÃ>  Äøöôô>  ÄøöôŸ?  ÄøffÊ?  ÄøÕÃL>  Äø33Û?  ÄøÕÃÃ=  @@33≥?  @@  ¿?  @@ÕÃÃ?  @@ff¶?  @@öôŸ?  @@öôô?  @@ffÊ?  @@ÕÃå?  @@33Û?<@“≈?9W @˘Íπ?o)(@Íà∫?⁄¸"@ö¶∆?=—?=bc¨?°Ÿ Ωd∑?Cöæë>°?Âí«æÁäõ?}°æ›cî?eÉÃæ,*ë?®ÅÒæ’éï?Üƒæ¸Éß?º0Óæ¶ÿâ?îo∂æ8™Ü?4æÈk°?0µÈæÔFz?	!ø„ùé?ñiø¸Å?˛&ΩØ™?Q™ø j?Iàóæ =Ø?i(]æ3¥ô?ﬁuæ|å?G.Èæ=ó_?oS∏ær&o?êk˝Ωó Æ?DìæëJ∫?ÏQæ≤?·P~æÁ.ª?™
+øoõ?fÃ∆æs)≤?Œh±æ
+_ª?+GÓæM¨≠?
+%øÂRá?u°$øà,t?¯ÂËæ—@ª?_9øÍP?Õ–î?mj÷?u&ú?ZVÀ?Éú¢?Å‘?Ô¥Ñæh–|?Äö@ü§∏?Ms@‘´¬?q\@,∂?ﬁ6@jt∏?·	@ı¢ƒ? Á@ç~π?d@j^≈?‹}@‰Óπ?É“ˇ?»´≈?|(¯?R∫?.ÒÚ?qÕ≈?ˇJÎ?u1∫?∂ Ê?ÿÊ≈?B>ﬁ?∏H∫?ú‹ÿ?ÿ∆?≈∞–?≤|∫?√f¥?};À?≥µ?n¡?®¨æ?∫ï»?Õä¡?Ñ˚∫?ÍqÀ?m∑∆?{“®?\∑«?/ˇ™?ÏVπ?¿⁄µ?wp∂?∏çê?æ—»?$ú?∑bΩ?]rå?Çïª?É?
+«?πã}?Ø∫?2·k?‰3∆?/Pc?!:∫?. R?Ú»≈?ù}I?é∫?èN8?<û≈?;—/?äÒπ?⁄¨?7ê≈?>1?ƒÍπ?«?Sã≈?Ü$˘>åÊπ?·–÷>lÖ≈?»–≈>›π?–]£>Ív≈?b9í>#¡π?m_>4U≈?ïˆ;>⁄uπ?éÏ=l≈?yœü=rø∏?≠/<Áπƒ?Ï—«Ω≈?:iMæûÎ≈?’æôæçF∆?áEÃæ/x∆?èˇ>Ôá≠?aá?Lã”?Õoø∑•ß?ß˘øÀó¥?∑Œ$øÏkî?eÈæÖwE?‰œπæC@T?Ú#øyˆY?+\¯æ˜S«?3`ø>æ¡?’ Ø?lŸ”?∞“ø.T6?ù®Ëæ[£+?çeø1û?Ÿ“Áæ∆Õ?Ã‚
+ø¯‘?tÊæÃ>Ô>C
+øQl“>ÙX‰æ@Y∂>gÂ∫?í”?å«?úç“?¯Í”?s›—?Í‡?Pó—?Œ”Ì?ö—?ˇØ˙?Üo—?qÀ@GO—?ÌU
+@Ó—?ﬁ@eî–?
+@π…–?–€@*¬—?yÜ)@Ä…?˚F%@ı“? $$øm°?›¿#ø©jÆ?0$ø#kª?±t?≈.“?›hZ?Sé—?ﬂ∆@?TN—?ù*'?¢:—?‰é?c6—?†·Á>[4—?ï¥>æ/—?"Å>;%—?æ>û—?íâH=À¯–?¬O]Ωú —?_+ æﬂ<—?Ç∫ÉæPy—?å’∂ææì—?gáÈæ£}—?' ø±˚œ?©%øüI»?ØN∫æ≤::?î∫æ…j ?Æπæoú?LÈ∂æc⁄>ãŒÄ>pÆ?É¥>M=Æ?‚Á>sMÆ?Ωè?hRÆ?c,'?wUÆ?ÎŒ@?„\Æ?YÑZ?@qÆ?¸mt?åüÆ?“ká?±ÛÆ?◊!ï?°WØ?	˚¢?æ¬Æ?ÏØ?"Å≠?Lº?¶æ≠?Œj…?ÕãÆ?∞Á÷?√òÆ?‰?éÆ?1‚?ˆÇÆ?ü≠˝?˛oÆ?ÿ5@#BÆ?Ä@Hﬁ≠?CÖ@Ò?≠?Áa@LN≠?có@.˚≠?5$@0Æ?d <ø†ç?‰Ì<øí\?í`âæ—¡a?˙æù?zÏﬂ?·“ì?jı·?-@ä?Çñﬂ?∆*@a,≠?#4/@ÿ≤?è$/@)h¡?Î¢*@€r‘?ïO/@¶"œ?X»©?L—ﬁ? ∏;ø
+˚c?fY#ø†@?Hﬂ"øÏi&?Çt"øF≥?˜’!ø`‡Â>È⁄
+øtDß>;S ø,'≥>’ø¥(Ñ>„ô˛æfóÇ>0q∆æ~≥Ñ>/±æS∫≠>TkãæÜäG?:˜ãæ∞´-?s®ãæıË?M§äæüâÙ>Æl;øÊFõ?Tü:øª®?	â:ø$Éµ?n;ø∆`¬?éÙ5@Ê∆π?p
+5@Í»?G"ô?{¨Í?\Óç?ÏåÍ?…¬§?£ÛÈ?k–Søòjn?G¿Wø˜WÜ?A¿øaF->,>„æù~>É˝àæÄ”¡>øÈ(ø•h”?$<ø˚
+œ?’∂?xHﬁ?˜-]>˙[¢?LK¢>°£¢?hÆ’>lº¢?ôu?Z√¢?%?≈¢?á¨7?%«¢?*OQ?Õ¢?nk?M€¢?ËpÇ?<ı¢?πÖè?3£?:≥ú?b¸¢?Lπ©?5¶¢?8#|?Tﬁ?ÌÂb?BY›?@jI?	›?rÿ/?-‹?çÅ∂?~¢?v?? Î‹?PI˘>AÎ‹?©V√?≥¢?‘Ä¬??⁄›?D[–?v·¢?o*œ?Rr›?=∆>(Í‹?@Y›?	Ê¢?àˇ€?è9›?-…í>∑Á‹?6Í?±·¢?ñ“>>C„‹?qŸË?`&›?®˜?…€¢?•≠ı?ú›?≈sØ=Ω›‹?Ö„@oŒ¢?≤û{º”›‹?IB@Ê›?]=@±¢?∂@e›?∆_ÓΩÎ‹?OÑ@?É¢?Ö‹:ø”¢I?ó9^æ∞ˇ‹?∞;@0„‹?ú∫@˙l¢?k¢æA›?~S:øY≈/?j’@n„‹?˝ @6ã¢?jp@†)›?ª:øï
+?,¡’æI	›?∂q!@¨©¢?ï˚ø‘‹?6≥9øGd¯>§!@äú›?˛˙'@ıß¢?L(@«ı›?9øN{√>ÃÅøª›?K!/@™£?€äæäFä>ı;ø!À‹?z{7ø’và>3./@|
+›?)5@•¬™?	⁄4@®÷?≥Ï:æ`9?K8æ(AS?ˆq;æ›†?˘∂:æ¯?k9æ˚Êÿ>= 7æGn¶>ˇÅSø=sï?VÊQø¥Ò¢?0bQø= ∞?=yQø‰ﬂº?CÎQø-†…?UâRø?5÷?íâ*ø9+2>}•æ’›.>±?sÈ?KëΩ?Ö$È??@ ?—ÔË?ô◊?∂–Ë?^’„?≈Ë?4§?m¬Ë?rs˝?Ü¿Ë?Y#@pºË?vë@X∂Ë?©@RµË?K}@¿ƒË?ÉÚ@§ÂË?Ce%@∆
+È?AÔ+@ô%È?L¬>*+ó?˚áı>¿3ó?œ]?'5ó?Ò˜-?â5ó?\ìG?≥6ó?ñ2a?¥9ó?6€z?õ?ó?âJä?ïFó?Z/ó?3Eó?^§?X4ó?•„∞?ƒ$ó?'≥Ω?¡*ó?å ?I:ó?úg◊?i@ó?R;‰?•?ó?èÒ?P>ó?¸“˝?Ã;ó?èL@Ë5ó?U´@‘+ó?ˇ@*#ó?©c@p#ó?$Œ@@&ó?˝I%@Ló?5Á+@pó?†XRø7cS?y∂QøB9?AsQøv?oVQø∑?Ã:QøÃs◊>˙LQø¢>àBÇ?É´È?‘Œk?QÈ?ÖR?k¡Ë?J9?§®Ë?”j?Ä§Ë?—?g§Ë?∑mÿ>;§Ë?7•>⁄£Ë?‹ıc>;£Ë?a—˙=°¢Ë?J∂<£Ë?uÿüΩÂ•Ë?kÑ6æ
+´Ë?«Äéæ∞Ë?»…¡æ™≤Ë?Ë[ıæ#ÆË?[Ωø4ΩË?qG/øáıË?ÆìTøo'·?’ﬂIøhÍ?dåZæΩ->Ò.æû,u>Ú^AøÊÌ,>µsSø=•X>6=5@>)·?îÖ2@’Í?aT5@P"ü?:å2@€ñ?Ñtü?+˜Ù?˚Mì?ñı?ËæøfW£=Pkø«w?ÅŸ:@XUƒ?®!á?ˇ„Ù?„vu?òÙ?Œ5\?jÙ?D∑B?âYÙ?Ò!)?øVÙ?Uà?ΩVÙ?e›Î>∫VÙ?Ú©∏>≥VÙ?˙uÖ>´VÙ?•Å$>¥VÙ?1Px=ÚVÙ?Îi!ΩáWÙ?≈æÜXÙ?g+uæÌYÙ?†Ã≠æ\[Ù?â·æt\Ù?˛G
+øÏaÙ?æ($øÕxÙ?F>øÕ…Ù?˛-kø
+ë?]roøMÜ?£Piø¬ û?Ù§høo¯™?[Éhøü”∑?≥°høØûƒ?∏ÿhøëW—?zËhø=‰›?4JføÆ>Î?åÀWøü~ı?yº‰æ£Ç=_<πæu+£=n†ÑæŒº¨=°y∫Ω;üC?¥ΩYb]?tºΩÓ)?òbºΩuJ?FªΩÍhÌ>y±πΩX{∫>WπΩ)=à>Ö_ŒΩ!Ü%> F!æôe¶=)õiøÊ]?˚hø§C?‰≈hø8)?õπhøâ?‡πhøá¶Î>ÿ—hø⁄·∑>viiø‹É>©î!øÖò∞=R9;ø$ ∂=wJVø∞Õ=√€jø>‘ > ⁄´?J¿Ù??r∏?£èÙ?∞)≈?†tÙ?ŒÔ—?ÍfÙ?òªﬁ?ªaÙ?éàÎ?≥`Ù?£U¯?â`Ù?úë@*`Ù?˘@õ_Ù?{a@∑_Ù?À@MbÙ?k5@øhÙ?ó°"@?sÙ?)@yÜÙ?å/@ÕÙ?bt:@⁄.—?ÂN:@¿⁄›?Ãô9@í?Î?ñÙ5@Byı?|⁄#?ûã?Bt=?5ûã?mW?áûã?§©p?<üã?u#Ö?5†ã?>Ûë?b†ã?√û?öûã?^ë´?Núã?‘^∏?húã?-≈?vûã?Ï˚—?ºüã?›…ﬁ?…üã?—ñÎ?úüã?Qc¯?^üã?¶ó@¬ûã?%˝@çùã?>b@úã?
+»@„öã?}0@-ôã?Ωù"@îã?X)@ÏÉã?%é/@ﬂ;ã?Ωÿ:@˝Æ?˙„;@tüπ?∆o:@L¢?˛¢9@.Õî?Y˜5@¨ãä?÷@
+?ûã?2l;@vﬁà?≠j;@Ì"˜?¶@nøM∞í=7§møD$˜?Ä˝íΩ
+rç=4˙Sæàß?NëXæﬁb†?r #æ⁄ú?X3æ∏à£?|ÙìΩÃ•?ÎøE<´ì†?˚ <Ω I†?`iº≠W•?BZUæFÅ?–0æ´]m?¯]æ
+u?\)æ,Åz?â´æ¿)ë?˚æ~ä?¶J!æW“É?çπuΩ¬à?	πﬁΩåÒÖ?Ï∆ΩAùå?]“‚ºoÉî?^ë3ΩJé?™π¨;Úuè?ôó=vhä?ËC2ºú<â?Ñ«<O?ï?¶¯j=“1ê?á€I>Ââú?â6>–∑ñ?QÏé>ó?‹0j>Ù·ñ?LÉ}>	¥ú?Œõò>‹◊ú?8ú®>°ó?∂K≤>fÁú?Ô§Ω:w?RÛΩta?€uèΩœÅ?–mæ`e?¨ΩJ@j?≈kæÚ=r?ê…‹=fîê?Ÿ¨ú=/˚ï?~">∂Úê?$s>ú-ã?
+¯A>¢Sã?Í€>u/ó?ˆM·>˚úã?
+Õ—>dë?¯jÎ>^hë?Êê?t4ó?jÇ?Ëhë?RO?õië?çπıºaÑ?Ô$Ωè{?¯ü->ŒñÖ?äŸÙ=ŒñÖ?Ô$ΩP¬n?4Ω`‰a?4ΩìU?±Âòæ»=®? Çæ(§?≤¬ÄæD'´?ßkÑæbyù?êRæNå¨?˛W)æô™?Z›'æ’∞?D"ÈΩ@ß?¯ÿ‘ΩËˇü?»=®Ω#¨?$#iæÿÊí?¥‰>æû°é?˘È2æ˙nï?ÛΩ‘îò?œ‰ˇªçãö?»∆ÜΩ¨Aö?ﬁCæÿ@Ö?B4KæÍıá?8AÒ<Ü{¶?øÍ=µ°?^fÅ=b$°?Ø˛§=>ß?˜>Ñûß?ﬁÛ»=®ı¨?¿
+áæIo?ú»aææèg?’•Ωò÷í?÷d5=mGõ?Ã`√=$ÿõ?fg´>wp®?⁄¸ª>∞¢?Ù≈>‹|®?8peæ|ÅZ?Øw4æjO`?+)>ä¢?ª…>t6ú?¬o>ÄYñ?d’Ñ>‡Bë?Ô|u>®yã?V>ºë??Æ>kïã?»û>¬Pë?Ø/∏>J`ë?€hî>äáã?ö∞«>3ôã?ﬁ$a>‘ºÖ?	,ä>‘ºÖ?l÷£>∂ Ö?pΩ>∂ Ö?b◊>~ŒÖ?˚¶>~ŒÖ?k ?œÖ?—Á˙>Öùã?Â~!æc1†?wæ˚lû?ÍœæPƒ°?∫f¥Ω⁄Ü¢?ªtôΩŸ$†?˙rΩÀ´¢?~¯„Ω^Jú?fÔºΩ@kô?‡œ≠Ω  ù?∆æJﬂî?t.€Ω, í?ÌÃΩ∂µï?NÊïΩ"åñ?l∫]Ω≠ì?_{?Ωébó?tR;æŒwÇ?œ3?æ‹]~?,%ævâÄ?v•TΩm-ã?D%ΩØ¶à?X"‡ºZ√ã?tx'=ê∏í?ñâ=Äì?˙®N=?ùï?∆∫÷=û∆û?!z˜=Lú?j>∆ıû?“∞=™Èò?.∆–=X*ñ?( ‰=“ô?æ>˙Gô?l|>®àñ?i)&>"wô?¸c¡ΩU¿Ä?r∑Ωæ‡É?îÈΩ#—Ç? »C=$Mç?
+ôµ=	Àä?kÚÅ=¿ôä?Æäï=n~ç?M1…=∏Øç?©?È=R¸ä?Ï◊¸=·ç?öÉ,>C’ì?ê@<>πë?FF>FËì?Ü˝K>/6é?|∫[>•fã?˘øe>2Ié?>`<â“â?ôóú<;4Ö?JÎÜ;l8á?f„Í<XŒá?ËC≤ªNûÑ?çπuº0Ç?ôó<öÇ?€uΩ¯ÁÄ?>‰LΩ(ÏÇ?R}aΩ~ó?Må=öÇ?Måç=;4Ö?ç,≠=öÇ?¥Ús=öÇ?3≤4=;4Ö?ÿ[=XŒá?¨í°=¢ˇá?,”‡=gÀÇ?Ï2¡=ÑeÖ?J9’=Ï0à?^>ŒñÖ?é	>5bà?Ùo>5bà?Ô§ºé«}?Ô§º(aw?)
+End of Binary Section   2010)
+
+(0 "Node flags:")
+(2041 (1 317)
+(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             )
+End of Binary Section   2041)
+
+
+(0 "Thread variables:")
+(39 (1 fluid fluid)(
+ (material . air)
+ (sources? . #f)
+ (sources)
+ (motion-spec . 0)
+ (grid-x-vel . 0)
+ (grid-y-vel . 0)
+ (grid-z-vel . 0)
+ (omega . 0)
+ (x-origin . 0)
+ (y-origin . 0)
+ (z-origin . 0)
+ (ai . 0)
+ (aj . 0)
+ (ak . 1)
+ (radiating? . #t)
+ (laminar? . #f)
+ (porous? . #f)
+ (conical? . #f)
+ (direction-1/x . 1)
+ (direction-1/y . 0)
+ (direction-1/z . 0)
+ (direction-2/x . 0)
+ (direction-2/y . 1)
+ (direction-2/z . 0)
+ (cone-axis-pt/x . 1)
+ (cone-axis-pt/y . 0)
+ (cone-axis-pt/z . 0)
+ (cone-angle . 0)
+ (porous-r/1 . 0)
+ (porous-r/2 . 0)
+ (porous-r/3 . 0)
+ (porous-c/1 . 0)
+ (porous-c/2 . 0)
+ (porous-c/3 . 0)
+ (c0 . 0)
+ (c1 . 0)
+ (porosity . 1)
+ (solid-material . aluminum)
+))
+(39 (2 wall wall.1)(
+ (d . 0)
+ (q-dot . 0)
+ (material . aluminum)
+ (thermal-bc . 1)
+ (t (constant . 300) (profile "" ""))
+ (q (constant . 0) (profile "" ""))
+ (h (constant . 0) (profile "" ""))
+ (tinf (constant . 300) (profile "" ""))
+ (planar-conduction? . #f)
+ (moving? . #f)
+ (relative? . #t)
+ (rotating? . #f)
+ (vmag . 0)
+ (ni . 1)
+ (nj . 0)
+ (nk . 0)
+ (components? . #f)
+ (u (constant . 0) (profile "" ""))
+ (v (constant . 0) (profile "" ""))
+ (w (constant . 0) (profile "" ""))
+ (in-emiss (constant . 1) (profile "" ""))
+ (ex-emiss (constant . 1) (profile "" ""))
+ (trad (constant . 300) (profile "" ""))
+ (int-rad? . #f)
+ (trad-internal . 300)
+ (roughness-height . 0)
+ (roughness-const . 0.5)
+ (dpm/bc-type . 2)
+ (dpm/bc-norm-coeff (polynomial angle 1))
+ (dpm/bc-tang-coeff (polynomial angle 1))
+ (dpm/bc-erosion (constant . 1))
+ (dpm/bc-erosion-c (constant . 1))
+ (dpm/bc-erosion-n (constant . 0))
+ (band-in-emiss ((constant . 1) (profile "" "")))
+ (radiation-bc . 0)
+ (q-ni . 1)
+ (q-nj . 0)
+ (q-nk . 0)
+ (coll-dtheta . 0)
+ (coll-dphi . 0)
+ (band-q-irrad ((constant . 0) (profile "" "")))
+ (band-diffuse-frac 1)
+ (react? . #f)
+ (species-spec 0)
+ (mf)
+ (uds-bc 0)
+ (uds ((constant . 0) (profile "" "")))
+ (omega . 0)
+ (x-origin . 0)
+ (y-origin . 0)
+ (z-origin . 0)
+ (ai . 0)
+ (aj . 0)
+ (ak . 1)
+ (adh-angle . 1.5707961)
+ (specified-shear? . #f)
+ (shear-x (constant . 0) (profile "" ""))
+ (shear-y (constant . 0) (profile "" ""))
+ (shear-z (constant . 0) (profile "" ""))
+))
+(39 (3 pressure-inlet pressure_inlet.2)(
+ (p0 (constant . 100) (profile "" ""))
+ (p (constant . 0) (profile "" ""))
+ (t0 (constant . 300) (profile "" ""))
+ (direction-spec . 1)
+ (coordinate-system . 0)
+ (ni (constant . 1) (profile "" ""))
+ (nj (constant . 0) (profile "" ""))
+ (nk (constant . 0) (profile "" ""))
+ (ai . 1)
+ (aj . 0)
+ (ak . 0)
+ (x-origin . 0)
+ (y-origin . 0)
+ (z-origin . 0)
+ (ke-spec . 0)
+ (k (constant . 1) (profile "" ""))
+ (e (constant . 1) (profile "" ""))
+ (turb-intensity . 0.1)
+ (turb-length-scale . 1)
+ (turb-viscosity-ratio . 10)
+ (turb-hydraulic-radius . 1)
+ (nut-spec . 0)
+ (nut (constant . 10) (profile "" ""))
+ (turb-level . 0.1)
+ (turb-hydraulic-diam . 1)
+ (rst-spec . 0)
+ (uu (constant . 1) (profile "" ""))
+ (vv (constant . 1) (profile "" ""))
+ (ww (constant . 1) (profile "" ""))
+ (uv (constant . 0) (profile "" ""))
+ (vw (constant . 0) (profile "" ""))
+ (uw (constant . 0) (profile "" ""))
+ (vof ((constant . 0) (profile "" "")))
+ (mf ((constant . 0) (profile "" "")))
+ (uds-bc 0)
+ (uds ((constant . 0) (profile "" "")))
+ (t-b-b-spec . 0)
+ (t-b-b . 300)
+ (in-emiss (constant . 1) (profile "" ""))
+ (fmean (constant . 0) (profile "" ""))
+ (fvar (constant . 0) (profile "" ""))
+ (fmean2 (constant . 0) (profile "" ""))
+ (fvar2 (constant . 0) (profile "" ""))
+ (premixc (constant . 0) (profile "" ""))
+ (no (constant . 0) (profile "" ""))
+ (hcn (constant . 0) (profile "" ""))
+ (soot (constant . 0) (profile "" ""))
+ (nuclei (constant . 0) (profile "" ""))
+ (dpm/bc-type . 4)
+))
+(39 (4 pressure-outlet pressure_outlet.3)(
+ (p (constant . 0) (profile "" ""))
+ (radial? . #f)
+ (t0 (constant . 300) (profile "" ""))
+ (ke-spec . 0)
+ (k (constant . 1) (profile "" ""))
+ (e (constant . 1) (profile "" ""))
+ (turb-intensity . 0.1)
+ (turb-length-scale . 1)
+ (turb-viscosity-ratio . 10)
+ (turb-hydraulic-radius . 1)
+ (nut-spec . 0)
+ (nut (constant . 10) (profile "" ""))
+ (turb-level . 0.1)
+ (turb-hydraulic-diam . 1)
+ (rst-spec . 0)
+ (uu (constant . 1) (profile "" ""))
+ (vv (constant . 1) (profile "" ""))
+ (ww (constant . 1) (profile "" ""))
+ (uv (constant . 0) (profile "" ""))
+ (vw (constant . 0) (profile "" ""))
+ (uw (constant . 0) (profile "" ""))
+ (t-b-b-spec . 0)
+ (t-b-b . 300)
+ (in-emiss (constant . 1) (profile "" ""))
+ (fmean (constant . 0) (profile "" ""))
+ (fmean2 (constant . 0) (profile "" ""))
+ (fvar (constant . 0) (profile "" ""))
+ (fvar2 (constant . 0) (profile "" ""))
+ (vof ((constant . 0) (profile "" "")))
+ (mf ((constant . 0) (profile "" "")))
+ (premixc (constant . 0) (profile "" ""))
+ (no (constant . 0) (profile "" ""))
+ (hcn (constant . 0) (profile "" ""))
+ (soot (constant . 0) (profile "" ""))
+ (nuclei (constant . 0) (profile "" ""))
+ (uds-bc 0)
+ (uds ((constant . 0) (profile "" "")))
+ (dpm/bc-type . 4)
+))
+(39 (6 interior default-interior)(
+))
+
+(0 "Boundary profiles:")

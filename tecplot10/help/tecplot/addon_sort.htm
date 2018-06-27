@@ -1,0 +1,186 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Addon Sort</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=679>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold;}
+p.whs2 {font-style: italic;}
+p.whs3 {font-family: 'Courier New', monospace; font-weight: bold;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nAdd-Ons\nAddon Sort");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Addon Sort</h1>
+
+<p>The Sort add-on will sort the values of a data set using one variable 
+ as a key. Further variables can be selected in order to further define 
+ how the data is sorted. Sort will only work with ordered data. Data may 
+ be sorted in either ascending or descending order. Also, data may be sorted 
+ &quot;In Place&quot; or &quot;To Zone.&quot;</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">In Place</p>
+
+<p>This means the data which defines the data set will be sorted. The plot 
+ itself will be altered after the sort takes place.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">To Zone</p>
+
+<p>This means the sorted data will be placed in a new zone or zones. The 
+ original data will not be altered. There will be a new I-ordered zone 
+ created for each zone sorted.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Macro Language</p>
+
+<p class="whs2">Recording Macros</p>
+
+<p>While recording a macro, a macro function is recorded for Sort upon 
+ a successful sort operation. Sort uses the macro command <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>$!ADDONCOMMAND</B></span>. 
+ See the Tecplot Reference Manual for additional information.</p>
+
+<p>&nbsp;</p>
+
+<p>An example of the syntax of <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>$!ADDONCOMMAND</B></span> 
+ for Sort is:</p>
+
+<p class="whs3">$!ADDONCOMMAND</p>
+
+<p class="whs3">ADDONID 
+ = 'sort'</p>
+
+<p class="whs3">COMMAND 
+ = 'Z=1,Z=3,V1=4,V2=5,V3=2,Increasing,ToZone'</p>
+
+<p>&nbsp;</p>
+
+<p>The above command sorts zones 1 and 3, using variable 4 as the key. 
+ If variable 4 has values that are equal, variable 5 is used to determine 
+ the order. Likewise if variable 5 has equal values, variable 2 is used 
+ to determine the proper order. If variable 2 also has equal values, the 
+ original order of variable 4 is used. The data will be sorted in increasing 
+ order, and it will be sorted to a zone.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Syntax of <span style="font-family: 'Courier New', monospace;">COMMAND</span></p>
+
+<p>Each zone that is to be sorted will have the syntax <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>Z={zone 
+ num}</B></span>, multiple zones may be specified in the same <span style="font-family: 'Courier New', monospace;">COMMAND</span>. 
+ The key variable is <span style="font-weight: bold; font-family: 'Courier New', monospace;"><B>V1={key}</B></span>, 
+ the secondary variable is <span style="font-weight: bold; font-family: 'Courier New', monospace;"><B>V2={key 
+ 2}</B></span>, and the final key is <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>V3={key 
+ 3}</B></span>. The sort type is either <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>Increasing 
+ </B></span><span style="font-family: Arial, sans-serif;">or</span><span style="font-family: 'Courier New', monospace; font-weight: bold;"><B> 
+ Decreasing</B></span>. Finally, the sort options are either <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>InPlace</B></span> 
+ or <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>ToZone</B></span>, 
+ these options must be spelled as one word, no spaces. For all options 
+ case is ignored. All the variable keys default to variable 1. The default 
+ for <span style="font-family: 'Courier New', monospace;">Sort Type</span> 
+ is <span style="font-family: 'Courier New', monospace;">Increasing</span>, 
+ the default for <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>Sort 
+ Option</B></span> is <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>ToZone</B></span>.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

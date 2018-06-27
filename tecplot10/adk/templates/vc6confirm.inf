@@ -1,0 +1,64 @@
+Project Name:	$$root$$
+
+$$IF(AW_FORTRANLANGUAGE)
+Language:	FORTRAN
+$$ELIF(AW_CPPLANGUAGE)
+Language:	C++ 
+$$ELSE
+Language:	C
+$$ENDIF
+Company Name:	$$AW_COMPANY$$
+$$IF(AW_GENERAL)
+Type of Add-on:	General Purpose
+$$ELIF(AW_LOADER)
+Type of Add-on:	Data Loader
+$$ELIF(AW_CONVERTER)
+$$IF(AW_CONVERTERPLUS)
+$$IF(AW_USETGB)
+Type of Add-on:	Converter Plus! with dialog
+$$ELSE
+Type of Add-on:	Converter Plus! without dialog
+$$ENDIF
+$$ELSE
+Type of Add-on:	Data Converter
+$$ENDIF
+$$ELSE
+Type of Add-on:	Extended Curve Fit
+$$ENDIF
+Add-on Name:	$$AW_ADDONNAME$$
+$$IF(AW_MENUTEXT)
+$$IF(AW_MAKEMENUOPTION)
+Text for menu label: "$$AW_MENUTEXT$$"
+$$ENDIF
+$$ENDIF
+$$IF(AW_CURVEFIT)
+$$IF(AWP_HASCURVEFITOPTIONS)
+Extended Curve Fit Options:
+$$IF(AW_CF_CONFIG_SETTINGS)
+ + Configurable Settings
+$$ENDIF
+$$IF(AW_USEPROBECB)
+ + Probe Callback
+$$ENDIF
+$$ENDIF
+$$ENDIF
+$$IF(AW_INCLUDEOVERRIDE)
+Extra Data Loader Code:
+ + Include Data Loader Callback
+$$ENDIF
+$$IF(AW_USETGB)
+
+$$IF(AW_ISMODAL)
+ + TGB Dialog Type: Modal
+$$ELSE
+ + TGB Dialog Type: Modeless
+$$ENDIF
+$$IF(AW_HASSSIDEBAR)
+ + Sidebar Dialog
+$$ENDIF
+$$IF(AW_DLGTITLE)
+ + Dialog Title: "$$AW_DLGTITLE$$"
+$$ENDIF
+$$ENDIF
+
+

@@ -1,0 +1,51 @@
+Description:  This addon demonstrates ways to manipulate a zone
+              in tecplot.  For simplicity sake this addon only 
+              operates on zone 1.  You can shrink the size of
+              a zone, expand the size of a zone, or probe to add
+              more cells to a finite element zone.
+
+How to use    First, load data or create data from scratch and set
+this addon:   the frame mode to be 2D.  Bring up the zone test addon
+              by selecting "Zone Test" from the "Tools" menu.
+
+              Press "Shrink Zone" to shrink the zone.
+              Press "Expand Zone" to expand the zone.
+
+              Pressing "Refine Cells" installs a probe override function
+              and sets the tecplot mouse mode to probe.  Each time you
+              probe, the cell that is probed in will be sub-divided into
+              multiple fe cells with a new point added where you probed.
+              Zone 1 must be a finite element triangular or quadrilateral
+              zone.
+
+
+Additional
+Features:     This addon also demonstrates how to augment tecplot's macro
+              language with new commands that replicate the actions of this
+              addon.
+
+
+TecUtil 
+Functions used:
+
+                TecUtilAddOnRegisterInfo
+                TecUtilDataSetIsAvailable
+                TecUtilDialogErrMsg
+                TecUtilFrameGetMode
+                TecUtilGeomCircleGetRadius
+                TecUtilGeomEllipseGetNumPoints
+                TecUtilGeomGetPositionCoordSys
+                TecUtilGeomGetType
+                TecUtilGeomGetXYZAnchorPos
+                TecUtilLockOn
+                TecUtilLockOff
+                TecUtilMenuAddOption
+                TecUtilPickListGetCount
+                TecUtilPickListGetGeom
+                TecUtilPickListGetType
+                TecUtilStreamtraceAdd
+                TecUtilVarGetNumByAssignment
+
+
+
+

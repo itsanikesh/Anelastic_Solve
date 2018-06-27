@@ -1,0 +1,6 @@
+#!/bin/sh
+if test "$TEC100HOME" = "" ; then
+  echo "Err:  Must have TEC100HOME set to run this utility"
+  exit
+fi
+grep -i $1 $TEC100HOME/help/comlist

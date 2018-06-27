@@ -1,0 +1,334 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Import CGNS</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=1977>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: circle;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nFile Menu\nImport CGNS");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Import CGNS</h1>
+
+<p>The <span style="font-weight: bold;"><B>CGNS Data Loader,</B></span> including 
+ the <span style="font-weight: bold;"><B>Load CGNS Options:</B></span> <span style="font-style: italic;"><I>Zones</I></span>, 
+ <span style="font-weight: bold;"><B>Load CGNS Options:</B></span> <span style="font-style: italic;"><I>Index 
+ Ranges</I></span>, and <span style="font-weight: bold;"><B>Load CGNS Options</B></span>: 
+ <span style="font-style: italic;"><I>Index Ranges</I></span> dialogs</p>
+
+<p>&nbsp;</p>
+
+<p>CGNS Data Loader allows you to read CGNS files created with CGNSLib 
+ Version 2.3 &nbsp;or 
+ earlier into Tecplot. You are able to choose either all or specific bases, 
+ zones, and solutions to be loaded into Tecplot zones. You can also select 
+ field variables individually. For structured-grid zones you are allowed 
+ to define index ranges to load specific subzone blocks or planes.</p>
+
+<p>&nbsp;</p>
+
+<p>Only CGNS bases and zones with valid grids can be read by the CGNS data 
+ loader. For unstructured grids Version 2.1 of the CGNS loader supports 
+ <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>BAR_2, 
+ TRI_3, QUAD_4, TETRA_4, PYRA_5, PENTA_6, HEXA_8, MIXED</B></span> element 
+ types and their combinations on every section. However, the CGNS Data 
+ Loader does not support higher-order element types.</p>
+
+<p>&nbsp;</p>
+
+<p>Only vertex and cell-center field variable locations are supported. 
+ Cell-centered data is averaged to the nodes when the file is read. For 
+ structured grids arithmetic averaging is used. Rind data is used in the 
+ averaging if it is available. For unstructured grids either a Laplacian 
+ averaging or arithmetic averaging can be selected to average the cell 
+ data to the surrounding nodes.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="circle" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>File:</I></span> 
+ Enter the name of the CGNS file you wish to load including the complete 
+ path, or click &quot;...&quot; to browse the file system to locate the 
+ file.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Specify 
+ Options:</I></span> This check box is enabled only when a valid CGNS file 
+ has been entered/selected. If not selected, CGNS Data Loader will load 
+ every base, zone, solution, and variable into Tecplot when you click OK. 
+ By selecting this option you are allowed to specifically control the data 
+ that will be loaded from your CGNS file. This gives you the ability to 
+ only load particular zones or field variables or even to load partial 
+ zones.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Select 
+ Zones</I></span> calls up the Load CGNS Options: Zones dialog, which allows 
+ you to select specific zones and partial zones to load.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Select 
+ Variables</I></span> calls up the Load CGNS Options: Variables dialog, which 
+ allows you to select specific field variables to load. The grid variables 
+ are always loaded automatically. In the absence of field variables, Select 
+ Variables is not active.</p></li>
+</ul>
+
+<ul type="circle" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Averaging:</I></span> 
+ When the field variables are stored at cell centers, either a Laplacian 
+ averaging or arithmetic averaging may be used to average the cell data 
+ to the nodes they surround. This can result in a bias at the boundary 
+ nodes. Arithmetic averaging is automatically used for ordered/structured 
+ zones. When available, Rind data is used in the averaging.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>CGNS 
+ Section Mapping:</I></span> CGNS files sometimes have multiple node-maps for 
+ each finite-element zone. These are called sections, and a zone may contain 
+ sections with different cell-types and cell dimensions. For example, one 
+ section may be <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>TETRA_4</B></span> 
+ (tetrahedral element - 3D cell dimension) for the volume zone and another 
+ section may be <span style="font-family: 'Courier New', monospace; font-weight: bold;"><B>TRI_3</B></span> 
+ (triangular element - 2D cell dimension) for various surfaces surrounding 
+ the volume zone. If you select <span style="font-style: italic;"><I>One Tecplot 
+ zone per CGNS zone/solution</I></span> (default), it will combine all sections 
+ with the zone cell-dimension into one Tecplot zone. If you select <span 
+ style="font-style: italic;"><I>Load each section as separate Tecplot zone, 
+ </I></span>it will create a separate Tecplot zone for each section regardless 
+ of cell dimension.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Load CGNS Options:</B></span> <span style="font-style: italic;"><I>Zones</I></span></p>
+
+<p>This dialog is used to specify the zones to load from the data file. 
+ The zones that were found in the CGNS data file are listed under Zones 
+ from CGNS. Tecplot zones are not always equivalent to CGNS zones. For 
+ example, each solution for a CGNS zone is considered a unique Tecplot 
+ zone. The CGNS base, zone, and solution hierarchy orders the zones in 
+ this list. The integer that precedes the word “Zone” is the Tecplot zone 
+ number that has been assigned to that zone. The integer after the word 
+ “Zone” represents the order in which the zone was found in the CGNS data 
+ file. The zone description includes the CGNS hierarchy information in 
+ parentheses, where “CGNS B, Z, S =” followed by three integers represents 
+ the CGNS order for the base, zone, and solution, respectively. If a single 
+ base is found, then just “CGNS Z, S =” and two integers are displayed. 
+ The description also indicates whether the zone is Ordered (structured) 
+ or FE (finite-element or unstructured). The I-, J-, and K-dimensions are 
+ provided for ordered zones, and the number of nodes and elements are provided 
+ for finite-element zones.</p>
+
+<p>&nbsp;</p>
+
+<p>By default all zones are selected for reading and are listed under Zones 
+ to Load. This list may be deleted by clicking Remove All. You can also 
+ selectively remove zones from the Zones to Load list by highlighting the 
+ zone(s) with a click, click-and-drag, Ctrl-click, or Shift-click and then 
+ clicking Remove. This will not affect the order of the zones in the Zones 
+ from CGNS list, however, the zones that do not appear in the Zones to 
+ Load list will not have a Tecplot zone number assigned to them. Similarly, 
+ all zones can be added to Zones to Load by clicking Move All, or they 
+ can be added selectively by highlighting the zone(s) to be added in the 
+ Zones from CGNS list, then clicking Move.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Note:</B></span> Zones in the Zones to 
+ Load list will be listed in the order in which they were added to the 
+ list regardless of their order in the Zones from CGNS list. This order 
+ is the basis for their Tecplot zone number, which is how they will be 
+ identified in Tecplot. </p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Load CGNS Options:</B></span> <span style="font-style: italic;"><I>Index 
+ Ranges</I></span></p>
+
+<p>To load a partial zone or subzone first highlight the zone(s) of interest 
+ in the Zones to Load list, then click Index Ranges for Zone(s). This will 
+ bring up the Load CGNS Options: Index Ranges dialog.</p>
+
+<p>&nbsp;</p>
+
+<p>This dialog is used to specify a subset of the selected ordered/structured 
+ zone(s) to be loaded. It allows you to define a block, plane, or line 
+ of points that will be extracted when the data is loaded. This is accomplished 
+ by inputting the ranges for the I-, J-, and K-indices. For each index 
+ you must enter Start, End, and Skip values. </p>
+
+<p>&nbsp;</p>
+
+<p>The Skip value is used to reduce the number of points that will be loaded 
+ by skipping points. A Skip value of three loads every third point after 
+ the Start point. </p>
+
+<p>&nbsp;</p>
+
+<p>The Start and End points are always loaded. If multiple zones have been 
+ selected prior to entering this dialog, the default values for End will 
+ be Mx, indicating the maximum value for each zone. You may enter any value 
+ for End, but it will only be used in the zones for which it is meaningful. 
+ If the value is greater than the maximum index for a zone, then the End 
+ for that zone will be replaced by that maximum index. </p>
+
+<p>&nbsp;</p>
+
+<p>For multi-dimensional zones the number of points that can be specified 
+ to load for the I- and J-directions must be greater than one. If the inputs 
+ for Start, End, and Skip result in a single point in either direction, 
+ an error message will be displayed and you will be forced to change your 
+ inputs or cancel the dialog.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Load CGNS Options:</B></span> <span style="font-style: italic;"><I>Variables</I></span></p>
+
+<p><span style="font-style: italic;"><I>The Load CGNS Options:</I></span> Variables 
+ dialog contains two lists: Variables from CGNS and Variables to Load. 
+ The Variables from CGNS list includes all field variables that were found 
+ in the CGNS data file regardless of the zone(s) to which they belong, 
+ since CGNS files may contain zones that have different field variables. 
+ The Variables to Load list contains the field variables that have been 
+ selected to load into Tecplot. Initially, both lists are the same. A Tecplot 
+ variable number is assigned to each CGNS field variable that appears in 
+ the Variables to Load list. Since Tecplot requires every zone to have 
+ the same number of variables, each zone that is loaded into Tecplot will 
+ include every variable in the Variables to Load list. This will occur 
+ regardless of whether the zone included that field variable in the CGNS 
+ file. The variables that were not originally in the zone will be initialized 
+ to zero before they are loaded into Tecplot.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Note:</B></span> Since this can unnecessarily 
+ increase the size of the data set in Tecplot, carefully examine the Variables 
+ from CGNS list to guarantee that the field variables selected for the 
+ Variables to Load list will be consistent with the zones to be loaded.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Remove All</I></span> lets you delete 
+ all variables from the Variables to Load list.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Move All</I></span> lets you include all 
+ variables from the Variables from CGNS list. You can also selectively 
+ remove variables from the Variables to Load list by highlighting the variable(s) 
+ with a click, click-and-drag, Ctrl-click, or Shift-click and then clicking 
+ Remove. The field variables that do not appear in the Variables to Load 
+ list will not have a Tecplot variable number assigned to them. Similarly, 
+ variables can be added to the Variables to Load by selectively highlighting 
+ the variable(s) to be added in the Variables from CGNS list and then clicking 
+ Move.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-style: italic;"><I>Note:</I></span> Variables in the Variables 
+ to Load list will be listed in the order in which they were added to the 
+ list regardless of their order in the Variables from CGNS list. This order 
+ is the basis for their Tecplot variable number, which is how they will 
+ be ordered in Tecplot. </p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

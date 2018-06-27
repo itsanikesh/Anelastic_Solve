@@ -1,0 +1,10 @@
+TITLE = "Simulated comparison of angle vs speed"
+VARIABLES = "Angle" "Speed"
+ZONE T="Test 1" I=7
+ -45 900
+ -30 800
+ -15 720
+ 0 600
+ 15 450
+ 30 250
+ 45 75

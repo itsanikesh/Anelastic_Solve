@@ -1,0 +1,876 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Alter Specify Equations</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=5905>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold;}
+p.whs2 {font-family: 'Courier New', monospace; font-weight: bold;}
+ul.whs3 {list-style: disc;}
+p.whs4 {font-family: 'Courier New', monospace; font-size: 12pt; font-weight: bold;}
+p.whs5 {font-size: 10pt;}
+p.whs6 {font-family: 'Courier New', monospace;}
+p.whs7 {font-family: 'Courier New', monospace; font-weight: bold; font-size: 12pt;}
+p.whs8 {font-size: 12pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nAlter Specify Equations");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Alter Specify Equations</h1>
+
+<p class="whs1">Basic Syntax</p>
+
+<p>Tecplot equations have the following form:</p>
+
+<p class="whs2">LValue 
+ = f(RValue1, RValue2, RValue3, ...)</p>
+
+<p>where f() is similar to a FORTRAN expression, with some limitations 
+ and some extensions as discussed below. LValue is a reference to an existing 
+ or non-existing variable, and RValueN is a reference to a value (such 
+ as a constant, variable value, or index value).</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Equation Variables and Values</p>
+
+<p>A variable is specified in one of three ways: according to its order 
+ in the data file, by its name, or by a letter code.</p>
+
+<p>A variable may be referenced according to its order in the data file. 
+ V1 is the first variable in the data file, V2 is the second, and so forth. 
+ For example, to set the first variable in the data file equal to the sum 
+ of the values of the second and third variables, type:</p>
+
+<p class="whs2">V1 
+ = V2 + V3</p>
+
+<p>&nbsp;</p>
+
+<p>To create a new variable using this specification, you must specify 
+ the number of the next available variable. Assuming there are five variables 
+ in the data file, you can create a new variable that is equal to half 
+ of the fourth variable as follows:</p>
+
+<p class="whs2">V6 
+ = V4 / 2</p>
+
+<p>&nbsp;</p>
+
+<p>You must specify the number of the next available variable. If you try 
+ to assign the result to a higher numbered variable, Tecplot pops up an 
+ error dialog informing you that you have specified an invalid variable 
+ number.</p>
+
+<p>A variable may also be referenced by its name. You refer to a variable 
+ by its name by enclosing the name within curly braces (&quot;{&quot; and 
+ &quot;}&quot;). For example, to set V3 equal to the value of the variable 
+ named R/RFR, you can type:</p>
+
+<p class="whs2">V3 
+ = {R/RFR}</p>
+
+<p>&nbsp;</p>
+
+<p>Variable names are case insensitive, meaning that any combination of 
+ uppercase and lowercase letters matches the variable name. Leading and 
+ trailing spaces are also not considered. So the following equations are 
+ equivalent:</p>
+
+<p class="whs2">v3 
+ = {R/rfr} V3 = { r/rfr }</p>
+
+<p>&nbsp;</p>
+
+<p>Spaces within the variable name are significant, so the following equation 
+ is not equivalent to the equations above:</p>
+
+<p class="whs2">V3 
+ = {R / rfr}</p>
+
+<p>&nbsp;</p>
+
+<p>If two or more variables have the same name, Tecplot uses the first 
+ variable. So, if both V5 and V9 are named R/rfr, V5 is used.</p>
+
+<p>&nbsp;</p>
+
+<p>The curly braces can also be used on the left-hand side of the equation. 
+ In this case, if a variable with that name does not exist, a new variable 
+ is created with that name. This is useful in equation files. For example, 
+ the following equation sets a variable called T/R to the value of a variable 
+ called T divided by the value of a variable called R. If no variable called 
+ T/R exists, a new variable is created.</p>
+
+<p class="whs2">{T/R} 
+ = {T} / {R}</p>
+
+<p>&nbsp;</p>
+
+<p>Finally, variables may also be referenced by letter codes. Letter codes 
+ can also be used to reference index values. Valid letter codes are:</p>
+
+<ul type="disc" class="whs3">
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>I:</B></span> I-index 
+ value at the data point.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>J:</B></span> J-index 
+ value at the data point (one for finite-element zones).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>K:</B></span> K-index 
+ value at the data point (one for finite-element zones).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>X:</B></span> Variable 
+ assigned to the X-axis (in XY Line plots, all active mappings must have 
+ the same X-variable in order for this variable name to be valid).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>Y:</B></span> Variable 
+ assigned to the Y-axis (in XY Line plots, all active mappings must have 
+ the same Y-variable in order for this variable name to be valid).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>Z:</B></span> Variable 
+ assigned to the Z-axis (if set).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>A:</B></span> The 
+ variable assigned to the Theta-axis for Polar plots. For this variable 
+ to be valid, the plot type must be set to Polar Line. In addition, all 
+ active mappings must have the same Theta-variable.</p></li>
+	
+	<li class=kadov-p><p>R: The variable assigned to the R-axis for Polar 
+ plots. The plot type must be Polar Line, and all active mappings must 
+ have the same R-variable for this variable name to be valid.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>U:</B></span> X-component 
+ of vectors (if set).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>V:</B></span> Y-component 
+ of vectors (if set).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>W:</B></span> Z-component 
+ of vectors (if set).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>B:</B></span> Value-blanking 
+ variable (if set).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>C</B></span>: Contour 
+ variable (if set).</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>S:</B></span> Scatter-sizing 
+ variable (if set).</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>Letter codes may be used anywhere on the right-hand side of the equation. 
+ Do not enclose them in curly braces. Some examples follow:</p>
+
+<p class="whs2">V3 
+ = I + J</p>
+
+<p class="whs2">V4 
+ = cos(X) * cos(Y) * cos(Z)</p>
+
+<p class="whs2">{Dist} 
+ = sqrt(U*U + V*V + W*W)</p>
+
+<p class="whs2">{temp} 
+ = min(B,1)</p>
+
+<p>&nbsp;</p>
+
+<p>Those letter codes representing variables (all letter codes except I, 
+ J, and K) may be used on the left-hand side of the equation, as well. 
+ For example:</p>
+
+<p class="whs2">Z 
+ = X*X/(1+Y*Y)</p>
+
+<p class="whs2">W 
+ = 0</p>
+
+<p class="whs2">S 
+ = 1+ABS(S)</p>
+
+<p>&nbsp;</p>
+
+<p>You receive an error message if the appropriate Tecplot feature is not 
+ available. For example, if you try to use Z and the active frame is not 
+ in the 3D Cartesian plot type you get an error message. The variables 
+ referenced by the letter codes are for the current frame.</p>
+
+<p>&nbsp;</p>
+
+<p>You may use auxiliary data containing numerical constants in equations. 
+ For example, using reference quantities read from the data file as auxiliary 
+ data to compute dimensional variables from non-dimensional variables. 
+ The syntax for using auxiliary data in equations is:</p>
+
+<p class="whs4">AUXZONE[nnn]:Name</p>
+
+<p class="whs4">AUXDATASET:Name</p>
+
+<p class="whs4">AUXFRAME:Name</p>
+
+<p>&nbsp;</p>
+
+<p>For instance, a data set auxiliary data constant called Pref would be 
+ referenced using AUXDataSet:Pref. Equations using this auxiliary data 
+ might appear as:</p>
+
+<p class="whs2">{P} 
+ = {P_NonDim} * &nbsp;AUXDataSet:Pref</p>
+
+<p>&nbsp;</p>
+
+<p>A frame auxiliary data constant called Mach would be referenced using 
+ AUXFrame:Mach. Zone auxiliary data constants may be referenced in one 
+ of two ways: AUXZone:Name uses the Name auxiliary data constant for the 
+ zone being operated on while AUXZone[nnn]:Name uses the Name auxiliary 
+ data constant for zone number nnn. </p>
+
+<p>&nbsp;</p>
+
+<p>For example, if you are operating on zones 1-3, AUXZone:Reynolds references 
+ the auxiliary data constant named Reynolds attached to zone 1 when operating 
+ on zone 1, the auxiliary data constant name Reynolds attached to zone 
+ 2 when operating on zone 2, and so on. For the same case, AUXZone[2]:Reynolds 
+ references the auxiliary data constant named Reynolds attached to zone 
+ 2 for all zones it is operating on.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Equation Operators and Functions</p>
+
+<p>In an equation, the valid binary operators are as follows:</p>
+
+<ul type="disc" class="whs3">
+	
+	<li class=kadov-p><p class="whs5">+ Addition.</p></li>
+	
+	<li class=kadov-p><p class="whs5">- Subtraction.</p></li>
+	
+	<li class=kadov-p><p class="whs5">* Multiplication.</p></li>
+	
+	<li class=kadov-p><p class="whs5">/ Division.</p></li>
+	
+	<li class=kadov-p><p class="whs5">** Exponentiation.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>Binary operators have the following precedence:</p>
+
+<ul type="disc" class="whs3">
+	
+	<li class=kadov-p><p>** Highest precedence.</p></li>
+	
+	<li class=kadov-p><p>*,/ </p></li>
+	
+	<li class=kadov-p><p>+,- Lowest precedence.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>For example, the expression V1+2*V2 is evaluated as V1+(2*V2), not as 
+ (V1+2)*V2. Operators are evaluated from left to right within a precedence 
+ level (that is &quot;*&quot; and &quot;/&quot; are evaluated left to right).</p>
+
+<p>&nbsp;</p>
+
+<p>The available functions are as follows (except where noted, all take 
+ a single argument):</p>
+
+<ul type="disc" class="whs3">
+	
+	<li class=kadov-p><p class="whs5">SIN: Sine (angle must 
+ be specified in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">COS: Cosine (angle must 
+ be specified in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">TAN: Tangent (angle must 
+ be specified in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">ABS: Absolute value.</p></li>
+	
+	<li class=kadov-p><p class="whs5">ASIN: Arcsine (result 
+ is given in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">ACOS: Arccosine (result 
+ is given in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">ATAN: Arctangent (result 
+ is given in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">ATAN2(A,B): Arctangent 
+ of A/B (result is given in radians).</p></li>
+	
+	<li class=kadov-p><p class="whs5">SQRT: Positive square 
+ root.</p></li>
+	
+	<li class=kadov-p><p class="whs5">LOG: Natural logarithm 
+ (base e).</p></li>
+	
+	<li class=kadov-p><p class="whs5">ALOG: Natural logarithm 
+ (base e).</p></li>
+	
+	<li class=kadov-p><p class="whs5">LOG10: Logarithm base 
+ 10.</p></li>
+	
+	<li class=kadov-p><p class="whs5">ALOG10: Logarithm base 
+ 10.</p></li>
+	
+	<li class=kadov-p><p class="whs5">EXP: Exponentiation (base 
+ e); EXP(V1)=e**(V1).</p></li>
+	
+	<li class=kadov-p><p class="whs5">MIN(A,B): Minimum of 
+ A and B.</p></li>
+	
+	<li class=kadov-p><p class="whs5">MAX(A,B): Maximum of 
+ A and B.</p></li>
+	
+	<li class=kadov-p><p class="whs5">SIGN: Returns -1 if argument 
+ is negative, +1 otherwise.</p></li>
+	
+	<li class=kadov-p><p class="whs5">ROUND: Round off to the 
+ nearest integer.</p></li>
+	
+	<li class=kadov-p><p class="whs5">TRUNC: Remove fraction 
+ part of a value.</p></li>
+	
+	<li class=kadov-p><p class="whs5">LOG and ALOG are equivalent 
+ functions, as are LOG10 and ALOG10.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>First- and second-derivative and difference functions are also available. 
+ These are discussed later in this section.</p>
+
+<p>&nbsp;</p>
+
+<p>To call an intrinsic function, place its argument within parentheses 
+ (&quot;(&quot; and &quot;)&quot;). For example, to set V4 to the arctangent 
+ of V1, use:</p>
+
+<p class="whs6">V4 = ATAN(V1)</p>
+
+<p>&nbsp;</p>
+
+<p>Tecplot has a complete set of first- and second-derivative and difference 
+ functions. These functions are listed below:</p>
+
+<p class="whs2">ddx 
+ ddy ddz dda ddr d2dx2 d2dy2 d2dz2 d2da2 d2dr2 d2dxy d2dyz d2dxz d2dar 
+ ddi ddj ddk d2di2 d2dj2 d2dk2 d2dij d2djk d2dik</p>
+
+<p>&nbsp;</p>
+
+<p>The derivative and difference functions are used just like the intrinsic 
+ functions described above. For example:</p>
+
+<p class="whs7">V4 = ddx(V3)</p>
+
+<p class="whs7">V6 = d2dx2(v5)</p>
+
+<p class="whs7">{dC/dx} = ddx(C)</p>
+
+<p class="whs7">V8 = ddj(X)</p>
+
+<p class="whs7">{Vt12} = ddy({Vt11}(i+1)) + ddy({Vt11}(i-1))</p>
+
+<p class="whs7">Z = d2dj2(sin(v5*v6))</p>
+
+<p class="whs7">V9 = ddj(ddx({R/T}))</p>
+
+<p class="whs7">C = d2dij(C[1]-C)</p>
+
+<p class="whs7">{NEWVAR} = ddi(X)+ddj(Y)+ddk(Z)</p>
+
+<p class="whs8">&nbsp;</p>
+
+<p>The use of derivative and difference functions is restricted as follows:</p>
+
+<ul type="disc" class="whs3">
+	
+	<li class=kadov-p><p class="whs5">Derivatives and differences 
+ for IJK-ordered zones are calculated for the full 3D-volume. The IJK-mode 
+ for such zones is not considered.</p></li>
+	
+	<li class=kadov-p><p class="whs5">If the derivative cannot 
+ be defined at every data point in all the selected zones, the operation 
+ is not performed for any data point.</p></li>
+	
+	<li class=kadov-p><p class="whs5">Derivative functions 
+ are calculated using the current frame's axis assignments. Be careful 
+ if you have multiple frames with different variable assignments for the 
+ same data set.</p></li>
+	
+	<li class=kadov-p><p class="whs5">All derivatives and differences 
+ are centered at the data point, or cell-center if derivative is cell-centered 
+ variable.</p></li>
+	
+	<li class=kadov-p><p class="whs5">Derivatives at the boundary 
+ of two zones may differ since Tecplot operates on only one zone at a time 
+ while generating derivatives.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Boundary Conditions for Derivative and Difference 
+ Functions</p>
+
+<p>For ordered zones the boundary values for first-derivative and difference 
+ functions (ddx, ddy, ddz, ddi, ddj, and ddk) are evaluated in one of two 
+ methods: simple or complex. The default is simple. The following parameter 
+ in the configuration file selects the method to use:</p>
+
+<p class="whs2">$!INTERFACE 
+ DATA {DERIVATIVEBOUNDARY=SIMPLE}</p>
+
+<p>&nbsp;</p>
+
+<p>Change the parameter SIMPLE to COMPLEX to use the complex boundary condition.</p>
+
+<p>&nbsp;</p>
+
+<p>For simple boundary conditions, the boundary derivative is determined 
+ by the one-sided first derivative at the boundary. This is the same as 
+ assuming that the first derivative is constant across the boundary (with 
+ the second derivative equal to zero).</p>
+
+<p>&nbsp;</p>
+
+<p>For complex boundary conditions, the boundary derivative is extrapolated 
+ linearly from the derivatives at neighboring interior points. This is 
+ the same as assuming that the second derivative is constant across the 
+ boundary (with the first derivative varying linearly).</p>
+
+<p>&nbsp;</p>
+
+<p>For second-derivatives and differences (d2dx2, d2dy2, d2dz2, d2dxy, 
+ d2dyz, d2dxz, d2di2, d2dj2, d2dij, d2dk2, d2djk, and d2dik), these boundary 
+ conditions are ignored. The boundary derivative is set equal to the derivative 
+ one index in from the boundary. This is the same as assuming that the 
+ second derivative is constant across the boundary.</p>
+
+<p>You can create your own derivative boundary conditions by using the 
+ index range and the indices options.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Specifying Zone Numbers</p>
+
+<p>By following a variable reference with square brackets (&quot;[&quot; 
+ and &quot;]&quot;), you can specify a specific zone from which to get 
+ the variable value. Some examples follow:</p>
+
+<p class="whs2">V3 
+ = V3 - V3[1]</p>
+
+<p class="whs2">X 
+ = ( X[1] + X[2] + X[3] ) / 3</p>
+
+<p class="whs2">{TempAdj} 
+ = {Temp}[7] - {Adj}</p>
+
+<p class="whs2">V8 
+ = V1[19] - 2*C[21] + {R/T}[18]</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p>The zone number must be a positive integer constant less than or equal 
+ to the number of zones. The zone specified must have the same structure 
+ (I-, IJ-, or IJK-ordered or finite-element) and dimensions (that is, IMax, 
+ number of nodes, and so forth) as the current zone. If you do not specify 
+ a zone, the current zone is used.</p>
+
+<p>Zone specification works only on the right-hand side of the equation. 
+ All values used on the right-hand side of the equation are the &quot;old&quot; 
+ values before the alteration began. To specify zones for the left-hand 
+ side, use the Zones region of the Specify Equations dialog.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Specifying Indices</p>
+
+<p>By following a variable reference with parentheses (&quot;(&quot; and 
+ &quot;)&quot;), you can specify indices. Indices can be absolute or an 
+ offset from the current index. For example:</p>
+
+<p class="whs2">V2 
+ = ( V2(i+1) + V2(i-1) ) / 2</p>
+
+<p class="whs2">U 
+ = U(i+1,j) - U(i-1,j) + V(i+2,1) + 3*W(i-1)</p>
+
+<p class="whs2">{NTQ} 
+ = {TQ} + {TQ}(i-3,j+7,k-1) - {TQ}(3,j+1,k+8}</p>
+
+<p class="whs2">S 
+ = S(i+1,j) - V3(2) + {RFR/T}(J+2)</p>
+
+<p>&nbsp;</p>
+
+<p>Index offsets are specified by using the appropriate index &quot;I&quot;, 
+ &quot;J&quot; or &quot;K&quot; followed by a &quot;+&quot; or &quot;-&quot; 
+ and then an integer constant. Any integer offsets may be used. If the 
+ offset moves beyond the end of the zone, the boundary value is used. For 
+ example, V3(i+2) uses the value V3(imax) when I=IMax-1 and I=IMax. V3(i-2) 
+ uses the value of V3(1) when I=1 or I=2.</p>
+
+<p>&nbsp;</p>
+
+<p>Absolute indices are specified by using a positive integer constant 
+ only. For example, V3(2) references V3 at index 2 regardless of the current 
+ I-index.</p>
+
+<p>Indices must be listed I-index, then J-index, then K-index. The J-index 
+ is omitted if the data is I-ordered; the K-index is omitted if the data 
+ is not IJK-ordered. Indices are not allowed for finite-element data.</p>
+
+<p>&nbsp;</p>
+
+<p>Index specification works only on the right-hand side of the equation. 
+ If the indices are not specified, the current index values are used. To 
+ specify indices for the left-hand side, use the Index Ranges section of 
+ the Specify Equations dialog.</p>
+
+<p>Indices may be combined with zone specifications. The zone is listed 
+ first, then the index offset. For example:</p>
+
+<p class="whs2">V3 
+ = V3 - V3[1](i+1)</p>
+
+<p class="whs2">Y 
+ = Y[1] - Y[2](1) + Y(1,j+3) + Y</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Data Type Specification for New Variables</p>
+
+<p>If your equations are creating one or more new variables, you can specify 
+ a data type for these new variables using the New Var Data Type drop-down. 
+ By default, this is set to Auto, and Tecplot assigns the most appropriate 
+ data type to the variables. However, if you want to be sure that your 
+ new variables have a particular data type, choose the type from the New 
+ Var Data Type drop-down.</p>
+
+<p>&nbsp;</p>
+
+<p>The following data types are available:</p>
+
+<ul type="disc" class="whs3">
+	
+	<li class=kadov-p><p><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;">Single: Four-byte 
+ floating point values.</font></span></p></li>
+	
+	<li class=kadov-p><p class="whs5">Double: Eight-byte floating 
+ point values.</p></li>
+	
+	<li class=kadov-p><p class="whs5">Long Int: Four-byte integer 
+ values.</p></li>
+	
+	<li class=kadov-p><p class="whs5">Short Int: Two-byte integer 
+ values.</p></li>
+	
+	<li class=kadov-p><p class="whs5">Byte: One-byte integer 
+ values (zero to 255).</p></li>
+	
+	<li class=kadov-p><p class="whs5">Bit: Either zero or one.</p></li>
+</ul>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">Data Location Specification for New Variables</p>
+
+<p>If your equations are creating new variables, you can specify the location 
+ for these new variables using the New Var Location drop-down. By default 
+ this is set to Auto, and Tecplot presumes the variable is located at the 
+ node, unless all variables used in the equation are cell-centered. If 
+ you want to be sure of the location, specify node or cell-center from 
+ the New Var Location drop-down.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Overriding Equation Restrictions</p>
+
+<p>The zone and index restrictions specified in the equation dialog can 
+ be overridden on an equation by equation basis. To specify restrictions 
+ for a single equation add the colon character (:) at the end of the equation 
+ followed by one or more of the following:</p>
+
+<p class="whs2">Equation 
+ Restrictor = Comments</p>
+
+<p class="whs2">&lt;Z=&lt;set&gt;&gt; 
+ = Restrict the zones.</p>
+
+<p class="whs2">&lt;I=start[,end[,skip]]&gt; 
+ = Restrict the I-range.</p>
+
+<p class="whs2">&lt;J=start[,end[,skip]]&gt; 
+ = Restrict the J-range.</p>
+
+<p class="whs2">&lt;K=start[,end[,skip]]&gt; 
+ = Restrict the K-range.</p>
+
+<p class="whs2">&lt;D=&lt;datatype&gt;&gt; 
+ = <span style="font-family: Arial, sans-serif; font-weight: normal;">Set 
+ the data type for the variable on the left hand side. This only applies 
+ if a new variable is being created.</span></p>
+
+<p class="whs2">&nbsp;</p>
+
+<p>For example, to add 1 to X in zones 1, 3, 4, and 5:</p>
+
+<p class="whs2">X=X+1:&lt;Z=[1,3-5]&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>The following example adds 1 to X for every other I-index. Note that 
+ 0 represents the maximum index.</p>
+
+<p class="whs2">X=X+1:&lt;I=1,0,2&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>The next example creates a new variable of type byte:</p>
+
+<p class="whs2">{NewV}=X-Y:&lt;D=Byte&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>To remove these restrictions, use the Remove button on the Specify Equations 
+ dialog.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Examples of Equations</p>
+
+<p>In the following equation, V1 (the first variable defined in the data 
+ file) is replaced by two and a half times the existing value of V1:</p>
+
+<p class="whs2">V1 
+ = 2.5*V1</p>
+
+<p>&nbsp;</p>
+
+<p>The following equation sets the value of a variable called “Density” 
+ to 205. A new variable is created if a variable called “Density'' does 
+ not exist.</p>
+
+<p class="whs2">{Density} 
+ = 205</p>
+
+<p>&nbsp;</p>
+
+<p>In the next equation, the values for Y (the variable assigned to the 
+ Y-axis) are replaced by the negative of the square of the values of X 
+ (the variable assigned to the X-axis):</p>
+
+<p class="whs2">Y 
+ = -X**2</p>
+
+<p>&nbsp;</p>
+
+<p>The following equation replaces the values of V3 with the values of 
+ V2 rounded off to the nearest integer. A new variable is created if there 
+ are only two variables currently in the data set.</p>
+
+<p class="whs2">V3 
+ = round(V2)</p>
+
+<p>&nbsp;</p>
+
+<p>In the following equation, the values of the fourth variable in the 
+ data set are replaced by the log (base 10) of the values of the third 
+ variable.</p>
+
+<p class="whs2">V4 
+ = ALOG10(V3)</p>
+
+<p>&nbsp;</p>
+
+<p>Suppose that the third variable and fourth variable are the X- and Y-components 
+ of velocity and that there are currently a total of five variables. The 
+ following examples create a new variable (V6) that is the magnitude of 
+ the components of velocity.</p>
+
+<p class="whs2">V6 
+ = (V3*V3+V4*V4)**0.5</p>
+
+<p>or</p>
+
+<p class="whs2">V6 
+ = sqrt(V3**2+V4**2)</p>
+
+<p>&nbsp;</p>
+
+<p>The above operation can also be accomplished with the following equation 
+ (assuming you have already set the vector components for the active window):</p>
+
+<p class="whs2">{Mag} 
+ = sqrt(U*U + V*V)</p>
+
+<p>&nbsp;</p>
+
+<p>You can also reference the I, J, and K-indices in an equation. For example, 
+ if you wanted to cut out a section of a zone using value-blanking, you 
+ could create a new variable that is a function of the I and J indices 
+ (for IJ-ordered data). Then, by using value-blanking, you could remove 
+ certain cells where the value of the value-blanking variable was less 
+ than or equal to the value-blanking cut-off value.</p>
+
+<p>&nbsp;</p>
+
+<p>The following equation sets the value of a variable named “diff” to 
+ the truncated value of a variable named “depth” subtracted from the existing 
+ value of depth:</p>
+
+<p class="whs2">{diff} 
+ = {depth} - trunc({depth})</p>
+
+<p>&nbsp;</p>
+
+<p>In the next equation, C (the contour variable) is set to the absolute 
+ value of S (the scatter-sizing variable):</p>
+
+<p class="whs2">C 
+ = abs(S)</p>
+
+<p>&nbsp;</p>
+
+<p>In the following example, a new variable is created (assuming that only 
+ seven variables initially existed in the data file). The value for V8 
+ (the new variable) is calculated from a function of the existing variables:</p>
+
+<p class="whs2">V8 
+ = SQRT((V1*V1+V2*V2+V3*V3)/(287.0*V4*V6))</p>
+
+<p>&nbsp;</p>
+
+<p>The above operation could have been performed in two steps as follows:</p>
+
+<p class="whs2">V8 
+ = V1*V1+V2*V2+V3*V3</p>
+
+<p class="whs2">V8 
+ = SQRT(V8/(287.0*V4*V6))</p>
+
+<p>&nbsp;</p>
+
+<p>Another example using intrinsic functions is shown below:</p>
+
+<p class="whs2">V8 
+ = 55.0*SIN(V3*3.14/180.0) + ALOG(V4**3/(v1+1.0))</p>
+
+<p>&nbsp;</p>
+
+<p>The following equation replaces all values of Y with the difference 
+ between current value of Y and the value of Y in zone 1. (If zone 1 is 
+ used for the data alteration, the values of Y will be zero throughout 
+ that zone.)</p>
+
+<p class="whs2">Y 
+ = Y - Y[1]</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

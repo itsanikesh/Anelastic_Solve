@@ -1,0 +1,236 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Interpolate Inverse Distance</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=798>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {margin-left: 0px;}
+p.whs3 {font-size: 10pt; margin-left: 0px;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+<!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
+{
+  var strNSS = "<style type='text/css'>";
+  strNSS += "p.whs2 {margin-left:1; }";
+  strNSS += "p.whs3 {margin-left:1; }";
+  strNSS +="</style>";
+  document.write(strNSS);
+}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nInterpolate Inverse Distance");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Interpolate Inverse Distance</h1>
+
+<p>Use the <span style="font-weight: bold;"><B>Inverse-Distance Interpolation 
+ dialog</B></span> to interpolate data from a set of zones (the source zones) 
+ to another zone (the destination zone). In many cases, the source zone 
+ is an I-ordered set of data points without any mesh structure (that is, 
+ just a list of points), referred to as irregular data; inverse-distance 
+ interpolation may be used to create 2-D, 3-D surface, or 3-D volume field 
+ plots of irregular data. The destination zone can be made with the Rectangular 
+ option from the Create Zone sub-menu-menu of the Data menu.</p>
+
+<p>&nbsp;</p>
+
+<p>Inverse-distance interpolation averages the values at the data points 
+ in the source zone weighted by a functions of the distance between each 
+ source data point to the destination data point. The closer a source data 
+ point is to the destination data point, the greater its value is weighted.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-size: 10pt; font-weight: bold;"><font size=2 style="font-size:10pt;"><B>Source 
+ Zones:</B></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> Select the zone or set of 
+ zones to interpolate from (that is, the zone(s) with the source data).</font></span></p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Variables:</B></span> Select the variables to interpolate. 
+ By default, all variables (other than those assigned to the X-, Y-, and 
+ Z-axes) are interpolated. Interpolating fewer variables can speed up the 
+ process.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Destination Zone:</B></span> Select the destination 
+ zone into which to interpolate. Except for the variables assigned to the 
+ axes, data in the destination zone will be overwritten.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Minimum Distance:</B></span> Enter the minimum 
+ distance used for the inverse-distance weighting. This moves the destination 
+ values away from the source values thereby reducing the weighting factor 
+ for source data points close to the destination data points. This tends 
+ to reduce the peaks and plateaus of the interpolated data near the source 
+ data points. </p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Exponent:</B></span> Enter the exponent for the 
+ inverse-distance weighting. This is the exponent, E, that is used in the 
+ weighting factor W=1/(D**E), where D is the distance between the source 
+ data point and the destination data point. This exponent (E) must be a 
+ positive number. The routine is optimized for an exponent of four.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Point Selection:</B></span> Select from the drop-down 
+ the method used for determining which source points to consider for each 
+ destination point. There are three available methods, as follows:</p></li>
+	
+	<ul type="disc" class="whs1">
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs2"><span style="font-size: 10pt; font-weight: bold;"><font size=2 style="font-size:10pt;"><B>Nearest 
+ N:</B></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> For each point in the destination 
+ zone, consider only the closest n points to the destination point. These 
+ n points can come from any of the source zones. You specify n after selecting 
+ this option. This option may speed up processing if n is significantly 
+ smaller than the entire number of source points.</font></span></p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Octant:</B></span> Like Nearest N above, except 
+ the n points are selected by coordinate-system octants. The n points are 
+ selected so they are distributed as evenly as possible throughout the 
+ eight octants. This reduces the chances of using source points which are 
+ all on one side of the destination point.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>All:</B></span> Consider all points in the source 
+ zone(s) for each point in the destination zone. This does not work as 
+ bad as it sounds since points that are far away have a very small weighting 
+ factor.</p></li>
+		
+		<li style="list-style: circle;"
+			type=circle
+			class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Number of Points:</B></span> Enter the number of 
+ points n to consider for each destination point. This field is enterable 
+ and used only if the Point Selection is set to Nearest N or Octant. This 
+ field is ignored if Point Selection is set to All.</p></li>
+	</ul>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>When you click <span style="font-weight: bold;"><B>Compute</B></span>, Tecplot 
+ interpolates values for every variable except the X-, Y- and Z-coordinate 
+ variables. If this is not what you want, use the Variables control to 
+ select the specific variables to interpolate. You cannot, however, interpolate 
+ the X-, Y- and Z-coordinate variables since these are used to determine 
+ the distances used in weighting.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Inverse-distance interpolation</B></span> 
+ ignores the IJK-mode of IJK-ordered zones. All data points in both the 
+ source and destination zones are used in the interpolation. After inverse-distance 
+ interpolating, you can optionally smooth the data in the destination zone.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

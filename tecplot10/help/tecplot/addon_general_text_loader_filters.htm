@@ -1,0 +1,192 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Addon General Text Loader Filters</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=735>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold; font-style: italic;}
+p.whs2 {font-family: 'Courier New', monospace; font-weight: bold;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nAdd-Ons\nAddon General Text Loader Filters");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Addon General Text Loader Filters</h1>
+
+<p>General filters are applied first, before General Text Loader attempts 
+ to read any data from a line.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Ignore All Lines Starting 
+ With</p>
+
+<p>If checked, all line number beginning with the entered string would 
+ be ignored. Typically is a comment character such as an octothorp (#).'</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Ignore All Lines Containing</p>
+
+<p>If checked, all lines containing the indicated text are ignored.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Ignore Character Column 
+ Position(s)</p>
+
+<p>If checked, then the entered columns are ignored when scanning the file. 
+ Columns are entered as a single number or a hyphenated range, one or more 
+ of which may be separated by commas. For example:</p>
+
+<p class="whs2">3</p>
+
+<p class="whs2">3,6-9,11</p>
+
+<p class="whs2">1-100, 
+ 150-300</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Note:</B></span> If there are tabs in the 
+ data file, they are not expanded in this filter. For example, if column 
+ 1 is a tab and you wish to skip column 2, you should enter 2, even though 
+ a text editor will show more than one space after expanding the tab.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Ignore Specific Lines</p>
+
+<p>If checked entered lines are ignored when scanning the file. Lines are 
+ entered as a single number or a hyphenated range, one or more of which 
+ may be separated by commas. You may also use “end” to specify the last 
+ line of the file. For example:</p>
+
+<p class="whs2">3</p>
+
+<p class="whs2">3,6-9,11</p>
+
+<p class="whs2">1-100, 
+ 150-end</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Specify Values for Blanked 
+ Cell</p>
+
+<p>If checked, you can specify a value which the loader uses for blank 
+ cells. For example, if your data is separated by commas, and the loader 
+ reads the line:</p>
+
+<p class="whs2">1,,,5</p>
+
+<p>The loader creates five data points and uses the blanked cell value 
+ for the missing three.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Note:</B></span> This option is only available 
+ if the data delimiter is a comma or semicolon.</p>
+
+<p>&nbsp;</p>
+
+<p>You can change the data value delimiter using the Data Import Instructions 
+ dialog.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

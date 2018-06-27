@@ -1,0 +1,32 @@
+This sample add-on demonstrates how to create a very simple sidebar using
+FORTRAN that replaces Tecplot's default sidebar. The new sidebar should contain
+an array of buttons that perform specified tasks. In the case of this add-on it
+implements six of the 16 buttons: Data, Alter, Contour, Scatter, Zoom In, and
+Zoom Out. The remaining 10 button are left unimplemented.
+
+The add-on was create using the following steps:
+  1) The CreateNewAddOn script was run to make a general purpose skeleton
+     add-on to replace Tecplot's default sidebar. The script ask questions
+     to determine what kind of add-on skeleton is desired.
+  2) Using the Tecplot GUI Builder add-on the skeleton gui.lay file created by
+     the CreateNewAddOn script in step #1 was modified to include two columns
+     of task buttons separated by a vertical line. The zoom buttons were just
+     placed below the two columns.
+  3) The Tecplot GUI Builder add-on was then directed to build the add-on
+     interface files. The guicb.tmp file produced by the Tecplot GUI builder
+     based on the newly added interface controls was then copied to guicb.F
+     to replace the one originally created by the CreateNewAddOn script in
+     step #1.
+  4) Following the instructions in the ADK User Manual for building add-ons the
+     Runmake script was used to compile and link the add-on for the desired
+     platform.
+  5) Finally the addon can be loaded into Tecplot by adding it to the tecplot.add
+     file or launching it from the command line per the instructions in the ADK
+     User Manual. Once loaded you can activate the sidebar from the Tools menu
+     or via the Workspace->Sidebar sub-menu.
+
+Note: In step #2 the guicb.tmp file simply replaced the guicb.F file. If you
+had already edit guicb.F and added code that was not originally created by the
+CreateNewAddOn script or the GUI builder you would have to copy any new
+functions in guicb.tmp to guicb.F by hand so that you preserve your original
+code.

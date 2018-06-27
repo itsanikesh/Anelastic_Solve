@@ -1,0 +1,228 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Alter Shift Cell Centered</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=608>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+p.whs3 {margin-left: 40px; font-size: 10pt;}
+ol.whs4 {list-style: decimal;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nAlter Shift Cell Centered");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Alter Shift Cell Centered</h1>
+
+<p>Use the Shift Cell-Centered Data dialog to recalculate the values of 
+ variables at your grid points under the assumption that the original data 
+ represented values observed at the centers of the grid cells.</p>
+
+<p>&nbsp;</p>
+
+<p>For example, suppose you have grid points at X=1, 2, ..., and Y=1, 2, 
+ ..., and your data is gathered at the cell centers, that is, at X=1.5, 
+ 2.5, ..., Y=1.5, 2.5, and so forth. When you create your Tecplot data 
+ file, simply map the cell-centered observations with the lowest indexed 
+ corner of the cell, so that, for example, the observations at (X,Y)=(1.5, 
+ 1.5) are identified with the grid point (X, Y)=(1, 1). Then use the dialog 
+ <span style="font-weight: bold;"><B>Shift Cell-Centered Data</B></span> to interpolate 
+ these cell-centered values onto the grid points. The final result is a 
+ node-centered data set with interpolated observations at each node.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Zone(s):</I></span> 
+ Select zones to be shifted. The default is no zones selected.</p></li>
+</ul>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs3">To select a single zone, 
+ click on it. To select a range of zones:</p>
+
+<ol type="1" class="whs4">
+	
+	<ol type="1" class="whs4">
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Click on the first 
+ or last zone in the range.</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Shift-click on the 
+ last or first zone in the range.</p></li>
+	</ol>
+</ol>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs3">To select an arbitrary set 
+ of zones:</p>
+
+<ol type="1" class="whs4">
+	
+	<ol type="1" class="whs4">
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Click on the first 
+ desired zone.</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Ctrl-click on subsequent 
+ zones until all desired zones are selected.</p></li>
+	</ol>
+</ol>
+
+<p class="whs2">&nbsp;</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-style: italic;"><I>Variable(s):</I></span> 
+ Select variables for shifting the data. The default is no variables selected.</p></li>
+</ul>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs3">To select a single variable, 
+ click on it. To select a range of variables:</p>
+
+<ol type="1" class="whs4">
+	
+	<ol type="1" class="whs4">
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Click on the first 
+ or last variable in the range.</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Shift-click on the 
+ last or first variable in the range.</p></li>
+	</ol>
+</ol>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs3">To select an arbitrary set 
+ of variables:</p>
+
+<ol type="1" class="whs4">
+	
+	<ol type="1" class="whs4">
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Click on the first 
+ desired variable.</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">Ctrl-click on subsequent 
+ variables until all desired variables are selected.</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-size: 10pt; /*}}end!kadov*/ "
+			class=kadov-p><p class="whs2">To perform the data 
+ shift, click Compute.</p></li>
+	</ol>
+</ol>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Export PostScript</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=844>
+<meta name=layout-width content=426>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nFile Menu\nExport PostScript");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Export PostScript</h1>
+
+<p><span style="font-weight: bold;"><B>PostScript (PS)</B></span>, is suitable 
+ for direct printing, but unsuitable for export to other applications. 
+ </p>
+
+<p>&nbsp;</p>
+
+<p>It is recommended that you use the <span style="font-weight: bold;"><B>Encapsulated 
+ PostScript (EPS)</B></span> format for importing into other applications.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Color:</B></span> 
+ Select this check box to save the image as a color EPS file.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Render 
+ Type:</B></span></p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Vector:</B></span> 
+ Select this option to export your EPS in a vector format.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Image:</B></span> 
+ Select this option to export your EPS in an image format.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Region:</B></span> 
+ Select Current Frame, All Frames, or Work Area from the drop-down. Current 
+ frame is the default and captures only the current frame. All Frames captures 
+ the smallest rectangular area containing all frames. Work Area captures 
+ the workspace.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Resolution:</B></span> 
+ Set resolution in terms of dots per inch for image output.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Extra 
+ Precision:</B></span> Specify the number of decimal places to which size and 
+ position parameters are carried. The number of decimal places added to 
+ the integer value will be used as coordinates for the resulting vector-based 
+ print output. Use the increase or decrease arrows, or enter a value in 
+ the text field. (Range 1-8.)</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Force 
+ Extra Sorting for 3D Frames:</B></span> Selecting this check box will cause 
+ Tecplot to use extra sorting in all 3-D frames for vector output.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>Performance Tips</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2">If exporting is taking 
+ an unusually long time, or you get an error message saying that the image 
+ cannot be exported, the most likely cause is that the image width you 
+ are trying to export is too large. Selecting a smaller image width will 
+ greatly speed up the export process.</p></li>
+	
+	<li class=kadov-p><p class="whs2">For an image export size 
+ of Length x Width, the file size for an uncompressed true color image 
+ is approximately Length x Width x 3. Memory requirements to export such 
+ an image can be up to twice this size.</p></li>
+	
+	<li class=kadov-p><p class="whs2">For 256 color images, 
+ the maximum file size is approximately Length x Width, but is usually 
+ less since all 256 color image files are compressed. However, the memory 
+ requirements for exporting are the same as they are for a true color uncompressed 
+ image.</p></li>
+</ul>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

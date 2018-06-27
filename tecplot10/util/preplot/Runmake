@@ -1,0 +1,66 @@
+#!/bin/ksh
+
+if test $# -ne 1 ; then
+  echo " "
+  echo " "
+  echo "Err: Need:     Runmake platform"
+  echo " "
+  echo "where plaform is one of:"
+  echo "    macx.101"
+  echo "    sgix.65"
+  echo "    sgix64.65"
+  echo "    sgix2.65"
+  echo "    sgix.62"
+  echo "    sgix3.62"
+  echo "    sun4.54"
+  echo "    sun4.55"
+  echo "    sun4.57"
+  echo "    sun464.57"
+  echo "    sun86.54"
+  echo "    ibmx.41"
+  echo "    decalpha.32"
+  echo "    compaq.51"
+  echo "    hp7xx.11"
+  echo "    hp7xx64.11"
+  echo "    hp7xx.102"
+  echo "    linux.24"
+  echo "    linuxi64.24"
+  echo "    linux.22"
+  echo "    linux.203"
+  echo "    linuxa.22"
+  echo "    cray"
+  echo " "
+  echo " "
+  echo " "
+  exit
+fi
+
+Platname=$1
+CC=cc
+
+echo "Building preplot for $Platname"
+
+case $Platname in
+        *macx*) PFLAGS="-DDARWIN -no-cpp-precomp";;
+        sgix.*) PFLAGS="-DIRIS";;
+     sgix64.65) PFLAGS="-DIRIS -DLONGIS64 -64 -mips4";;
+       sgix2.*) PFLAGS="-DIRIS -o32";;
+      sgix3.62) PFLAGS="-DIRIS -mips3 -n32";;
+     sun464.57) CC=/opt/SUNWspro/bin/cc;PFLAGS="-DSUN -DLONGIS64 -KPIC -xarch=v9";;
+       sun4.5*) CC=/opt/SUNWspro/bin/cc;PFLAGS="-DSUN";;
+        ibmx.*) PFLAGS="-DIBMRS6000";;
+      ibmx64.*) PFLAGS="-DIBMRS6000 -DLONGIS64 -q64";;
+   decalpha.32) PFLAGS="-DDECALPHA";;
+     compaq.51) PFLAGS="-DCOMPAQALPHA";;
+    hp7xx64.11) CC=aCC;PFLAGS="-DHP -DLONGIS64 +DA2.0W +DD64 +DS2.0W";;
+       hp7xx.*) CC=aCC;PFLAGS="-DHP +DAportable";;
+     linuxa.22) CC=gcc;PFLAGS="-DLINUX -DLINUXALPHA -DLONGIS64";;
+     linuxi64*) CC=gcc;PFLAGS="-DLINUX -DLINUXI64 -DLONGIS64";;
+        linux*) CC=gcc;PFLAGS="-DLINUX";;
+          cray) PLFAGS="-DCRAYB";;
+             *) echo "*************************** Err: Invalid platform for preplot build: $Platname";;
+esac
+
+
+echo "$CC -DUNIXX -DPLOT3D $PFLAGS preplot.c -o preplot"
+$CC -DUNIXX -DPLOT3D $PFLAGS preplot.c -o preplot

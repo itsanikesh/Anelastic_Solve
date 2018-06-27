@@ -1,0 +1,231 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Import Fluent</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=738>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {font-size: 10pt;}
+p.whs3 {font-size: 10pt; font-weight: bold;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nFile Menu\nImport Fluent");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Import Fluent</h1>
+
+<p><span style="font-weight: bold;"><B>Fluent Data Loader</B></span> allows you 
+ to read <span style="font-weight: bold;"><B>Fluent Version 5</B></span> or <span 
+ style="font-weight: bold;"><B>6 case</B></span> <span style="font-weight: bold;"><B>(.cas)</B></span> 
+ and <span style="font-weight: bold;"><B>data</B></span> <span style="font-weight: bold;"><B>(.dat)</B></span> 
+ files into Tecplot. </p>
+
+<p>&nbsp;</p>
+
+<p>To load files from earlier versions of Fluent, you must first import 
+ them into Fluent 5 or 6, then save them as Fluent 5 or 6 files. If a particular 
+ variable is present in a data file for only one zone, it is set to zero 
+ in Tecplot for all other zones.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Case and Data Files:</B></span> Loads both a case and a data file. The grid 
+ comes from the case file, and the solution comes from the data file. Specify 
+ the case and data files below.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Case File Only:</B></span> Loads the grid from a case file. Specify the case 
+ below.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Residuals Only:</B></span> Loads the residual data (convergence history) from 
+ a data file. The residuals are not scaled or normalized.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Multiple Case and Data Files:</B></span> Displays the File List region of 
+ the dialog. You may load either one case file and multiple matching data 
+ files, or pairs of matching case and data files. Enter all files in the 
+ list below.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Case 
+ File:</B></span> Indicates the case (.cas) file from which the grid will be 
+ loaded. Type the name of the case file, or click the button and select 
+ the name of the file from the resulting dialog.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Data 
+ File:</B></span> Indicates the data (.dat) file from which solution or residual 
+ data will be loaded. Type the name of the data file, or click the button 
+ and select the name of the file from the resulting dialog.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>File 
+ List:</B></span> Includes the list of case and data files and controls for 
+ selecting files for the Load Multiple Case and Data Files option. Also 
+ contains controls for indicating time levels for unsteady solutions.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Add 
+ Files:</B></span> Displays the multiple file selection dialog to allow you 
+ to add files to the list of files to be loaded. Selected files will be 
+ added to the end of the list.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Remove:</B></span> 
+ Removes selected files from the list.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Remove 
+ All:</B></span> Clears the file list.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Flow 
+ Solution is Unsteady/Time Interval:</B></span> For loading multiple case and 
+ data files, indicates that individual data files or case/data file pairs 
+ represent different time levels of an unsteady solution. The time value 
+ (starting at a value of 0) will be stored in auxiliary data for each zone. 
+ This information is not used by Tecplot, but may be used by other Tecplot 
+ add-ons. Refer to Tecplot’s User’s Manual for more information on auxiliary 
+ data.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Options:</B></span> 
+ The Options portion of the dialog allows you to choose which zones and 
+ variables to load, and contains the following controls:</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Cells and Boundaries:</B></span> Loads all zones from the case file. Each 
+ fluid or solid cell zone and each boundary zone will be displayed as a 
+ separate zone in Tecplot.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Cells Only:</B></span> Loads only the cell (solution) zones. Each zone will 
+ be displayed as a separate zone in Tecplot.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Load 
+ Boundaries Only:</B></span> Loads only the boundary zones. Each zone will 
+ be displayed as a separate zone in Tecplot.</p></li>
+	
+	<li class=kadov-p><p class="whs3">Select 
+ Zones and Variables to Load: <span style="font-weight: normal;">Allows 
+ you to choose in a separate dialog which zones and variables to load. 
+ The selection dialog is displayed after you click OK.</span></p></li>
+	
+	<li class=kadov-p><p class="whs3">Include 
+ Particle Data:<span style="font-weight: normal;"> Loads discrete particles, 
+ if any, from the data file. All particles from a particular injection 
+ will be displayed in a single Tecplot zone.</span></p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Averaging: 
+ </B></span>By default, non-grid variables are stored at cell centers, consistent 
+ with Fluent. This section of the dialog contains controls that allow you 
+ to average the data to the nodes, which may be useful for other add-ons 
+ that cannot handle cell-centered data.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Average 
+ to Nodes:</B></span> Directs the loader to average Fluent’s cell-centered 
+ data to the grid nodes. Choose the averaging method below.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Arithmetic:</B></span> 
+ A simple, fast arithmetic averaging will be performed.</p></li>
+	
+	<li class=kadov-p><p class="whs2"><span style="font-weight: bold;"><B>Laplacian:</B></span> 
+ A more accurate, much slower averaging will be performed that accounts 
+ for hanging nodes and cell sizes.</p></li>
+</ul>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+#!/bin/sh
+#
+# This script is used by Tecplot to launch a help page in your favorite
+# browser. The script is passed 2 arguments: the help URL and the X display
+# indicating where to show the help. It assumes that at least one of the
+# browsers that it attempts to launch (see below) is in your $PATH environment
+# variable.
+#
+# It first attempts to launch the various Mozilla based browsers available on
+# Unix/Linux: Firefox, Mozilla, and Netscape. If they fail to launch we attempt
+# a few other know browsers. Feel free to reorder the priority as you see fit.
+# The "||" symbols between each attempted launch rely on the startup scripts
+# correctly returning 0 to indicate success and a non-zero number to indicate
+# failure.
+#
+# Note that for the three Mozilla based browsers we first attempt to launch the
+# browser using the "-remote" option. Only upon failure do we attempt to launch
+# the browser without the "-remote" option. This sequence is essential for a
+# good user experience. The "-remote" option will attempt to locate a running
+# Mozilla based browser on your display and load the URL in a new window (or
+# tab if you replace the "new-window" option with "new-tab". Note however that
+# some older Mozilla and Netscape browsers did not support tab browsing). If
+# you attempt to start a Mozilla based browser without the "-remote" option and
+# a browser is already running it will attempt to create a new user profile
+# which feels clunky and is just plain annoying.
+#
+# On some older Unix/Linux platforms the Mozilla based browser startup scripts
+# do not return the correct error code and thereby fool this script into
+# thinking that it successfully launched the browser. For instance on some Sun
+# platforms the netscape startup script returns success but prints out a
+# message "No running window found." to indicate that it failed. Unfortunately
+# even this message is not always consistent between platforms so you may have
+# to write your own instructions for launching the browser and determining if
+# the "-remote" option was a success. Following is an attempt to check for a
+# running Netscape browser on the Sun.
+#
+NetscapeBrowser()
+{
+  #
+  # Most Sun platforms don't return an error code if Netscape is executed with
+  # the "-remote" option and a running Netscape is not available. To work
+  # around this we check the user's processes for Netscape.
+  #
+  HELP_URL=$1 # The argument to the function is the URL.
+  if test `uname` = "SunOS" ; then
+    # See if Netscape is running already.
+    ps -f | grep netscape >/dev/null 2>&1
+    if test $? -eq 0 ; then
+      netscape -remote "OpenURL($HELP_URL,new-window)" >/dev/null 2>&1
+    else
+      netscape "$HELP_URL" >/dev/null 2>&1
+    fi
+  else
+    # ... for all other platforms that return the correct error codes
+    (netscape -remote "OpenURL($HELP_URL,new-window)" >/dev/null 2>&1 ||
+     netscape "$HELP_URL" >/dev/null 2>&1) >/dev/null 2>&1
+  fi
+}
+
+if test $# -eq 2 ; then
+  HELP_URL=$1 # The first argument to the script is the URL.
+  DISPLAY=$2  # The second argument is the X display on which to show it.
+  export DISPLAY
+  
+  # Macintosh only: Try the open command first; this fails for remote display.
+  (
+    (test "`uname -s`" = "Darwin") && `open "$1"`
+  ) ||
+
+  # Hopefully one of these browsers will be found in the $PATH varaible.
+  (
+    # If you don't like our selections add your favoriate browser here or
+    # simply reorder our selections.
+    # YourFavoriteBrowser "$HELP_URL" >/dev/null 2>&1 ||
+
+    # First try firefox as it is the latest and fastest Mozilla based browser.
+    (firefox -remote "OpenURL($HELP_URL,new-tab)" >/dev/null 2>&1 ||
+     firefox "$HELP_URL" >/dev/null 2>&1) >/dev/null 2>&1 ||
+
+    # Next try mozilla.
+    (mozilla -remote "OpenURL($HELP_URL,new-window)" >/dev/null 2>&1 ||
+     mozilla "$HELP_URL" >/dev/null 2>&1) >/dev/null 2>&1 ||
+
+    # The final Mozilla based browser attempt is netscape. For details, see the
+    # implementation of the NetscapeBrowser shell function above.
+    NetscapeBrowser "$HELP_URL" >/dev/null 2>&1 ||
+
+    # The Mozilla based browsers failed so try KDE's konqueror browser.
+    konqueror "$HELP_URL" >/dev/null 2>&1 ||
+
+    # We failed to find a suitable browser so issue an error and exit.
+    (echo "$0: No suitable browser to display the requested help." 1>&2 &&
+     exit 1)
+  )
+else
+  echo "usage:   $0 URL TargetDisplay"
+  echo "example: $0 http://www.google.com :0"
+fi

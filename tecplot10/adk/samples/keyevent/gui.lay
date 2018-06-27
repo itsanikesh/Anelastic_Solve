@@ -1,0 +1,191 @@
+#!MC 1000
+$!SETSTYLEBASE FACTORY
+$!PAPER 
+  BACKGROUNDCOLOR = WHITE
+  ISTRANSPARENT = NO
+  ORIENTPORTRAIT = NO
+  SHOWGRID = NO
+  SHOWRULER = NO
+  SHOWPAPER = YES
+  PAPERSIZE = LETTER
+  PAPERSIZEINFO
+    {
+    LETTER
+      {
+      WIDTH = 8.5
+      HEIGHT = 11
+      LEFTHARDCLIPOFFSET = 0.125
+      RIGHTHARDCLIPOFFSET = 0.125
+      TOPHARDCLIPOFFSET = 0.125
+      BOTTOMHARDCLIPOFFSET = 0.125
+      }
+    CUSTOM1
+      {
+      WIDTH = 3
+      HEIGHT = 3
+      }
+    }
+  RULERSPACING = ONEINCH
+  PAPERGRIDSPACING = HALFINCH
+  REGIONINWORKAREA
+    {
+    X1 = -0.05
+    Y1 = -0.05
+    X2 = 11.05
+    Y2 = 8.55
+    }
+$!COLORMAP 
+  CONTOURCOLORMAP = SMRAINBOW
+$!COLORMAPCONTROL RESETTOFACTORY
+### Frame Number 1 ###
+$!FRAMELAYOUT 
+  SHOWHEADER = NO
+  BACKGROUNDCOLOR = CUSTOM2
+  HEADERCOLOR = GREEN
+  XYPOS
+    {
+    X = 2.0358
+    Y = 0.75263
+    }
+  WIDTH = 7.4417
+  HEIGHT = 5.5
+$!FRAMENAME  = 'ID=1 MODE=MODELESS TITLE="key Event" OKCLOSEBUTTON=T HELPBUTTON=T' 
+$!SKETCHAXIS 
+  DEPXTOYRATIO = 1
+$!SKETCHAXIS 
+  XDETAIL
+    {
+    RANGEMIN = -0.029053788771050442774
+    RANGEMAX = 0.97094443601355073792
+    GRSPACING = 0.2
+    }
+$!SKETCHAXIS 
+  YDETAIL
+    {
+    RANGEMIN = -0.054702270628785749917
+    RANGEMAX = 0.6843763627657341031
+    GRSPACING = 0.1
+    }
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 51.6209905937
+    Y = 7.94319124206
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=KeyResult Type=Text' 
+  TEXT = 'T:                                   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 51.1562672529
+    Y = 95.2039672742
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=LBL2 Type=Label' 
+  TEXT = 'Resulting Keystrokes:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 3.67139227523
+    Y = 69.245253394
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=TFSrc Type=TextField' 
+  TEXT = 'TF:            ' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 3.67139227523
+    Y = 12.1315282661
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    BOXTYPE = FILLED
+    MARGIN = 45
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=TSrc Type=Text' 
+  TEXT = 'T:                                \n\n\n\n\n\n\n' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.32761055628
+    Y = 75.0635858154
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=LBL5 Type=Label' 
+  TEXT = 'Enter values in textfield:' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.32761055628
+    Y = 50.6713460486
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=LBL6 Type=Label' 
+  TEXT = 'Enter values in Multi-line' 
+$!ATTACHTEXT 
+  ANCHORPOS
+    {
+    X = 2.32761055628
+    Y = 46.1957057244
+    }
+  TEXTSHAPE
+    {
+    HEIGHT = 16
+    }
+  BOX
+    {
+    MARGIN = 0.2
+    FILLCOLOR = CUSTOM2
+    }
+  MACROFUNCTIONCOMMAND = 'VarName=LBL7 Type=Label' 
+  TEXT = 'Text Field:' 
+$!SETSTYLEBASE CONFIG

@@ -1,0 +1,73 @@
+This addon demonstrates the ability to make a "usefull"
+general purpose addon that manipulates data using FORTRAN.
+This addon also extends tecplot's macro language.
+
+This addon does NOT operate on or create data using the
+new (version 10) cell centered value location.
+
+This addon provides the ability to create an IJK-Ordered
+based on the cell centers of a source IJK-Ordered zone.
+
+If run via a macro you can use:
+
+$!ADDONCOMMAND
+  ADDONID = "Create Cell Center"
+  COMMAND = 'nnn'
+
+where nnn is the number of the source zone to use.
+
+
+
+
+   Building the addon:
+
+
+      1.  Make sure you have your environment set up
+          as per instructions in section 2.1 of the ADK 
+          Users Manual (adk/doc/90adkum.pdf).
+
+
+      2.  Put the files in this distribution in a directory
+          called "cellctr" below the directory you created
+          in step 2. in the instructions from section 2.1
+          of the ADK users manual.
+
+      3.  from the cellctr directory type:
+
+             Runmake sgix.65 -d
+
+
+      4.  You now have a "debug" version of the addon.  You
+          can cut and paste the instructions left for you after
+          the build to run the addon OR follow step 2 in
+          section 2.2 of the ADK users manual using "cellctr"
+          in place of "MyAddOnName".  Tecplot will then
+          use the addon when you type:
+
+
+          tecplot -develop
+          
+
+
+
+Using the addon.
+
+
+    1.  From the interface.
+
+          - Load in IJK-Ordered data.
+          - Launch the addon dialog via the tools menu.
+          - Select a source zone.
+          - Click Ok.
+
+
+    2.  From a macro.
+
+        $!ADDONCOMMAND 
+          ADDONID='Create Cell Center' 
+          COMMAND='1'
+
+        The above will use zone 1 as the source for creating
+        a cell centered zone.
+
+

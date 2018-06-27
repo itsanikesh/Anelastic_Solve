@@ -1,0 +1,223 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Interpolate Kriging</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=761>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 {list-style: disc;}
+p.whs2 {margin-left: 0px;}
+p.whs3 {font-size: 10pt; margin-left: 0px;}
+p.whs4 {margin-left: 40px; font-size: 10pt;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+<!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
+{
+  var strNSS = "<style type='text/css'>";
+  strNSS += "p.whs2 {margin-left:1; }";
+  strNSS += "p.whs3 {margin-left:1; }";
+  strNSS +="</style>";
+  document.write(strNSS);
+}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nData\nInterpolate Kriging");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Interpolate Kriging</h1>
+
+<p>Use the <span style="font-weight: bold;"><B>Kriging dialog</B></span> to perform 
+ kriging, a more complex form of interpolation than inverse-distance. It 
+ works like inverse-distance interpolation and is used for the same purposes. 
+ Kriging generally produces superior results to the inverse-distance algorithm 
+ but requires more computer memory and time. Tecplot uses the current frame's 
+ axis assignments to determine the variables to use for coordinates in 
+ kriging, but it ignores any axis scaling that may be in effect.</p>
+
+<p>&nbsp;</p>
+
+<p>The following options are available:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2"><span style="font-size: 10pt; font-weight: bold;"><font size=2 style="font-size:10pt;"><B>Source 
+ Zones:</B></font></span><span style="font-size: 10pt;"><font size=2 style="font-size:10pt;"> Select the zone or set of 
+ zones to krig from (that is, the zone[s] with the source data).</font></span></p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Variables:</B></span> Select the variables to krig. 
+ By default, all variables (other than those assigned to the X-, Y-, and 
+ Z-axes) are kriged. Kriging fewer variables can speed up the process.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Destination Zone:</B></span> Select the destination 
+ zone into which to krig. Except for the variables assigned to the axes, 
+ data in the destination zone is overwritten.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Range:</B></span> Select the distance beyond which 
+ source points become insignificant for the kriging. The value is stated 
+ as the fraction of the length of the diagonal of the box which contains 
+ the data points. A range of zero means that any point not coincident with 
+ the destination point is statistically insignificant; a range of one means 
+ that every point in the data set is statistically significant for each 
+ point. In general, values between 0.2 and 0.5 should be used.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Zero Value:</B></span> Enter the semi-variance 
+ at each source data point on a normalized scale from zero to one. Semi-variance 
+ is the certainty of the value at a data point. A value of zero means that 
+ the values at the source points are exact. Greater values mean the values 
+ at the source points have some uncertainty or noise. Zero is usually a 
+ good number for Zero Value, and it causes the interpolated data to fit 
+ closely to all the source data points. Increasing the Zero Value results 
+ in smoother interpolated data that fits increasingly more to the average 
+ of the source data points.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Drift:</B></span> Select the overall trend for 
+ the data from the drop-down. The available choices are No Drift, Linear, 
+ and Quadratic. If the Drift is set to Linear or Quadratic, the selected 
+ points must be non-collinear (non-coplanar in the 3D Cartesian plot type).</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Point Selection:</B></span> Select from the drop-down 
+ the method used for determining which source points to consider for each 
+ destination point. This option is very important for kriging, since kriging 
+ involves the computationally expensive inversion and multiplication of 
+ matrices. The computational time and memory requirements increase rapidly 
+ as the number of selected source data points increases. In general, you 
+ should not use All unless you have very few source points, or extra time 
+ and computer memory. There are three available methods, as follows:</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Nearest N:</B></span> For each point in the destination 
+ zone, consider only the closest n points to the destination point. These 
+ n points can come from any of the source zones. You specify n after selecting 
+ this option. This option may speed up processing if n is significantly 
+ smaller than the entire number of source points.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Octant:</B></span> Like Nearest N above, except 
+ the n points are selected by coordinate-system octants. The n points are 
+ selected so they are distributed as evenly as possible throughout the 
+ eight octants. This reduces the chances of using source points which are 
+ all on one side of the destination point.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>All:</B></span> Consider all points in the source 
+ zone(s) for each point in the destination zone. Keep in mind that points 
+ far away have a very small weighting factor.</p></li>
+	
+	<li class=kadov-p><p class="whs3"><span 
+ style="font-weight: bold;"><B>Number of Points:</B></span> Enter the number of 
+ points n to consider for each destination point. This field is enterable 
+ and used only if the Point Selection is set to Nearest N or Octant. This 
+ field is ignored if Point Selection is set to All.</p></li>
+</ul>
+
+<p class="whs4">&nbsp;</p>
+
+<p>For details about the kriging algorithm see:</p>
+
+<p>Davis, J. C. <span style="font-style: italic;"><I>Statistics and Data Analysis 
+ in Geology</I></span>, Second Edition. New York: John Wiley, 1986.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

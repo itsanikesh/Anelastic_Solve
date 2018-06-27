@@ -1,0 +1,40 @@
+//////////////////////////////////////////////////////////////////
+// Sample.txt - this file shows how the wizard directives are used
+//////////////////////////////////////////////////////////////////
+
+AW_ADDONNAME [!output AW_ADDONNAME]
+AW_COMPANY    [!output AW_COMPANY]
+AW_MENUTEXT   [!output AW_MENUTEXT]
+AW_ADDONBASENAME [!output AW_ADDONBASENAME]
+
+AW_GENERAL       [!output AW_GENERAL]
+AW_LOADER        [!output AW_LOADER]
+AW_CONVERTER     [!output AW_CONVERTER]
+AW_CURVEFIT      [!output AW_CURVEFIT]
+
+AW_MACROCOMMANDS [!output AW_MACROCOMMANDS]
+AW_STATECHANGE   [!output AW_STATECHANGE]
+AW_MENUTEXT      [!output AW_MENUTEXT]
+AW_USETGB           [!output AW_USETGB]
+AW_INCLUDEOVERRIDE  [!output AW_INCLUDEOVERRIDE]
+AW_FORTRANLANGUAGE  [!output AW_FORTRANLANGUAGE]
+AW_USEPROBECB       [!output AW_USEPROBECB]
+AW_ISWINDOWS        [!output AW_ISWINDOWS]
+AW_ISMODAL          [!output AW_ISMODAL]
+AW_ISMODELESS       [!output AW_ISMODELESS]
+AW_DLGTITLE         [!output AW_DLGTITLE]
+AW_HASSIDEBAR       [!output AW_HASSIDEBAR]
+AW_SBTITLE          [!output AW_SBTITLE]
+AW_CONVERTERPLUS    [!output AW_CONVERTERPLUS]
+AW_MAKEMENUOPTION   [!output AW_MAKEMENUOPTION]
+
+AW_CLANGUAGE        [!output AW_CLANGUAGE]
+AW_CPPLANGUAGE      [!output AW_CPPLANGUAGE]
+AW_FORTRANLANGUAGE  [!output AW_FORTRANLANGUAGE]
+
+AW_HASENGINE        [!output AW_HASENGINE]
+AW_EXTENDEDCURVEFIT [!output AW_CURVEFIT]
+
+AW_TECPLOTVERSION   [!output AW_TECPLOTVERSION]
+
+

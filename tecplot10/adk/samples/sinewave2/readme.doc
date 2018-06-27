@@ -1,0 +1,147 @@
+FORTRAN example addon showing use of a timer.  This addon simulates the
+collection of real time data and shows how you can interactively alter
+the plot in tecplot at the same time data is being collected.
+
+
+What happens:
+
+   When tecplot comes up, the "Tools" menu will have an option called "sinewave2".
+
+   sinewave2:  This launches a dialog with just one scale and one  button labeled "reset".  
+               Press reset to start.  Use the scale to adjust the amplitude.  The phase 
+               will automatically update even while you are dragging the scale.
+
+
+
+The code:
+
+   The code has some comments to guide you through.   The following is
+   a brief overview of how each addon works:
+
+      guicb.F:     
+         This is the standard module that contains the callback functions
+         for the dialog used by the addon.  The dialog is modal and, being lazy,
+         the "Ok" and "Cancel" buttons do the same thing - namely close the dialog.
+
+         AmpScale_SC_D1_CB and AmpScale_SCD_D1_CB are the callbacks
+         associated with the amplitude scale.  The "_SC_" form is only called
+         when the user releases the scale after dragging it.  The "_SCD_"
+         form is called at every drag event.  For this situation the 
+         "_SC_" function is left empty and only the "_SCD_" function
+         is being used.
+
+         When a drag event occurs on the amplitude scale, AmpScale_SCD_D1_CB
+         is called which updates the amplitude of the sine wave and calls
+         drawwave() which draws a new sine wave.
+                   
+         Subroutine Reset_BTN_D1_CB is called when the reset button is pushed.
+         This function turns around and calls ResetDataSet() which is in
+         util.F and is discussed below.
+
+
+      util.F       
+         This is where all the real work is done.
+
+         ResetDataSet is called when the by Reset_BTN_D1_CB after the reset
+         button is pressed.  This function does the following:
+
+            - Locks tecplot
+            - clears out all frames in tecplot (i.e. does a $!NEWLAYOUT)
+            - Creates a dataset out of thin air and stuffs it into tecplot.
+            - Sets up an XY plot with a reasonable style.
+            - Calls PollForData which draws the sinewave and sets up a timer to
+              get the next bit of data.
+
+
+         drawwave() does the following:
+
+            - Makes sure it is ok to draw.
+            - Gains access to the X and Y arrays inside of tecplot
+            - Calls calcxy() to update the X and Y arrays to new values.
+            - redraws the plot.  
+
+
+         calcxy() simply calculates the x,y coordinates for a new sinewave given
+         the current amplitude and phase.  Some type of data retrieval could be
+         done at this stage instead.
+
+
+         Using the timer
+         ---------------
+
+         There are a number of ways this can be done.  Two convenience functions
+         are provided as part of the fglue.a library.  They are:
+
+             FExtRegisterTimeOut 
+             FExtRemoveTimeOut
+
+         FExt stands for FORTRAN-Extended.
+
+         FExtRegisterTimeOut is used to register the name of a function that is
+         to be called, no matter what else is happening, at a user specified
+         number of milliseconds in the future relative to the time the function
+         was registered.
+
+         Example:
+
+             Program Test
+             Call LaunchIt()
+             ..... Add code here that does a lot of work.....
+             stop
+             end
+
+             Subroutine GotIt()
+             write (*,*) 'Hi Mom'
+             return
+             end
+
+
+             Subroutine LaunchIt()
+             External GotIt
+             FExtRegisterTimeOut(GotIt,300)
+             return
+             End
+
+
+             In the above example,  LaunchIt() is called and it registers GotIt
+             to be called in 300 milliseconds.  Meanwhile, LaunchIt returns to
+             the main program (Test) and some code is executed that "does a lot
+             of work (hopefully more than 300 milliseconds worth).    While
+             the "lot of work" is being performed, a timer goes off and the 
+             code stops all it is doing in the "lot of work" section and a 
+             call is made to GotIt().  GotIt() prints "Hi Mom" and then returns
+             and the "lot of work" code picks up where it left off.
+
+
+         In sinewave2,  The trick comes in the function in util.F called 
+         PollForData().  This function is called at the very beginning and it 
+         simulates some form of data acquisition - it's up to you to decide how 
+         it gets it's new information.  It gathers the new information and then 
+         registers ITSELF to be called again in 50 milliseconds.
+
+         So what we have here is a function that gets called every 50 
+         milliseconds regardless of what else is going on in the program.  It 
+         updates the phase of the sinewave and then redraws the sinewave.
+
+         What this allows the rest of the addon to do is to process the events
+         generated by dragging the amplitude scale.  
+
+         Note that there are a few other "tricky" pieces of code that make sure
+         double buffering and some other things are handled correctly.  I can
+         explain these things a bit more if you have questions on them.  The 
+         code should be fairly clear on how this stuff.
+
+
+         A number of things could have been different with this addon.  Here 
+         are a few:
+
+           - The sinewave could be redrawn when a drag even occurs instead of
+             when new data is obtained.
+
+           - Instead of polling for the data, code could be set up that could
+             register a socket with the X event handler such that when new data
+             was available on a given socket, a callback function would be called
+             and then could read the new data from the socket.  What this does
+             is make the application attempt to process the data as it becomes
+             available instead of always polling for new data every set amount
+             of time (50 milliseconds in this case).

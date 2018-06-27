@@ -1,0 +1,298 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Import HDF 5</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=1895>
+<meta name=layout-width content=844>
+
+
+<!--(Links)=========================================================-->
+
+ <link rel='stylesheet' href='default_ns.css'>
+<script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 {font-weight: bold;}
+-->
+</style>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+  div.WebHelpPopupMenu {position:absolute; left:0px; top:0px; z-index:4; visibility:hidden;}
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Tecplot 10 Help\nAdd-Ons\nImport HDF 5");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("tecplot10.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Import HDF 5</h1>
+
+<p>Selecting the HDF5loader add-on from the Tecplot File/Import dialog 
+ allows you to import general HDF5 files into Tecplot. The loader provides 
+ a mechanism for importing generic data from multiple HDF5 datasets or 
+ groups. The H5loader will load datasets within user selected groups, load 
+ one or more user selected datasets to one zone, load multiple user selected 
+ datasets to multiple zones, execute macros after data has been loaded, 
+ create implicit X, Y, and Z grid vectors as needed, sub-sample loaded 
+ data, and reference user selected vectors for X, Y, and Z grids. Datasets 
+ must be formatted as I, IJ, or IJK ordered data. For information regarding 
+ HDF5 refer to http://hdf.ncsa.uiuc.edu/HDF5/.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Data Selection</p>
+
+<p>HDF5 files may be viewed and selected by pressing the Select File button 
+ in the H5loader dialog. One or more files may be selected if all selected 
+ files have an identical hierarchy. Hierarchy information for the selected 
+ HDF5 files is displayed in the Available Datasets window in the form: 
+ /group/[group]…/dataset - the dimension of each dataset is displayed immediately 
+ following the dataset name. In this window one or more datasets or groups 
+ may be selected for loading.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Importing/Loading Data</p>
+
+<p>Datasets may be loaded using one of three methods: 1) loading multiple 
+ datasets to one zone, 2) loading multiple datasets to separate zones, 
+ or 3) loading datasets by group.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Loading Multiple Datasets to One Zone</p>
+
+<p>Loading multiple datasets to one zone is the default method of importing 
+ HDF5 files. Using this method the HDF5loader will create one zone with 
+ N variables where N is the number of HDF5 datasets selected in the Available 
+ Datasets window. Selected datasets may have 1 to 3 dimensions. The dimension 
+ of loaded Tecplot variables will match the I, J, and K values of the selected 
+ datasets. Variable names are assigned the corresponding names of selected 
+ datasets - the dimensionality of each selected dataset must be equivalent. 
+ </p>
+
+<p>&nbsp;</p>
+
+<p>To import your data, select one or more datasets from the Available 
+ Datasets window. All selected datasets must be identical in dimension; 
+ dataset dimensions are shown immediately to the right of dataset names 
+ in the Available Datasets window. Once you have selected the datasets 
+ to load press the OK button.</p>
+
+<p>&nbsp;&nbsp;</p>
+
+<p class="whs1">Loading Multiple Datasets to Separate Zones</p>
+
+<p>Using this method the HDF5loader will create N zones where N is the 
+ number of datasets selected in the Available Datasets window. Each zone 
+ contains one variable per selected dataset where each dataset must have 
+ 1 to 3 dimensions. The I, J, and K values of each Tecplot zone will match 
+ the dimensionality of each selected dataset. Variable and zone names are 
+ automatically assigned. Dimensionality may vary between selected datasets. 
+ </p>
+
+<p>&nbsp;</p>
+
+<p>To import your data using this method, select the Load to Separate Zones 
+ toggle. Select one or more datasets from the Available Datasets window. 
+ Once you have selected the datasets you want to load, press the OK button. 
+ One zone will be created for each selected dataset and each zone will 
+ contain exactly one variable (unless you selected Create Implicit Grid 
+ Values or Reference Data Grids.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Loading Datasets by Group</p>
+
+<p>Using this method the HDF5loader will create N zones with M variables 
+ where N is the number of groups selected in the Available Datasets window 
+ and M is the number of datasets in each group. The I, J, and K indices 
+ of the Tecplot variables will be equivalent to the respective dimension 
+ of selected datasets. Datasets in any selected group must be equal in 
+ dimension; however datasets may be unequal in dimension between groups. 
+ When selecting multiple groups all groups must contain an equal number 
+ of datasets and dataset names must be identical between groups. The HDF5 
+ loader will only load datasets within the root directory or within a subgroup, 
+ i.e., the HDF5loader will not load data within nested groups.</p>
+
+<p>&nbsp;</p>
+
+<p>To import your data using this method, select the Load Datasets by Group 
+ toggle. Press Select File to open a HDF5 file. Select one or more groups 
+ from the Available Datasets window; all groups must contain an equal number 
+ of datasets where all datasets have identical names between groups. Press 
+ the OK button to load your data. The number of selected groups determines 
+ the number of zones that load into Tecplot. Zone names will match the 
+ name of the corresponding group. Variable names will match the respective 
+ dataset name. Each zone will include as many variables as datasets per 
+ selected groups. </p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Additional Options</p>
+
+<p>Additional options may be specified when loading HDF5 data into Tecplot 
+ using methods described in sections 1.2.1, 1.2.2, and 1.2.3. These options 
+ allow you to execute macros after data has been loaded, sub-sample loaded 
+ data, reference user selected vectors for X, Y, and Z grid values, and 
+ automatically create X, Y, and Z grid vectors.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Using Macros</p>
+
+<p>Macros may be defined within a HDF5 vector and placed in any group. 
+ Each character string in the selected vector must be a valid one-line 
+ Tecplot macro. Macros are executed in the order encountered and after 
+ all data are loaded.</p>
+
+<p>&nbsp;</p>
+
+<p>To run a macro defined as a character vector in your HDF5 file, select 
+ the Run Macros in Selected Group toggle. From the Select Macro pull-down 
+ menu select the macro you want to execute. Proceed by following one of 
+ the methods described in sections 3.1, 3.2, and 3.3 for loading HDF5 data. 
+ Your macro will run after your data has been successfully loaded into 
+ Tecplot.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Sub-Sampling Data</p>
+
+<p>The H5loader will sub-sample the first, second, and third dimensions 
+ of loaded datasets respectively as defined by the user. The default skip-value 
+ is 1. When specifying non-unitary skip values the dimensionality of all 
+ selected datasets must be equivalent. Datasets will be sub-sampled using 
+ the user defined I-Skip, J-Skip, and/or K-Skip values – skip values must 
+ be whole numbers.</p>
+
+<p>&nbsp;</p>
+
+<p>To sub-sample data in the first, and/or second, and/or third dimensions 
+ of selected datasets change the respective I-Skip, and/or J-Skip, and/or 
+ K-Skip values located in the HDF5Loader dialog. If the skip-values are 
+ non-unitary then the dimensionality of all selected datasets must be equivalent. 
+ Proceed by following one of the methods described in sections 3.1, 3.2, 
+ and 3.3 for loading HDF5 data.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Referencing Data Grids</p>
+
+<p>The HDF5Loader allows users to specify X, and/or Y, and/or Z grid vectors. 
+ Selected vectors are used for plotting all zones. Vectors are of dimension 
+ 1 and length M. The X grid vector length must equal to the first dimension 
+ of selected datasets, the Y grid vector length must be equal to the second 
+ dimension of selected datasets, and the Z grid vector length must be equal 
+ to the third dimension of selected datasets. The number of selected grid 
+ vectors must equal the rank of selected datasets.</p>
+
+<p>&nbsp;</p>
+
+<p>To define the grid vectors you may choose them from a pull-down menu. 
+ Begin by unselecting the Create Implicit Grid Values option and select 
+ the Reference Data Grids button. A child dialog will appear (Fig. 2), 
+ from the X, Y, and Z menus select the vector you want to use as the corresponding 
+ grid. You MUST select the toggle Use Data Grids. The number of grid vectors 
+ you specify must equal the rank of selected datasets. Continue loading 
+ your HDF5 data by following one of the methods described in sections 3.1, 
+ 3.2, and 3.3.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Grid Generation</p>
+
+<p>The H5loader can automatically create X, Y, and Z grid vectors as necessary 
+ for selected datasets. Grid vectors will be of length equal to the corresponding 
+ dimension.</p>
+
+<p>&nbsp;</p>
+
+<p>To automatically create X, Y, and Z grid vectors select Create Implicit 
+ Grid Values in the HDF5loader dialog – this is selected by default. Proceed 
+ by following one of the methods described in sections 3.1, 3.2, and 3.3 
+ to load your HDF5 data. The grid vectors will be created upon loading 
+ your data into Tecplot.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+
+</html>

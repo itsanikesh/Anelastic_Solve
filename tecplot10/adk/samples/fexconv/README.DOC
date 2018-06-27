@@ -1,0 +1,19 @@
+This addon demonstrates how to write a data converter using
+fortran.  This converter is extremely simple.  The 
+converter will load files that look like:
+
+NumVars
+NumDataPoints
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+nnn nnn nnn nnn
+.
+.
+.
+.
+
+For an example of a data loader that can read this
+data see fexload

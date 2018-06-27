@@ -1,0 +1,92 @@
+#!TECPLOT_LOADGEN
+#######################################################
+#
+# WARNING: Editing this file by hand is not recommended.
+# The general text loader add-on will not be able to read
+# all of the contents of this file
+# if there are syntax errors.
+#
+#
+#
+#######################################################
+
+VERSION = 100 # version number of this file
+FILEEXT = "*.txt" # typical extension of this kind, including '*.'
+FILEDESC = "General Text" # description of this kind of file
+
+
+
+TITLE
+{
+ SEARCH = LINE 
+ NAME = "New Dataset" # dataset title
+ LINE = 2 
+ DELIMITER = AUTO 
+ WIDTH = 10 
+}
+
+
+VARIABLES
+{
+
+ SEARCH = NONE 
+ NAMES = "freq,RelS11,ImS11,ReS21,ImS21,ReS12,ImS12,ReS22,ImS22" 
+
+ LOADED =  All  
+ STARTLINE = 3 
+ ENDLINE = 3 
+ DELIMITER = AUTO 
+ WIDTH = 10 
+}
+
+
+DATA
+
+{
+
+ IGNORENONNUMERICTOKENS = TRUE 
+ IMPORT
+
+ {
+
+  STARTID = FIRSTNUMERICLINE 
+  {
+
+   LINE = 1 
+  }
+
+
+  ENDID = EOF 
+  {
+
+   LINE = 1 
+  }
+
+
+  FORMAT = IJKPOINT 
+  DELIMITER = AUTO 
+   WIDTH = 10 
+  }
+
+
+  DIMENSION
+
+  {
+
+   AUTO = TRUE 
+   CREATEMULTIPLEZONES = FALSE 
+ }
+
+}
+
+GLOBALFILTERS
+{
+
+ COMMENT = "!" 
+ USEBLANKCELLVALUE = FALSE 
+ BLANKCELLVALUE = 0.000000 
+}
+
+#######################################################
+# End of file
+#######################################################
