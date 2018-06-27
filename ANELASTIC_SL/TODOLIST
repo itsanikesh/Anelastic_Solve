@@ -1,0 +1,27 @@
+Must Dos
+1 Add Algorithms for DNS solver, Multigrid Pressure Solver, Grid Generation
+  Program, Interpolation program to doc/manual.tex.
+2 Document files in post/ directory, add a statistics section to manual.tex.
+3 
+4 
+5 
+
+Should Dos
+1 Combine Interpolation program into 1 program rather than 3 sub-programs
+2 Remove utils/BC.F90 and utils/Ghost.F90 after DNS solver is working
+3 Create Wake and Shear Layer directories in runfiles/
+4 Organize files in post/
+6 Figure out how to make grid program without having to turn off the parallel
+  flag manually, this will have to also make a serial version of readINI.F90
+  and then delete it when it is done... this is a tricky area.
+5 Set up sf2s@gmail.com account
+6 Post sf2s online, work on legal statements if necessary...
+7 Implement threading using OpenMP for the serial version
+
+Dreams
+1 Implement threading using OpenMP to make a hybrid MPI/OpenMP code
+2 
+3 
+4 
+5 
+

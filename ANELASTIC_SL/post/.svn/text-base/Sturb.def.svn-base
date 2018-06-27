@@ -1,0 +1,104 @@
+#################Sturb Version####################################
+# Statistics File Definition & Description for use with tkstat v2.4
+# Date = 02/03/2009
+# Written by Kyle Brucker
+# Format <TEXT>:<XMGR>:<LATEX>:<FORMULA>
+ I:i:i:
+ J:j:j:
+ Z:z:z:
+ S1:x\s3\N/\xd\sw\N\0:x_3/\delta_\omega:
+ U1:U1:\bar{u}_1:
+ U2:U2:\bar{u}_2:
+ U3:U3:\bar{u}_3:
+ P:P:\bar{p}:
+ RHO:\xr\0:\bar{\rho}:
+ u1':u1':u^'_1:
+ u2':u2':u^'_2:
+ u3':u3':u^'_3:
+ p':p':p^':
+ rho':\xr\N\0':\rho^':
+ OMG1:\xw\s1\N\0:\Omega_1:
+ OMG2:\xw\s2\N\0:\Omega_2:
+ OMG3:\xw\s3\N\0:\Omega_3:
+ OMG_MAG:\xw\N\s\0mag\N\0:\Omega_{mag}:
+ omg1':\xw\s1\N'\0:\omega_1^':
+ omg2':\xw\s2\N'\0:\omega_2^':
+ omg3':\xw\s3\N'\0:\omega_3^':
+ omg_mag':\xw\N\s\0mag\N'\0:\omega_{mag}^':
+ eps_11:\xe\s11\N\0:\epsilon_{11}:
+ eps_12:\xe\s12\N\0:\epsilon_{12}:
+ eps_13:\xe\s13\N\0:\epsilon_{13}:
+ eps_21:\xe\s21\N\0:\epsilon_{21}:
+ eps_22:\xe\s22\N\0:\epsilon_{22}:
+ eps_23:\xe\s23\N\0:\epsilon_{23}:
+ eps_31:\xe\s31\N\0:\epsilon_{31}:
+ eps_32:\xe\s32\N\0:\epsilon_{32}:
+ eps_33:\xe\s33\N\0:\epsilon_{33}:
+ sum_eps_ij:\xe\sab\N\0:\epsilon_{\alpha \beta}:
+ u1'u2':u\s1\N\S'\Nu\s2\N\S'\N:\left<u_1^'u_2^'\right>:
+ u1'u3':u\s1\N\S'\Nu\s3\N\S'\N:\left<u_1^'u_3^'\right>:
+ u1'p':u\s1\N\S'\Np\S'\N:\left<u_1^'p^'\right>:
+ u1'rho':u\s1\N\S'\N\xr\S'\N:\left<u_1^'\rho^'\right>:
+ u2'u3':u\s2\N\S'\Nu\s3\N\S'\N:\left<u_2^'u_3^'\right>:
+ u2'p':u\s2\N\S'\Np\S'\N:\left<u_2^'p^'\right>:
+ u2'rho':u\s2\N\S'\N\xr\S'\N:\left<u_2^'\rho^'\right>:
+ u3'p':u\s3\N\S'\Np\S'\N:\left<u_3^'p^'\right>:
+ u3'rho':u\s3\N\S'\N\xr\S'\N:\left<u_3^'\rho^'\right>:
+ p'rho':p\S'\N\xr\S'\N:\left<p^'\rho^'\right>:
+ dU1dx3:dU1/dx\s3\N:\frac{d \left<u_1\right>}{dx_3}"
+ PROD:P:Production:P:
+ DISS:\xe\0:\epsilon:
+ BFLUX:B:B:
+ TRANS:dT\s3\N\S'\N/dx\s3\N:\frac{d \left<T_3^'\right>}{dx_3}:
+ eta:\xh\N\0:\eta:
+ dw'dz:du\s3\N\S'\N/dx\s3\N:\frac{d u_3^'}{dx_3}:
+ d_theta:\xd\sq\0\N:\delta_{\theta}:
+ d_omega:\xd\sw\0\N:\delta_{\omega}:
+ dRHOdx3:d\xr\N\0/dx\s3\N\0:\frac{d \left<\rho\right>}{dx_3}:
+ N2:N\S2\N\0:N^2
+ Loz:L\sO\N:L_O:
+ d_theta_rho:\xd\sq,r\0\N:\delta_{\theta,\rho}:
+ d_omega_rho:\xd\sw,r\0\N:\delta_{\omega,\rho}:
+ Ri_gradient:Ri\sg\N:Ri_g:
+ Seps1:\xe\s\xr\N\s,1\N\0:\epsilon_{\rho,1}:
+ Seps2:\xe\s\xr\N\s,2\N\0:\epsilon_{\rho,2}:
+ Seps3:\xe\s\xr\N\s,3\N\0:\epsilon_{\rho,3}:
+ SepsSUM:\xe\s\xr,a\N\s\N\0:\epsilon_{\rho,\alpha}:
+ ScalarProd:P\x\sr\0\N:P_{\rho}
+ ScalarDiss:\xe\s\xr\N\0:\epsilon_{\rho}:
+ ScalarTrans:dT\s3\xr\0\N\S'\N/dx\s3\N:\frac{d \left<T_{\rho,}3^'\right>}{dx_3}:
+ P13: : :
+ PS11: : :
+ PS22: : :
+ PS33: : :
+ Le:L\sE\N:L_E:
+ D11: : :
+ D22: : :
+ D33: : :
+ D13: : :
+ NA: : :
+ NA: : :
+ B11: : :
+ B22: : :
+ B33: : :
+ B13: : :
+ T22: : :
+ T33: : :
+ T13: : :
+ Pr1: : :
+ Dr1: : :
+ Dbr1: : :
+ Pr3: : :
+ NA: : :
+ Dr3: : :
+ Dbr3: : :
+ Tr33: : :
+ PS13: : :
+ mix_eff:M\se\N\0:\frac{\int -B}{\int (-B + \epsilon)}:
+ trans_eff:T\se\N\0:\frac{\int \epsilon_{\rho}}{\int ( \epsilon_{\rho} + \epsilon)}:
+ int_eps:Int \xe\N\0:\int \epsilon
+ int_sceps:Int \xe\N\s\xr\N\0:\int \epsilon_{\rho}
+ int_prod:Int P:\int P
+ int_buoyancy:Int B:\int B
+ int_mix_eff:Int M\se\N\0:frac{-B}{int (-B + \epsilon)}
+ int_trans_eff:Int T\se\N\0:frac{\epsilon_{\rho}}{int (\epsilon_{\rho} + \epsilon)}

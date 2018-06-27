@@ -1,0 +1,25 @@
+#!/bin/sh
+#ACCOUNT
+#PBS -A onrdc307
+
+#QUEUE
+#PBS -q debug
+
+#WALL TIME
+#PBS -l walltime=01:00:00
+
+#NUMBER OF PROCESSORS
+#PBS -l ncpus=8
+
+#STANDARD ERROR
+#PBS -e test.err
+
+#STANDARD OUT
+#PBS -o test.out
+
+#JOB NAME
+#PBS -N waketest 
+
+#RUN
+cd /work/kbruck/wake_Test
+aprun -n 8 ./Sturb.x > test.log

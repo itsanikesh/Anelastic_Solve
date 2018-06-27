@@ -1,0 +1,1202 @@
+subroutine NSsolver(stat)
+!@t
+! \textbf{subroutine NSsolver(stat)}
+!@h
+!   Description:
+!     Solves the unsteady Navier Stokes equations. I NEED TO UPDATE THIS KYLE
+
+!   Method:
+!     The low storage RK3 method of Williamson (1980 Journal of Computational Physics)
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     An output message is sent to confirm that everything was allocated
+!     properly.
+!@q
+
+ use ntypes,     only: i4, r8
+ use IO,         only: IOUT, checkDIV
+ use Flow
+ use Parameters, only: bstep, estep, nstep, delt, cfl, time,Ddt
+ implicit none
+
+ !Passed Variables
+ integer,intent(out)              :: stat
+
+ !Local Variables
+ integer                          :: ok
+ real(r8)                         :: a1, a2, a3, ec
+ logical                          :: wdivplanes=.false.
+ logical,parameter                :: debug=.false.
+
+
+if (debug) call check_point('NSsolver#0',.false.)
+
+!LOW STORAGE RK3 UPDATE 
+!(Williamson 1980 Journal of Computational Physics)
+!ROUND OFF CORRECTION NOT IMPLEMENTED
+!USE DOUBLE PRECISION 
+
+!Le and Moin JCP 1991 solve the pressure projection only at the last time step
+!this reduces the global accuracy of the RK3 update Dt^2 from Dt^3.  May save
+!considerable expense, set psolve to .false. in the first two rk substeps  
+
+do nstep=bstep,estep
+
+ !Ensure temporary variables are empty
+ call zero_temps  
+
+ !Calculate time step
+ call calcdt(delt,ok)
+  if (ok.NE.0) goto 1000
+ write(IOUT,*) ""
+ write(IOUT,'(i5,a9,f15.8,a7,f15.8)') nstep,"    time=",time,"    dt=",delt
+
+ !Calculate gravity (may be ramped up smoothly from zero)
+ call gravity(ok)
+  if (ok.NE.0) stop
+
+ !First sub-step
+ a1 = 0.d0
+ a2 = 1.d0
+ a3 = 1.d0/3.d0
+ ec = -1.d0/6.d0
+ call rk_ss(a1,a2,a3,ec,delt,.true.,ok)
+  if (ok.NE.0) goto 1000
+  if (debug) call check_point('NSsolver#1',.false.)
+
+ !Second sub-step
+ a1 = -5.d0/9.d0
+ a2 = 1.d0
+ a3 = 15.d0/16.d0
+ ec = -10.d0/3.d0
+ call rk_ss(a1,a2,a3,ec,delt,.true.,ok)
+  if (ok.NE.0) goto 1000 
+  if (debug) call check_point('NSsolver#2',.false.)
+
+ !Third sub-step
+ a1 = -153.d0/128.d0
+ a2 = 1.d0
+ a3 = 8.d0/15.d0
+ ec = 15.d0/8.d0
+ call rk_ss(a1,a2,a3,ec,delt,.true.,ok)
+  if (ok.NE.0) goto 1000
+  if (debug) call check_point('NSsolver#3',.false.)
+
+ !Check Divergence
+ if (mod(nstep,checkDIV).EQ.0) then
+  call divergence(u,v,w,r_tmp1,wdivplanes,ok)
+  if (ok.NE.0) goto 1000 
+ endif
+ if (debug) call check_point('NSsolver#4',.false.)
+
+ !OUTPUT RESULTS
+ call output(.false.,ok)
+  if (ok.NE.0) goto 1000 
+  if (debug) call check_point('NSsolver#5',.false.)
+  
+ !Explicitly damp the pressure then call psponge to move the region where p is forced to zero 
+ !around otherwise the region near the corners where the divergence builds up just moves
+! r_tmp1=p
+! var=4 
+! do dir=1,3
+!  do face=1,2
+!   call Sponge(p,r_tmp1,4,dir,face,err)
+!  enddo
+! enddo
+!endif
+! call psponge(pstep)
+! pstep = pstep + 1
+! if (pstep.GE.10) pstep = 1
+
+ time=time+delt
+enddo
+
+1000 continue
+stat=ok
+return
+end subroutine NSsolver
+
+! ec does nothing why is it here KYLE?
+subroutine rk_ss(a1,a2,a3,ec,dt,psolve,stat)
+!@t
+! \textbf{subroutine rk\_ss(a1,a2,a3,ec,dt,psolve,stat)}
+!@h
+!   Description:
+!     Perform one RK sub-step.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use ntypes,    only: r8,i4
+ use Flow 
+ use IO,        only: IOUT
+ use domain,    only: sx,ex,sy,ey,sz,ez,nyp2, nxp2, nzp2
+
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)                   :: a1, a2, a3, ec, dt
+ integer(i4),intent(out)               :: stat
+ logical,intent(in)                    :: psolve 
+
+!Local Variables
+ integer                               :: err1
+ integer(i4)                           :: niters
+ real(r8)                              :: resmax
+ integer                               :: s1
+ real(r8),allocatable,dimension(:,:,:) :: Ftemp
+ logical,parameter                     :: debug=.false.
+
+ if (debug) call check_point('rk_ss#0',.false.)
+ err1=0
+ s1=0
+
+ allocate( Ftemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error allocating Ftemp in rk_ss"
+  goto 1000
+ endif
+
+ r_tmp1(:,:,:) = 0.d0
+
+ !X1-momentum 
+ call u1_rhs(u,v,w,Ftemp,err1)
+ if (psolve) call Psource2(Ftemp,u,r_tmp1,dt,1,err1)
+ call var_advance(Ftemp,u1_tmp2,a1,a2,dt)
+  if ( debug ) call write_plane(Ftemp,1,nxp2/2,0,1,'NS1',.false.,err1)
+  if (debug) call check_point('rk_ss#1',.false.)
+
+ !X2-momentum 
+ call u2_rhs(u,v,w,Ftemp,err1)
+ if (psolve) call Psource2(Ftemp,v,r_tmp1,dt,2,err1)
+ call var_advance(Ftemp,u2_tmp2,a1,a2,dt)
+  if ( debug ) call write_plane(Ftemp,1,nxp2/2,0,1,'NS2',.false.,err1)
+  if (debug) call check_point('rk_ss#2',.false.)
+
+ !X3-momentum 
+ call u3_rhs(u,v,w,rho,Ftemp,err1)
+ if (psolve) call Psource2(Ftemp,w,r_tmp1,dt,3,err1)
+ call var_advance(Ftemp,u3_tmp2,a1,a2,dt)
+  if ( debug ) call write_plane(Ftemp,1,nxp2/2,0,1,'NS3',.false.,err1)
+  if (debug) call check_point('rk_ss#3',.false.)
+
+ deallocate(Ftemp,stat=s1)
+ if (s1.NE.0) then
+  write(IOUT,*) "Error de-allocating Ftemp in rk_ss"
+  goto 1000
+ endif
+  if (debug) call check_point('rk_ss#4',.false.)
+
+ !Pressure Source Calculated Piecewise
+  if ( debug ) call write_plane(r_tmp1,1,nxp2/2,0,1,'source',.false.,err1)
+  if ( debug ) call write_plane(r_tmp1,2,nyp2/2,0,1,'source',.false.,err1)
+  if (debug) call check_point('rk_ss#5',.false.)
+
+ !Pressure Poisson Equation 
+ if (psolve) then
+ call mg_solver(p,r_tmp1,niters,resmax)
+ write(IOUT,'(a20,i3,a11,e22.15)') "    MG Iterations: ",niters,"  RESIDUAL= ",resmax
+  if ( debug ) call write_plane(p,1,nxp2/2,0,1,'p1',.false.,err1)
+  if ( debug ) call write_pencil(p,3,nxp2/2,nyp2/2,0,'p',.false.,err1)
+  if (debug) call check_point('rk_ss#6',.false.)
+
+ !Pressure Gradient 
+ call Pgrad(p,u1_tmp2,u2_tmp2,u3_tmp2,dt)
+  if ( debug ) call write_plane(u1_tmp2,1,nxp2/2,0,1,'NSa1',.false.,err1)
+  if ( debug ) call write_plane(u2_tmp2,1,nxp2/2,0,1,'NSa2',.false.,err1)
+  if ( debug ) call write_plane(u3_tmp2,1,nxp2/2,0,1,'NSa3',.false.,err1)
+   if (debug) call check_point('rk_ss#7',.false.)
+ endif
+
+ !Density/Temperature/Passive Scalar
+ call rho_rhs(u,v,w,rho,r_tmp1,err1)
+ call var_advance(r_tmp1,r_tmp2,a1,a2,dt) 
+  if ( debug ) call write_plane(r_tmp1,1,nxp2/2,0,1,'NSr',.false.,err1)
+  if (debug) call check_point('rk_ss#8',.false.)
+
+ !NOTE: u1_tmp2,u2_tmp2,u3_tmp2 contain information that will be used at the next substep
+ !therefore subdomains must pass boundary data
+ call ghost(u1_tmp2,'utemp',err1)
+ call ghost(u2_tmp2,'vtemp',err1)
+ call ghost(u3_tmp2,'wtemp',err1)
+ call ghost(r_tmp2,'rtemp',err1)
+  if (debug) call check_point('rk_ss#9',.false.)
+
+ !q_i
+ call var_advance(u1_tmp2,u,1.d0,a3,1.d0) 
+ call var_advance(u2_tmp2,v,1.d0,a3,1.d0) 
+ call var_advance(u3_tmp2,w,1.d0,a3,1.d0) 
+ call var_advance(r_tmp2,rho,1.d0,a3,1.d0) 
+  if (debug) call check_point('rk_ss#10',.false.)
+
+ !NOTE: subdomains must pass boundary data since the information in the ghost cells is used 
+ !in the next substep
+ call ghost(u,'u',err1)
+ call ghost(v,'v',err1)
+ call ghost(w,'w',err1)
+ call ghost(rho,'rho',err1)
+  if (debug) call check_point('rk_ss#11',.false.)
+
+ 1000 continue
+ stat=max(err1,s1)
+ return
+end subroutine rk_ss
+
+subroutine u1_rhs(un,vn,wn,Utemp,stat)
+!@t
+! \textbf{subroutine u1\_rhs(un,vn,wn,Utemp,stat)}
+!@h
+!   Description:
+!     Updates the right hand side for u1.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use ntypes,     only: r8
+ use Domain,     only: sx,ex,sy,ey,sz,ez,EU
+ use Grid,       only: rdxe,rdxc,rdye,rdyc,rdze,rdzc
+ use Parameters, only: rRe, Rsponge
+ use ratios,     only: r_1_2
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)        :: un(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: vn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: wn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: Utemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ integer,intent(out)        :: stat
+
+!Local Variables
+ integer                   :: i,j,k
+ real(r8)                  :: uaver1, uaver2, vaver1, vaver2, waver1, waver2
+ integer                   :: dir,face,var,err
+
+
+  Utemp=0.d0
+
+!*********************************
+!   Linear Terms                 *
+!*********************************
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex-EU
+    !d2u/dx2
+    Utemp(i,j,k) = Utemp(i,j,k) + rRe*( ( un(i+1,j,k) - un(i,j,k) )*rdxc(i+1) &
+                 -( un(i,j,k) - un(i-1,j,k) )*rdxc(i) )*rdxe(i)               &
+    !d2u/dy2
+                                + rRe*( ( un(i,j+1,k) - un(i,j,k) )*rdye(j)   &
+                 -( un(i,j,k) - un(i,j-1,k) )*rdye(j-1) )*rdyc(j)             &
+    !d2u/dz2
+                                + rRe*( ( un(i,j,k+1) - un(i,j,k) )*rdze(k)   &
+                 -( un(i,j,k) - un(i,j,k-1) )*rdze(k-1) )*rdzc(k)
+   enddo
+  enddo
+ enddo
+
+!*********************************
+!*  Non-linear Terms             *
+!*********************************
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex-EU
+    !d(u*u)/dx
+    !Fully 2nd Order [Bewley EQ. 13.3]
+    uaver2 = r_1_2*( un(i+1,j,k) + un(i,j,k) )
+    uaver1 = r_1_2*( un(i,j,k) + un(i-1,j,k) )
+    Utemp(i,j,k) = Utemp(i,j,k) + (uaver1*uaver1 - uaver2*uaver2 )*rdxe(i)
+
+    !d(w*u)/dz
+    !Quasi 2nd Order [Bewley EQ. 13.4]
+    uaver2 = r_1_2*(un(i,j,k+1) + un(i,j,k))       
+    uaver1 = r_1_2*(un(i,j,k) + un(i,j,k-1))       
+    waver2 = r_1_2*(wn(i+1,j,k) + wn(i,j,k))       
+    waver1 = r_1_2*(wn(i+1,j,k-1) + wn(i,j,k-1))   
+    Utemp(i,j,k) = Utemp(i,j,k) + ( uaver1*waver1 - uaver2*waver2 )*rdzc(k)
+
+    !Fully 2nd Order [Bewley EQ. 13.6]
+    !R1=           !dz(k+1/2)/dz(k) 
+    !R2=           !dz(k-1/2)/dz(k)
+    !R3=           !dx(i+1/2)/dx(i)
+    !R4=           !dx(i-1/2)/dx(i)
+    !uaver2 =      !u_k+1/2
+    !uaver1 =      !u_k-1/2
+    !waver2 =      !w_i+1/2
+    !waver1 =      !w_i-1/2
+    !Utemp(i,j,k) =
+
+    !d(u*v)/dy
+    !Quasi 2nd Order [Bewley EQ. 13.4]
+    uaver2 = r_1_2*(un(i,j+1,k) + un(i,j,k))    
+    uaver1 = r_1_2*(un(i,j,k) + un(i,j-1,k))
+    vaver2 = r_1_2*(vn(i+1,j,k) + vn(i,j,k))
+    vaver1 = r_1_2*(vn(i+1,j-1,k) + vn(i,j-1,k))
+    Utemp(i,j,k) = Utemp(i,j,k) + ( uaver1*vaver1 - uaver2*vaver2 )*rdyc(j)
+
+    !Fully 2nd Order [Bewley EQ. 13.6]
+    !R1=           !dy(j+1/2)/dy(j) 
+    !R2=           !dy(j-1/2)/dy(j)
+    !R3=           !dx(i+1/2)/dx(i)
+    !R4=           !dx(i-1/2)/dx(i)
+    !uaver2 =      !u_j+1/2
+    !uaver1 =      !u_j-1/2
+    !vaver2 =      !v_i+1/2
+    !vaver1 =      !v_i-1/2
+    !Utemp(i,j,k) =
+
+   enddo
+  enddo
+ enddo
+
+if (Rsponge) then
+!*********************************
+!*  Sponge Terms                 *
+!*********************************
+ var=1 !u=Flow(:,:,:,5)
+ do dir=1,3
+  do face=1,2
+   call Sponge(Utemp,un,var,dir,face,err)
+  enddo
+ enddo
+endif
+
+ call ghost(Utemp,'utemp',err)
+
+ stat=err
+ return
+end subroutine u1_rhs
+
+
+subroutine u2_rhs(un,vn,wn,Vtemp,stat)
+!@t
+! \textbf{subroutine u2\_rhs(un,vn,wn,Vtemp,stat)}
+!@h
+!   Description:
+!     Updates the right hand side for u2.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+ 
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+ 
+!   Language:
+!     Fortran 90
+
+ use ntypes,     only: r8
+ use Domain,     only: sx,ex,sy,ey,sz,ez,EV
+ use Grid,       only: rdxe,rdxc,rdye,rdyc,rdze,rdzc
+ use Parameters, only: rRe, Rsponge
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)        :: un(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: vn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: wn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: Vtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ integer,intent(out)        :: stat
+!Local Variables
+ integer                    :: i,j,k
+ real(r8)                   :: uaver1, uaver2, vaver1, vaver2, waver1, waver2
+ integer                    :: dir,face,var,err
+
+ Vtemp = 0.d0
+
+!*********************************
+!*  Linear Terms                 *
+!********************************* 
+ do k=sz,ez 
+  do j=sy,ey-EV
+   do i=sx,ex
+   !d2v/dx2
+    Vtemp(i,j,k) = Vtemp(i,j,k) + rRe*( ( vn(i+1,j,k) - vn(i,j,k) )*rdxe(i) &
+                 -( vn(i,j,k) - vn(i-1,j,k) )*rdxe(i-1) )*rdxc(i) &
+   !d2v/dy2
+                 + rRe*( ( vn(i,j+1,k) - vn(i,j,k) )*rdyc(j+1) &
+                 - ( vn(i,j,k) - vn(i,j-1,k) )*rdyc(j) )*rdye(j) &
+
+   !d2v/dz2
+                 + rRe*( ( vn(i,j,k+1) - vn(i,j,k) )*rdze(k) &
+                 - ( vn(i,j,k) - vn(i,j,k-1) )*rdze(k-1) )*rdzc(k)
+   enddo
+  enddo
+ enddo
+
+!*********************************
+!*  Non-linear Terms             *
+!********************************* 
+ do k=sz,ez 
+  do j=sy,ey-EV
+   do i=sx,ex
+   !v*dv/dy
+    vaver1 = 0.5d0*( vn(i,j+1,k) + vn(i,j,k) )
+    vaver2 = 0.5d0*( vn(i,j,k) + vn(i,j-1,k) )
+    Vtemp(i,j,k) = Vtemp(i,j,k) - ( vaver1*vaver1 - vaver2*vaver2 )*rdye(j)
+   !u*dv/dx
+    vaver1 = 0.5d0*(vn(i+1,j,k) + vn(i,j,k))
+    vaver2 = 0.5d0*(vn(i,j,k) + vn(i-1,j,k))
+    uaver1 = 0.5d0*(un(i,j+1,k) + un(i,j,k))
+    uaver2 = 0.5d0*(un(i-1,j+1,k) + un(i-1,j,k))
+    Vtemp(i,j,k) = Vtemp(i,j,k) - ( uaver1*vaver1 - uaver2*vaver2 )*rdxc(i)
+   !w*dv/dz
+    vaver1 = 0.5d0*(vn(i,j,k+1) + vn(i,j,k))
+    vaver2 = 0.5d0*(vn(i,j,k) + vn(i,j,k-1))
+    waver1 = 0.5d0*(wn(i,j+1,k) + wn(i,j,k))
+    waver2 = 0.5d0*(wn(i,j+1,k-1) + wn(i,j,k-1))
+    Vtemp(i,j,k) = Vtemp(i,j,k) - ( waver1*vaver1 - waver2*vaver2 )*rdzc(k)
+   enddo
+  enddo
+ enddo
+
+if (Rsponge) then
+!*********************************
+!*  Sponge Terms                 *
+!********************************* 
+ var=2 
+ do dir=1,3
+  do face=1,2
+    call Sponge(Vtemp,vn,var,dir,face,err) 
+  enddo
+ enddo
+endif
+!#if PARALLEL
+ call ghost(Vtemp,'vtemp',err)
+!#endif
+
+ stat=err
+return
+end subroutine u2_rhs 
+
+subroutine u3_rhs(un,vn,wn,rhon,Wtemp,stat)
+!@t
+! \textbf{subroutine u3\_rhs(un,vn,wn,Wtemp,stat)}
+!@h
+!   Description:
+!     Updates the right hand side for u3.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+ 
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+ 
+!   Language:
+!     Fortran 90
+
+ use Parameters, only: rRe, g, flow_type, Rsponge
+ use ntypes,     only: r8 
+ use Domain,     only: sx,ex,sy,ey,sz,ez,EW
+ use Grid,       only: rdxe,rdxc,rdye,rdyc,rdze,rdzc
+ use ratios,     only: r_1_2
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)       :: un(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)       :: vn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)       :: wn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)    :: Wtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ integer,intent(out)       :: stat
+ real(r8),intent(in)       :: rhon(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1) !inout or in? in means you can not modify it
+
+!Local Variables
+ integer                   :: i,j,k
+ real(r8)                  :: uaver1, uaver2, vaver1, vaver2, waver1, waver2
+ integer                   :: dir,face,var,err
+ integer,parameter         :: DEBUG=-1
+ real(r8)                  :: rho_Z(sz-1:ez+1)
+
+ Wtemp = 0.d0
+
+!*********************************
+!*  Linear Terms                 *
+!********************************* 
+ do k=sz,ez-EW
+  do j=sy,ey
+   do i=sx,ex
+   !d2w/dx2
+    Wtemp(i,j,k) = Wtemp(i,j,k) + rRe*( ( wn(i+1,j,k) - wn(i,j,k) )*rdxe(i) &
+                 - ( wn(i,j,k) - wn(i-1,j,k) )*rdxe(i-1) )*rdxc(i)&
+   !d2w/dy2
+                 + rRe*( ( wn(i,j+1,k) - wn(i,j,k) )*rdye(j) &
+                 - ( wn(i,j,k) - wn(i,j-1,k) )*rdye(j-1) )*rdyc(j)&
+   !d2w/dz2
+                 + rRe*( ( wn(i,j,k+1) - wn(i,j,k) )*rdzc(k+1)  &
+                 -( wn(i,j,k) - wn(i,j,k-1) )*rdzc(k) )*rdze(k) 
+   enddo
+  enddo
+ enddo
+
+!*********************************
+!*  Non-linear Terms             *
+!*********************************
+ do k=sz,ez-EW
+  do j=sy,ey
+   do i=sx,ex
+   !w*dw/dz
+    waver1 = 0.5d0*( wn(i,j,k+1) + wn(i,j,k) )
+    waver2 = 0.5d0*( wn(i,j,k) + wn(i,j,k-1) )
+    Wtemp(i,j,k) = Wtemp(i,j,k) - ( waver1*waver1 - waver2*waver2 )*rdze(k)
+   !u*dw/dx
+    waver1 = 0.5d0*(wn(i+1,j,k) + wn(i,j,k))
+    waver2 = 0.5d0*(wn(i,j,k) + wn(i-1,j,k))
+    uaver1 = 0.5d0*(un(i,j,k+1) + un(i,j,k))
+    uaver2 = 0.5d0*(un(i-1,j,k+1) + un(i-1,j,k))
+    Wtemp(i,j,k) = Wtemp(i,j,k) - ( uaver1*waver1 - uaver2*waver2 )*rdxc(i)
+   !v*dw/dy
+    waver1 = 0.5d0*(wn(i,j+1,k) + wn(i,j,k))
+    waver2 = 0.5d0*(wn(i,j,k) + wn(i,j-1,k))
+    vaver1 = 0.5d0*(vn(i,j,k+1) + vn(i,j,k))
+    vaver2 = 0.5d0*(vn(i,j-1,k+1) + vn(i,j-1,k))
+    Wtemp(i,j,k) = Wtemp(i,j,k) - ( vaver1*waver1 - vaver2*waver2 )*rdyc(j)
+   enddo
+  enddo
+ enddo
+
+ !*********************************
+ !*  Bousinesq Term               *
+ !********************************* 
+
+ if (g.GT.0.d0.OR.g.LT.0.d0) then
+
+  call rho_mean(rhon,rho_Z,err)
+ 
+   do k=sz,ez-EW
+    do j=sy,ey
+     do i=sx,ex
+      Wtemp(i,j,k) = Wtemp(i,j,k)-r_1_2*( (rhon(i,j,k+1) - rho_Z(k+1)) + (rhon(i,j,k)-rho_Z(k)) )*g
+     enddo
+    enddo
+   enddo
+
+ endif
+
+ if (Rsponge) then
+ !*********************************
+ !*  Sponge Terms                 *
+ !*********************************
+  var=3 !w=Flow(:,:,:,3)
+  do dir=1,3
+   do face=1,2
+     call Sponge(Wtemp,wn,var,dir,face,err)
+   enddo
+  enddo
+ endif
+
+ call ghost(Wtemp,'wtemp',err)
+
+ stat=err
+return
+end subroutine u3_rhs
+
+
+subroutine rho_mean(rhoFull,rho_avg_1d_Z,stat)
+!@t
+! \textbf{subroutine rho\_mean(rhoFull,rho\_avg\_1d\_Z,stat)}
+!@h
+!   Description:
+!     Calculates the mean value of the density: rho.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+ 
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+ 
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     Automatically ghosts rho.
+!@q
+
+ use ntypes, only: r8
+ use Domain, only: sx,ex,sy,ey,sz,ez
+ use grid,   only: dxc,dyc
+ use IO,     only: IOUT
+ use ratios, only: r_1_2
+#ifdef PARALLEL
+ use dd,     only: MPI_SUM,realtype,commx1x2,sizex1x2
+#endif
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)           :: rhoFull(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1 )
+ real(r8),intent(out)          :: rho_avg_1d_Z(sz-1:ez+1 )
+ integer,intent(out)           :: stat
+
+!Local Variables
+ integer                       :: i,j,k
+ integer                       :: ierr
+ real(r8)                      :: Area, rsum
+ real(r8)                      :: rho_Z_global(sz-1:ez+1)
+ integer                       :: rsize
+
+ logical,parameter             :: debug=.false.
+
+! call ghost(rhoFull,'rf',ierr)    ! KYLE WHY IS THIS NECESSARY?
+
+ rho_avg_1d_Z(:)=0.d0
+
+ Area = 0.d0
+ do j=sy-1,ey+1
+  do i=sx-1,ex+1
+   Area = Area + dxc(i)*dyc(j)
+  enddo
+ enddo
+
+ do k=sz-1,ez+1
+  rsum=0.0d0
+  do j=sy-1,ey+1
+   do i=sx-1,ex+1
+    rsum = rsum + rhoFull(i,j,k)*dxc(i)*dyc(j)
+   enddo
+  enddo
+   rho_avg_1d_Z(k) = rsum/Area
+ enddo
+
+#ifdef PARALLEL
+ rsize=size(rho_Z_global)
+ call MPI_ALLREDUCE(rho_avg_1d_Z(:),rho_Z_global(:),rsize,realtype,MPI_SUM,commx1x2,ierr)
+ rho_avg_1d_Z(:)=rho_Z_global(:)/dble(sizex1x2)
+#endif
+
+ stat = 0
+return
+end subroutine rho_mean
+
+
+subroutine rho_rhs(un,vn,wn,rhon,Rtemp,stat)
+!@t
+! \textbf{subroutine rho\_rhs(un,vn,wn,rhon,Rtemp,stat)}
+!@h
+!   Description:
+!     Updates rho using the scalar equation. KYLE?
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+ 
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+ 
+!   Language:
+!     Fortran 90
+
+ use ntypes, only: r8
+ use Domain, only: sx,ex,sy,ey,sz,ez
+ use Grid,   only: rdxc, rdyc, rdzc, rdxe, rdye, rdze
+ use Parameters, only: rRe, rPr, Rsponge, flow_type
+ use IO, only: IOUT
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)        :: un(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: vn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: wn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: rhon(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(out)       :: Rtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ integer,intent(out)        :: stat
+
+!Local Variables
+ integer                    :: i,j,k
+ real(r8)                   :: rhoaver1, rhoaver2
+ real(r8)                   :: D
+ integer                    :: dir,face,var,ierr
+
+ Rtemp = 0.d0
+
+ D = rRe*rPr
+
+ !*********************************
+ !*  Linear Terms                 *
+ !********************************* 
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex
+    !d2rho/dx2
+    Rtemp(i,j,k) = D*( ( rhon(i+1,j,k) - rhon(i,j,k) )*rdxe(i) -  &
+                 ( rhon(i,j,k)- rhon(i-1,j,k) )*rdxe(i-1) )*rdxc(i) &
+
+    !d2rho/dy2
+                + D*( ( rhon(i,j+1,k) - rhon(i,j,k) )* rdye(j) - &
+                ( rhon(i,j,k) - rhon(i,j-1,k) )*rdye(j-1) )*rdyc(j) &
+    !d2rho/dz2
+                + D*( ( rhon(i,j,k+1) - rhon(i,j,k) )*rdze(k) - &
+                ( rhon(i,j,k) - rhon(i,j,k-1) )*rdze(k-1) )*rdzc(k)
+   enddo
+  enddo
+ enddo
+
+ !*********************************
+ !*  Non-linear Terms             *
+ !*********************************
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex
+   !-rho*du/dx
+    rhoaver2 = 0.5d0*( rhon(i+1,j,k) + rhon(i,j,k) )
+    rhoaver1 = 0.5d0*( rhon(i,j,k) + rhon(i-1,j,k) )
+    Rtemp(i,j,k) = Rtemp(i,j,k) + ( un(i-1,j,k)*rhoaver1 - un(i,j,k)*rhoaver2 )*rdxc(i)
+   !-rho*dv/dy
+    rhoaver2 = 0.5d0*(rhon(i,j+1,k) + rhon(i,j,k))
+    rhoaver1 = 0.5d0*(rhon(i,j,k) + rhon(i,j-1,k))
+    Rtemp(i,j,k) = Rtemp(i,j,k) + ( vn(i,j-1,k)*rhoaver1 - vn(i,j,k)*rhoaver2 )*rdyc(j)
+   !-rho*dw/dz
+    rhoaver2 = 0.5d0*(rhon(i,j,k+1) + rhon(i,j,k))
+    rhoaver1 = 0.5d0*(rhon(i,j,k) + rhon(i,j,k-1))
+    Rtemp(i,j,k) = Rtemp(i,j,k) + ( wn(i,j,k-1)*rhoaver1 - wn(i,j,k)*rhoaver2 )*rdzc(k)
+   enddo
+  enddo
+ enddo
+
+ if (Rsponge) then
+ !*********************************
+ !*  Sponge Terms                 *
+ !*********************************
+  var=5 !rho=Flow(:,:,:,5)
+  do dir=1,3
+   do face=1,2
+     call Sponge(Rtemp,rhon,var,dir,face,ierr)
+   enddo
+  enddo
+ endif
+
+ call ghost(Rtemp,'rtemp',ierr)
+
+ stat = ierr
+return
+end subroutine rho_rhs
+
+subroutine Pgrad(pn,Utemp,Vtemp,Wtemp,factor)
+!@t
+! \textbf{subroutine Pgrad(pn,Utemp,Vtemp,Wtemp,factor)}
+!@h
+!   Description:
+!     Adds the impact of the pressure gradient turn on the velocity terms.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+ 
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+ 
+!   Language:
+!     Fortran 90
+
+ use ntypes, only: r8
+ use Grid, only:rdxe, rdye, rdze
+ use Domain, only: sx,ex,sy,ey,sz,ez, EU, EV, EW
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)        :: pn(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: Utemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: Vtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: Wtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: factor
+
+!Local Variables
+ integer                   :: i,j,k,err1
+
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex-EU
+    Utemp(i,j,k)=Utemp(i,j,k) - ( pn(i+1,j,k)-pn(i,j,k) )*rdxe(i)*factor
+   enddo
+  enddo
+ enddo
+ call ghost(Utemp,'utemp',err1)
+
+ do k=sz,ez
+  do j=sy,ey-EV
+   do i=sx,ex
+    Vtemp(i,j,k)=Vtemp(i,j,k) - ( pn(i,j+1,k)-pn(i,j,k) )*rdye(j)*factor
+   enddo
+  enddo
+ enddo
+ call ghost(Vtemp,'vtemp',err1)
+
+ do k=sz,ez-EW
+  do j=sy,ey
+   do i=sx,ex
+    Wtemp(i,j,k)=Wtemp(i,j,k) - ( pn(i,j,k+1)-pn(i,j,k) )*rdze(k)*factor
+   enddo
+  enddo
+ enddo
+ call ghost(Wtemp,'wtemp',err1)
+
+return
+end subroutine Pgrad
+
+subroutine Psource2(Uitemp,ui,SRC,dt,term,stat)
+!@t
+! \textbf{subroutine Psource2(Uitemp,ui,SRC,dt,term,stat)}
+!@h
+!   Description:
+!     Updates the pressure source term by term.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+ 
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+ 
+!   Language:
+!     Fortran 90
+
+ use ntypes, only: r8
+ use Grid, only: rdxc, rdyc, rdzc
+ use Domain, only: sx,ex,sy,ey,sz,ez,nzp2
+ implicit none
+
+ !Passed Variables
+ real(r8),intent(in)        :: ui(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: Uitemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: SRC(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: dt
+ integer,intent(in)         :: term
+ integer,intent(out)        :: stat
+
+ !Local Variables
+ integer                    :: i,j,k
+ integer                    :: ierr
+ real(r8)                   :: rdt
+
+ rdt=1.d0/dt
+
+ if (term.EQ.1) then
+
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     !Calculate d(du_i/dx_i)/dt and add it as a correction to d(H_i)/dx_i so that new field is divergence free
+     SRC(i,j,k) = SRC(i,j,k) +  ( ui(i,j,k)-ui(i-1,j,k) )*rdxc(i)*rdt  + ( Uitemp(i,j,k) - Uitemp(i-1,j,k) )*rdxc(i) 
+    enddo
+   enddo
+  enddo
+
+ elseif (term.EQ.2) then
+
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     !Calculate d(du_i/dx_i)/dt and add it as a correction to d(H_i)/dx_i so that new field is divergence free
+     SRC(i,j,k) = SRC(i,j,k) + ( ui(i,j,k)-ui(i,j-1,k) )*rdyc(j)*rdt  + ( Uitemp(i,j,k) - Uitemp(i,j-1,k) )*rdyc(j) 
+    enddo
+   enddo
+  enddo
+
+ elseif (term.EQ.3) then
+
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     !Calculate d(du_i/dx_i)/dt and add it as a correction to d(H_i)/dx_i so that new field is divergence free
+     SRC(i,j,k) = SRC(i,j,k) + ( ui(i,j,k)-ui(i,j,k-1) )*rdzc(k)*rdt  + ( Uitemp(i,j,k) - Uitemp(i,j,k-1) )*rdzc(k) 
+    enddo
+   enddo
+  enddo
+
+ else
+
+  stat=1
+  return
+
+ endif
+
+
+ call ghost(SRC,'psource',ierr)
+
+ stat=ierr
+return
+end subroutine Psource2
+
+subroutine Psource(Utemp,Vtemp,Wtemp,u,v,w,SRC,dt,stat)
+!@t
+! \textbf{subroutine Psource(Utemp,Vtemp,Wtemp,u,v,w,SRC,dt,stat)}
+!@h
+!   Description:
+!     Updates the pressure source term all at once. KYLE?
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use ntypes, only: r8
+ use Grid, only: rdxc, rdyc, rdzc
+ use Domain, only: sx,ex,sy,ey,sz,ez,nzp2
+ implicit none
+
+ !Passed Variables
+ real(r8),intent(in)        :: u(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: v(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: w(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: Utemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: Vtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: Wtemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(out)       :: SRC(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: dt
+ integer,intent(out)        :: stat
+
+ !Local Variables
+ integer                    :: i,j,k
+ integer                    :: ierr
+ real(r8)                   :: rdt
+
+ SRC(:,:,:) = 0.d0
+
+ rdt=1.d0/dt
+
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex
+      !Calculate d(du_i/dx_i)/dt and add it as a correction to d(H_i)/dx_i so that new field is divergence free
+      SRC(i,j,k) = ( (u(i,j,k)-u(i-1,j,k))*rdxc(i) &
+                     +(v(i,j,k)-v(i,j-1,k))*rdyc(j) & 
+                     +(w(i,j,k)-w(i,j,k-1))*rdzc(k) )*rdt &
+                     +( (Utemp(i,j,k) - Utemp(i-1,j,k))*rdxc(i) & 
+                     +  (Vtemp(i,j,k) - Vtemp(i,j-1,k))*rdyc(j) & 
+                     +  (Wtemp(i,j,k) - Wtemp(i,j,k-1))*rdzc(k) )
+   enddo
+  enddo
+ enddo
+
+ call ghost(SRC,'psource',ierr)
+
+ stat=ierr
+return
+end subroutine psource
+
+subroutine var_advance(veltemp1,veltemp2,f1,f2,f3)
+!@t
+! \textbf{subroutine var\_advance(veltemp1,veltemp2,f1,f2,f3)}
+!@h
+!   Description:
+!     Advances a variable. KYLE?
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use ntypes, only: r8
+ use Domain, only: sx,ex,sy,ey,sz,ez
+ implicit none
+ 
+!Passed Variables
+ real(r8),intent(in)        :: veltemp1(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(inout)     :: veltemp2(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(in)        :: f1, f2, f3
+
+!Local Variables
+ integer                   :: i,j,k
+
+ do k=sz,ez
+  do j=sy,ey
+   do i=sx,ex
+     veltemp2(i,j,k)=f1*veltemp2(i,j,k)+f2*veltemp1(i,j,k)*f3
+    enddo
+   enddo
+  enddo
+
+ return 
+end subroutine var_advance
+
+subroutine rk_ss_LARGE_MEMORY(a1,a2,a3,ec,dt,psolve,stat)
+!@t
+! \textbf{subroutine rk\_ss\_LARGE\_MEMORY(a1,a2,a3,ec,dt,psolve,stat)}
+!@h
+!   Description:
+!     This version is antiquated and only left in for readibility.
+!    (i.e. the version rk_ss above does the exact same thing with less
+!      memory, but it is harder to understand by just looking at it)
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use ntypes,    only: r8,i4
+ use Flow 
+ use IO,        only: IOUT
+ use domain,    only: sx,ex,sy,ey,sz,ez,nyp2, nxp2, nzp2
+
+ implicit none
+
+!Passed Variables
+ real(r8),intent(in)                   :: a1, a2, a3, ec, dt
+ integer(i4),intent(out)               :: stat
+ logical,intent(in)                    :: psolve
+
+!Local Variables
+ integer                               :: err1
+ integer(i4)                           :: niters
+ real(r8)                              :: resmax
+ integer                               :: s1
+ real(r8),allocatable,dimension(:,:,:) :: u1_tmp1,u2_tmp1,u3_tmp1 
+ logical,parameter                     :: debug=.false.
+
+ err1=0
+ s1=0
+
+ allocate( u1_tmp1(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error allocating u1_tmp1 in rk_ss"
+  goto 1000
+ endif
+ allocate( u2_tmp1(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error allocating u2_tmp1 in rk_ss"
+  goto 1000
+ endif
+
+ allocate( u3_tmp1(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error allocating u3_tmp1 in rk_ss"
+  goto 1000
+ endif
+
+  if (debug) call check_point('rk_ss#0',.false.)
+
+ r_tmp1(:,:,:) = 0.d0
+
+ !X1-momentum 
+ call u1_rhs(u,v,w,u1_tmp1,err1)
+  if ( debug ) call write_plane(u1_tmp1,1,nxp2/2,0,0,'rkss_u1',.false.,err1)
+  if (debug) call check_point('rk_ss#1',.false.)
+
+ !X2-momentum 
+ call u2_rhs(u,v,w,u2_tmp1,err1)
+  if ( debug ) call write_plane(u2_tmp1,1,nxp2/2,0,0,'rkss_u2',.false.,err1)
+  if (debug) call check_point('rk_ss#2',.false.)
+
+ !X3-momentum 
+ call u3_rhs(u,v,w,rho,u3_tmp1,err1)
+  if ( debug ) call write_plane(u3_tmp1,1,nxp2/2,0,0,'rkss_u3',.false.,err1)
+  if (debug) call check_point('rk_ss#3',.false.)
+
+ if (psolve) then
+
+  !Pressure Source
+  call psource(u1_tmp1,u2_tmp1,u3_tmp1,u,v,w,r_tmp1,dt,err1)
+   if ( debug ) call write_plane(r_tmp1,1,nxp2/2,0,0,'source',.false.,err1)
+   if ( debug ) call write_plane(r_tmp1,2,nyp2/2,0,0,'source',.false.,err1)
+   if (debug) call check_point('rk_ss#4',.false.)
+
+  !Pressure Poisson Equation 
+  call mg_solver(p,r_tmp1,niters,resmax)
+  write(IOUT,'(a20,i3,a11,e22.15)') "    MG Iterations: ",niters,"  RESIDUAL= ",resmax
+   if ( debug ) call write_plane(p,1,nxp2/2,0,0,'p1',.false.,err1)
+   if (debug) call check_point('rk_ss#5',.false.)
+
+  !Pressure Gradient 
+  call Pgrad(p,u1_tmp1,u2_tmp1,u3_tmp1,1.d0)
+   if ( debug ) call write_plane(u1_tmp2,1,nxp2/2,0,0,'rkss_u1a',.false.,err1)
+   if ( debug ) call write_plane(u2_tmp2,1,nxp2/2,0,0,'rkss_u2a',.false.,err1)
+   if ( debug ) call write_plane(u3_tmp2,1,nxp2/2,0,0,'rkss_u3a',.false.,err1)
+   if (debug) call check_point('rk_ss#6',.false.)
+
+ endif
+
+ !x_i 
+ call var_advance(u1_tmp1,u1_tmp2,a1,a2,dt) 
+ call var_advance(u2_tmp1,u2_tmp2,a1,a2,dt) 
+ call var_advance(u3_tmp1,u3_tmp2,a1,a2,dt) 
+  if (debug) call check_point('rk_ss#7',.false.)
+
+ !Density/Temperature/Passive Scalar
+ call rho_rhs(u,v,w,rho,r_tmp1,err1)
+ call var_advance(r_tmp1,r_tmp2,a1,a2,dt) 
+  if ( debug ) call write_plane(r_tmp1,1,nxp2/2,0,0,'NSr',.false.,err1)
+  if (debug) call check_point('rk_ss#8',.false.)
+
+ !NOTE: u1_tmp2,u2_tmp2,u3_tmp2 contain information that will be used at the next substep
+ !therefore subdomains must pass boundary data
+ call ghost(u1_tmp2,'utemp',err1)
+ call ghost(u2_tmp2,'vtemp',err1)
+ call ghost(u3_tmp2,'wtemp',err1)
+ call ghost(r_tmp2,'rtemp',err1)
+  if (debug) call check_point('rk_ss#9',.false.)
+
+ !q_i
+ call var_advance(u1_tmp2,u,1.d0,a3,1.d0) 
+ call var_advance(u2_tmp2,v,1.d0,a3,1.d0) 
+ call var_advance(u3_tmp2,w,1.d0,a3,1.d0) 
+ call var_advance(r_tmp2,rho,1.d0,a3,1.d0) 
+  if (debug) call check_point('rk_ss#10',.false.)
+
+ !NOTE: subdomains must pass boundary data since the information in the ghost cells is used 
+ !in the next substep
+ call ghost(u,'u',err1)
+ call ghost(v,'v',err1)
+ call ghost(w,'w',err1)
+ call ghost(rho,'rho',err1)
+  if (debug) call check_point('rk_ss#11',.false.)
+
+ deallocate(u1_tmp1,u2_tmp1,u3_tmp1,stat=s1)
+ if (s1.NE.0) then
+  write(IOUT,*) "Error de-allocating Ftemp in rk_ss"
+  goto 1000
+ endif
+  if (debug) call check_point('rk_ss#12',.false.)
+
+ 1000 continue
+ stat=max(err1,s1)
+ return
+end subroutine rk_ss_LARGE_MEMORY

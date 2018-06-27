@@ -1,0 +1,15 @@
+rundir=/work/mdestad/test
+codedir=/u/mdestad/testprogramMK
+cd $rundir
+rm test.x
+cd $codedir
+./compile
+cp cleanup $rundir
+cp jobfiles/run.sh.jade $rundir
+cp jobfiles/setup_results $rundir
+cp test.x $rundir
+cd $rundir
+./cleanup
+./setup_results
+#qsub - V <./run.sh.jade
+

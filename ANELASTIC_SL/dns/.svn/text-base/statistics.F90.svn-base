@@ -1,0 +1,3110 @@
+subroutine statistics(stat)
+!@t
+! \textbf{subroutine statistics(stat)}
+!@h
+!   Description:
+!     Determine whether the simulation is of a wake or shear layer and
+!     call the appropriate statistics package.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+ use IO,         only:IOUT
+ use Parameters, only: flow_type
+ implicit none
+
+ !Passed Variables
+  integer,intent(out) :: stat
+ !Local Variables
+  integer             :: ok
+
+ ok=0
+
+  select case(flow_type)
+   case('Vshear')
+    call statistics_vshear(ok)
+   case('Twake','wake','SPwake','PRPwake')
+    call statistics_wake(ok)
+   case DEFAULT
+    write(IOUT,'(a30,a)') "STATISTICS NOT AVAILABLE FOR FLOW TYPE: ",trim(flow_type)
+    ok=1
+   end select
+
+ stat=ok
+return
+end subroutine statistics
+
+subroutine statistics_small(stat)
+!@t
+! \textbf{subroutine statistics\_small(stat)}
+!@h
+!   Description:
+!     Determine whether the simulation is of a wake or shear layer and
+!     call the appropriate small statistics package.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+ use IO,         only:IOUT
+ use Parameters, only: flow_type
+ implicit none
+
+ !Passed Variables
+  integer,intent(out) :: stat
+ !Local Variables
+  integer             :: ok
+
+ ok=0
+
+  select case(flow_type)
+   case('Vshear')
+    call statistics_vshear_small(ok)
+   case('Twake','Wake','SPwake','PRPwake')
+    call statistics_wake_small(ok)
+   case DEFAULT
+    write(IOUT,'(a30,a)') "STATISTICS NOT AVAILABLE FOR FLOW TYPE: ",trim(flow_type)
+    ok=1
+   end select
+
+ stat=ok
+return
+end subroutine statistics_small
+
+#ifndef PARALLEL
+subroutine statistics_vshear(ok)
+ implicit none
+ integer,intent(out) :: ok
+ ok=0
+ return
+end subroutine
+
+subroutine statistics_vshear_small(ok)
+ implicit none
+ integer,intent(out) :: ok
+ ok=0
+ return
+end subroutine
+subroutine statistics_wake(ok)
+ implicit none
+ integer,intent(out) :: ok
+ ok=0
+ return
+end subroutine
+
+subroutine statistics_wake_small(ok)
+ implicit none
+ integer,intent(out) :: ok
+ ok=0
+ return
+end subroutine
+
+#else
+subroutine statistics_vshear(ok)
+!@t
+! \textbf{subroutine statistics\_vshear(ok)}
+!@h
+!   Description:
+!     Calculate all statistics for the vertical shear layer.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+
+ use ntypes, only: r8 
+ use IO,     only: IOUT, statDIR, statbin, tkstat
+ use Flow,   only: u,v,w,p,rho,u1_tmp2,u2_tmp2,u3_tmp2,r_tmp1,r_tmp2
+ use domain, only: sx,ex,sy,ey,sz,ez,nzp2,nyp2
+ use grid,   only: dzc, dze, rdzc, rdze, zc, ze, yc
+ use parameters, only: time, rRe, nstep, rho_0, g, rPr 
+ use dd,     only: myid,coords,rankx3,comm3d
+ use ratios
+ implicit none
+
+!Passed Variables
+ integer,intent(out) :: ok
+
+!Local Variables
+ integer,parameter :: nstats=87
+ integer,parameter :: ngroups=8
+
+ real(r8)          :: STATS(1:nzp2,1:nstats)
+ character(len=25) :: Sname(1:nstats), Gname(1:ngroups)
+ integer           :: group(1:nstats)
+
+ integer  :: err1, i, j, k, s1 , sloc, t3loc, n, plane
+ real(r8) :: mean(sz-1:ez+1), rms(sz-1:ez+1), temp(sz-1:ez+1)
+ real(r8) :: T3(1:nzp2,7), tempF(1:nzp2)
+ character(len=150) :: filen1
+ real(r8) :: d_theta, dUmax, d_theta_rho, dRHOmax
+ character(len=1024) :: tkheader
+
+ real(r8),allocatable,dimension(:,:,:) :: Ftemp
+
+ allocate( Ftemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 ) 
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating Ftemp in stat1d"
+  goto 1000
+ endif
+
+ Gname(1)="Flow"
+ Gname(2)="Vorticity"
+ Gname(3)="Dissipation"
+ Gname(4)="Corrlations"
+ Gname(5)="TKE"
+ Gname(6)="Scales"
+ Gname(7)="Scalar"
+ Gname(8)="Budgets"
+ Sname="NA"
+
+!INTERPOLATE VELOCITIES TO CELL CENTERS
+  u1_tmp2 = 0.d0
+  u2_tmp2 = 0.d0
+  u3_tmp2 = 0.d0
+  call center_velocity(u,u1_tmp2,1 )
+  call center_velocity(v,u2_tmp2,3 )
+  call center_velocity(w,u3_tmp2,2 )
+
+ !<U1>,<u1'> 
+  call avgX1X2(u1_tmp2,mean,rms,'uc')
+  !<U1>
+   sloc=1
+   Sname(sloc)="U1"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<u1'> 
+   sloc=6
+   Sname(sloc)="u1'"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<U2>,<u2'> 
+  call avgX1X2(u2_tmp2,mean,rms,'vc')
+  sloc=2
+  !<U2>
+   Sname(sloc)="U2"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<u2'> 
+   sloc=7
+   group(sloc)=1
+   Sname(sloc)="u2'"
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<U3>,<u3'> 
+  call avgX1X2(u3_tmp2,mean,rms,'wc')
+  !<U3>
+   sloc=3
+   Sname(sloc)="U3"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<u3'> 
+   sloc=8
+   Sname(sloc)="u3'"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<P>,<p'> 
+  call avgX1X2(p,mean,rms,'cfluc')
+  !<P>
+   sloc=4
+   Sname(sloc)="P"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<p'> 
+   sloc=9
+   Sname(sloc)="p'"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<RHO>,<rho'> 
+  call avgX1X2(rho,mean,rms,'rf')
+  !<RHO>
+   sloc=5
+   Sname(sloc)="RHO"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<rho'> 
+   sloc=10
+   Sname(sloc)="rho'"
+   group(sloc)=1
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !sloc 39=d<U>/dx3
+  sloc=39
+  Sname(sloc)="dU1dx3"
+  group(sloc)=6
+  call deriv(u1_tmp2,r_tmp2,3)
+  call avgX1X2(r_tmp2,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !sloc 48=<dRHO/dx3>
+  sloc=48
+  Sname(sloc)="dRHOdx3"
+  group(sloc)=6
+  call deriv(rho,r_tmp2,3)
+  call avgX1X2(r_tmp2,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+
+ !<OMG1>,<omg1'> 
+   call vorticity( r_tmp1,r_tmp2,1)
+   call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  !<OMG1>
+   sloc=11
+   Sname(sloc)="OMG1"
+   group(sloc)=2
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<omg1'> 
+   sloc=15
+   Sname(sloc)="omg1'"
+   group(sloc)=2
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<OMG2>,<omg2'> 
+   call vorticity(r_tmp1,r_tmp2,2)
+   call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  !<OMG2>
+   sloc=12
+   Sname(sloc)="OMG2"
+   group(sloc)=2
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<omg2'> 
+   sloc=16
+   Sname(sloc)="omg2'"
+   group(sloc)=2
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+
+ !<OMG3>,<omg3'> 
+   call vorticity(r_tmp1,r_tmp2,3)
+   call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  !<OMG3>
+   sloc=13
+   Sname(sloc)="OMG3"
+   group(sloc)=2
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<omg3'> 
+   sloc=17
+   Sname(sloc)="omg3'"
+   group(sloc)=2
+   if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,sloc),0,err1)
+   if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<OMG_MAG>,<omg_mag'>
+   if (myid.EQ.0) then
+  !<OMG_MAG>
+    sloc=14
+    Sname(sloc)="OMG_MAG"
+   group(sloc)=2
+    STATS(:,sloc) = dsqrt( STATS(:,11)**2+STATS(:,12)**2+STATS(:,13)**2 ) 
+  !<omg_mag'>
+    sloc=18
+    Sname(sloc)="omg_mag'"
+    group(sloc)=2
+    STATS(:,sloc) = dsqrt( STATS(:,14)**2+STATS(:,15)**2+STATS(:,16)**2 ) 
+   endif
+
+!Subtract mean from cell centered quantities and store in u1_tmp2, u2_tmp2, u3_tmp2, r_tmp2
+ !u'
+  call avgX1X2(u1_tmp2,mean,rms,'uc')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     u1_tmp2(i,j,k)=u1_tmp2(i,j,k)-mean(k)
+    enddo
+   enddo
+  enddo
+  call ghost(u1_tmp2,'cfluc',err1) 
+ 
+ !v'
+  call avgX1X2(u2_tmp2,mean,rms,'vc')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     u2_tmp2(i,j,k)=u2_tmp2(i,j,k)-mean(k)
+    enddo
+   enddo
+  enddo
+  call ghost(u2_tmp2,'cfluc',err1)
+
+ !w'  
+  call avgX1X2(u3_tmp2,mean,rms,'wc')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     u3_tmp2(i,j,k)=u3_tmp2(i,j,k)-mean(k)
+    enddo
+   enddo
+  enddo
+  call ghost(u3_tmp2,'cfluc',err1)
+
+
+!******************************************************************
+!********************DISSIPATION 1/2<sij'sij'>*********************
+!******************************************************************
+ !Dissipation Components!
+ !epsilon_11=(prl_u1'_prl_x1)**2
+  sloc=19
+  Sname(sloc)="eps_11"
+  group(sloc)=3
+  call deriv(u1_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_12=(prl_u1'_prl_x2)**2
+  sloc=20
+  Sname(sloc)="eps_12"
+  group(sloc)=3
+  call deriv(u1_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_13=(prl_u1'_prl_x3)**2
+  sloc=21
+  Sname(sloc)="eps_13"
+  group(sloc)=3
+  call deriv(u1_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_21=(prl_u2'_prl_x1)**2
+  sloc=22
+  Sname(sloc)="eps_21"
+  group(sloc)=3
+  call deriv(u2_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_22=(prl_u2'_prl_x2)**2
+  sloc=23
+  Sname(sloc)="eps_22"
+  group(sloc)=3
+  call deriv(u2_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_23=(prl_u2'_prl_x3)**2
+  sloc=24
+  Sname(sloc)="eps_23"
+  group(sloc)=3
+  call deriv(u2_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_31=(prl_u3'_prl_x1)**2
+  sloc=25
+  Sname(sloc)="eps_31"
+  group(sloc)=3
+  call deriv(u3_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_32=(prl_u3'_prl_x2)**2
+  sloc=26
+  Sname(sloc)="eps_32"
+  group(sloc)=3
+  call deriv(u3_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_33=(prl_u3'_prl_x3)**2
+  sloc=27
+  Sname(sloc)="eps_33"
+  group(sloc)=3
+  call deriv(u3_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !SUM ALL 9 COMPONENTS OF DISSIPATION
+  if (myid.EQ.0) then 
+  sloc=28
+  Sname(sloc)="sum_eps_ij"
+  group(sloc)=3
+  STATS(:,sloc) = 0.d0
+   do i=19,27
+    STATS(:,sloc) = STATS(:,sloc)+STATS(:,i) 
+   enddo
+
+
+  endif
+
+
+
+
+!******************************************************************
+!**********************SCALAR DISSIPATION**************************
+!******************************************************************
+ !rho'
+  call avgX1X2(rho,mean,rms,'rf')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp2(i,j,k)=rho(i,j,k)-mean(k)
+    enddo
+   enddo
+  enddo
+  call ghost(r_tmp2,'cfluc',err1)
+
+ !Repsilon_1=(prl_rho'_prl_x1)**2
+  sloc=54
+  Sname(sloc)="Seps1"
+  group(sloc)=7
+  call deriv(r_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !Repsilon_1=(prl_rho'_prl_x2)**2
+  sloc=55
+  Sname(sloc)="Seps2"
+  group(sloc)=7
+  call deriv(r_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !Repsilon_2=(prl_rho'_prl_x3)**2
+  sloc=56
+  Sname(sloc)="Seps3"
+  group(sloc)=7
+  call deriv(r_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+
+ !SUM ALL 3 COMPONENTS OF SCALAR DISSIPATION
+  if (myid.EQ.0) then 
+  sloc=57
+  Sname(sloc)="SepsSUM"
+  group(sloc)=7
+  STATS(:,sloc) = 0.d0
+   do i=54,26
+    STATS(:,sloc) = STATS(:,sloc)+STATS(:,i) 
+   enddo
+  endif
+
+!******************************************************************
+!********************CROSS CORRELAIONS <ui'uj'>********************
+!******************************************************************
+ !<u1'u2'>
+  sloc=29
+  Sname(sloc)="u1'u2'"
+  group(sloc)=4
+  r_tmp1=u1_tmp2*u2_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u1'u3'>
+  sloc=30
+  Sname(sloc)="u1'u3'"
+  group(sloc)=4
+  r_tmp1=u1_tmp2*u3_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'u3'>
+  sloc=33
+  Sname(sloc)="u2'u3'"
+  group(sloc)=4
+  r_tmp1 = u2_tmp2*u3_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !p'
+  call avgX1X2(p,mean,rms,'c')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp2(i,j,k) =p(i,j,k)-mean(k)
+    enddo
+   enddo
+  enddo
+  call ghost(r_tmp2,'cfluc',err1) 
+
+ !<u1'p'>
+  sloc=31
+  Sname(sloc)="u1'p'"
+  group(sloc)=4
+  r_tmp1=u1_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'p'>
+  sloc=34
+  Sname(sloc)="u2'p'"
+  group(sloc)=4
+  r_tmp1 = u2_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'p'>
+  sloc=36
+  Sname(sloc)="u3'p'"
+  group(sloc)=4
+  r_tmp1 = u3_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !rho'
+  call avgX1X2(rho,mean,rms,'rf')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp2(i,j,k)=rho(i,j,k)-mean(k)
+    enddo
+   enddo
+  enddo
+  call ghost(r_tmp2,'cfluc',err1)
+
+ !<u1'rho'>
+  sloc=32
+  Sname(sloc)="u1'rho'"
+  group(sloc)=4
+  r_tmp1= u1_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'rho'>
+  sloc=35
+  Sname(sloc)="u2'rho'"
+  group(sloc)=4
+  r_tmp1 = u2_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'rho'>
+  sloc=37
+  Sname(sloc)="u3'rho'"
+  group(sloc)=4
+  r_tmp1 = u3_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !p'
+  call avgX1X2(p,mean,rms,'p')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp1(i,j,k) =p(i,j,k)-mean(k)
+   enddo
+   enddo
+  enddo
+  call ghost(r_tmp1,'cfluc',err1) 
+
+ !<p'rho'>
+  sloc=38
+  Sname(sloc)="p'rho'"
+  group(sloc)=4
+  r_tmp2 =  r_tmp1*r_tmp2
+  call avgX1X2(r_tmp2,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+!******************************************************************
+!***********************PRESSURE STRAIN****************************
+!******************************************************************
+ !<p'd(u1')/dx1>
+  sloc=62
+  call deriv(u1_tmp2,r_tmp2,1)
+  r_tmp2=r_tmp2*r_tmp1
+  call avgX1X2(r_tmp2,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<p'd(u2')/dx2>
+  sloc=63
+  call deriv(u2_tmp2,r_tmp2,2)
+  r_tmp2=r_tmp2*r_tmp1
+  call avgX1X2(r_tmp2,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<p'd(u3')/dx3>
+  sloc=64
+  call deriv(u3_tmp2,r_tmp2,3)
+  r_tmp2=r_tmp2*r_tmp1
+  call avgX1X2(r_tmp2,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<p'd(u1')/dx3>
+  sloc=87
+  call deriv(u1_tmp2,r_tmp2,3) !du1'/dx3
+  call deriv(u3_tmp2,Ftemp,1) !du3'/dx1
+  r_tmp2=r_tmp2*(r_tmp1+Ftemp) !p'*du1'/dx3*du3'/dx1
+  call avgX1X2(r_tmp2,mean,rms,'cfluc') !<p'*du1'/dx3*du3'/dx1>
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+
+!dw'/dz
+!sloc=45               SHOULD BE COMPUTED WITH DISSIPATION
+!**************************INTERNAL WAVE DIAGNOSTIC******************************
+!*******************************du3'/dx3*****************************************
+!**********************************sloc=45***************************************
+  sloc=45
+  Sname(sloc)="dw'dz"
+  group(sloc)=5
+  call deriv(u1_tmp2,r_tmp1,3)
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,sloc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+
+!TRANSPORT TERMS
+!T'3=1/2[<u3' u1' u1'> + <u3' u2' u2'> + <u3' u3' u3'>] + <u3' p'>/rho_0 
+!    -2/Re0[<u1' s'31> + <u2' s'32> + <u3' s'33>]
+ 
+ !<u3'u1'u1'>
+  t3loc=1
+  r_tmp1 = u3_tmp2*u1_tmp2*u1_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,T3(:,t3loc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'u2'u2'>
+  t3loc=2
+  r_tmp1 = u3_tmp2*u2_tmp2*u2_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,T3(:,t3loc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'u3'u3'>
+  t3loc=3
+  r_tmp1 = u3_tmp2*u3_tmp2*u3_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,T3(:,t3loc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+ 
+ !<u3'p'>
+  !sloc  36=<u3'p'>
+  sloc=36
+  t3loc=4
+  if (myid.EQ.0)  T3(:,t3loc) = STATS(:,36)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u1's'31>
+  t3loc=5
+    !s'_31=1/2(prl_u3'_prl_x1 + prl_u1'_prl_x3)
+  call deriv(u3_tmp2,r_tmp2,1)
+  call deriv(u1_tmp2,r_tmp1,3)
+  r_tmp1=u1_tmp2*(r_1_2*(r_tmp2+r_tmp1))
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,T3(:,t3loc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2's'32>
+  t3loc=6
+    !s'_32=1/2(prl_u3'_prl_x2 + prl_u2'_prl_x3)
+  call deriv(u3_tmp2,r_tmp2,2)
+  call deriv(u2_tmp2,r_tmp1,3)
+  r_tmp1=u2_tmp2*(r_1_2*(r_tmp2+r_tmp1))
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,T3(:,t3loc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3's'33>
+  t3loc=7
+    !s'_33=(prl_u3'_prl_x3)
+  call deriv(u3_tmp2,r_tmp2,3)
+  r_tmp1=u3_tmp2*r_tmp2
+  call avgX1X2(r_tmp1,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,T3(:,t3loc),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+
+if (myid.EQ.0) then
+!**********************************************************************
+!*************************MASTER NODE ONLY*****************************
+!**********************************************************************
+
+!*****************************
+!*********VSHEAR TKE**********
+!*****************************
+!PRODUCTION
+!P13=-<u1'u3'><dU1/dx3>
+ !sloc 40=P13
+ !sloc 30=<u1'u3'>
+ !sloc 39=d<U>/dx3
+ sloc=40 
+ Sname(sloc)="PROD"
+ group(sloc)=5
+ STATS(:,sloc)=-STATS(:,30)*STATS(:,39)
+
+!DISSIPATION
+!eps=2<s'_ijs'_ij>/Re_0
+ !sloc 41=Dissipation
+ !eps_ij=sloc19-sloc27
+
+ sloc=41
+ Sname(sloc)="DISS"
+ group(sloc)=5
+ STATS(:,sloc) = 0.d0
+
+ do i=19,27
+  !Sum all 9 components
+  STATS(:,sloc) = STATS(:,sloc)-rRe*2.d0*STATS(:,i)
+ enddo
+
+!BUOYANT FLUX
+!B=-g/rho_0<rho' u3'>
+ !sloc 42=Buoyant Flux
+ !sloc 37=<rho' u3'>
+
+ sloc=42
+ Sname(sloc)="BFLUX"
+ group(sloc)=5
+ if (myid.EQ.0) STATS(:,sloc) = -g/rho_0*STATS(:,37)
+
+
+!TRANSPORT !d(T'3)/dx3 
+ !T'3
+ do k=1,nzp2
+    tempF(k) = r_1_2*(T3(k,1)+T3(k,2)+T3(k,3) ) &
+              +  T3(k,4)&
+              + 2.d0*rRe*( T3(k,5)+T3(k,6)+T3(k,7) ) 
+ enddo
+
+!sloc = 43
+ sloc=43
+ Sname(sloc)="TRANS"
+ group(sloc)=5
+ do k=2,nzp2-1
+  STATS(k,sloc) = ( temp(k+1) - temp(k-1) ) / ( zc(k+1)-zc(k-1) )
+ enddo
+!******************************************************************
+!************************END VSHEAR TKE****************************
+!******************************************************************
+
+!******************************************************************
+!*****************VSHEAR DENSITY VARIANCE BUDGET*******************
+!******************************************************************
+!PRODUCTION
+!Prps=-2<rho'u3'><drho/dx3>
+ !sloc 58=Prho
+ !sloc 37=<rho'u3'>
+ !sloc 48=<drho/dx3>
+ sloc=58 
+ Sname(sloc)="ScalarProd"
+ group(sloc)=7
+ STATS(:,sloc)=-2.d0*STATS(:,37)*STATS(:,48)
+
+!SCALAR DISSIPATION
+!Seps=2<s'_ijs'_ij>/Re_0
+ !sloc 41=Dissipation
+ !eps_ij=sloc19-sloc27
+
+ sloc=59
+ Sname(sloc)="ScalarDiss"
+ group(sloc)=7
+ STATS(:,sloc) = 0.d0
+ do i=54,56
+  !Sum all 3 components
+  STATS(:,sloc) = STATS(:,sloc)-rRe*rPr*2.d0*STATS(:,i)
+ enddo
+
+!TRANSPORT
+!Tr3=-d/dx3<rho'^2 u3'> + 1/(Pr*Re)*d/dx3(d/dx3<rho'^2>)
+ sloc=60
+ Sname(sloc)="ScalarTrans"
+ group(sloc)=7
+ STATS(:,sloc) = 0.d0
+
+
+!******************************************************************
+!***************************R11 BUDGET*****************************
+!******************************************************************
+!PRODUCTION
+!P11=-2<u1'u3'><dU1/dx3>
+ !sloc 30=<u1'u3'>
+ !sloc 39=d<U1>/dx3
+ sloc=61
+ Sname(sloc)="P11"
+ group(sloc)=8
+ STATS(:,sloc) = -2.d0*STATS(:,30)*STATS(:,39)
+
+!DISSIPATION
+!D11=2/Re*<du1'/dxk*du1'/dxk>
+  !sloc 19 eps_11 
+  !sloc 20 eps_12 
+  !sloc 21 eps_13 
+  sloc=66
+  Sname(sloc)="D11"
+  group(sloc)=8
+  STATS(:,sloc) = -2.d0*rRe*( STATS(:,19)+STATS(:,20)+STATS(:,21) )
+
+!PRESSURE STRAIN (computed above)
+!PS11=<p'du1'/dx1>
+  sloc=62
+  Sname(sloc)="PS11"
+  group(sloc)=8
+
+!BUOYANT FLUX
+!B11=0
+  sloc=72
+  Sname(sloc)="B11"
+  group(sloc)=8
+  STATS(:,sloc)=0.d0
+
+!TRANSPORT
+!dT113/dx3=-d/dx3<u3'u1'u1'>+1/Re<d(u1')/dx3 d(u1')/dx3)>
+   sloc=75
+  Sname(sloc)="T11"
+  group(sloc)=8
+  STATS(:,sloc)=0.d0
+
+
+!******************************************************************
+!***************************R22 BUDGET*****************************
+!******************************************************************
+!PRODUCTION
+!P22=0 -2<u1'u2'><dU1/dx2>
+ !sloc 29=<u1'u2'>
+ !sloc N/A=<dU1/dx2>=0
+ sloc=61
+ Sname(sloc)="P22"
+ group(sloc)=8
+ STATS(:,sloc) = 0.d0
+
+!DISSIPATION
+!D22=2/Re*<du2'/dxk*du2'/dxk>
+ !3 components for R22  
+ !sloc 22 eps_21 
+ !sloc 23 eps_22 
+ !sloc 24 eps_23 
+ sloc=67
+ Sname(sloc)="D22"
+ group(sloc)=8
+ STATS(:,sloc) = -2.d0*rRe*( STATS(:,22)+STATS(:,23)+STATS(:,24) )
+
+!PRESSURE STRAIN (computed above)
+!PS22=<p'du2'/dx2>
+  sloc=63
+  Sname(sloc)="PS22"
+  group(sloc)=8
+
+!BUOYANT FLUX
+!B22=0
+  sloc=73
+  Sname(sloc)="B22"
+  group(sloc)=8
+  STATS(:,sloc)=0.d0
+
+!TRANSPORT
+!dT223/dx3=-d/dx3<u3'u2'u2'>+1/Re<d(u2')/dx3 d(u2')/dx3)>
+   sloc=76
+  Sname(sloc)="T22"
+  group(sloc)=8
+  STATS(:,sloc)=0.d0
+
+!******************************************************************
+!***************************R33 BUDGET*****************************
+!******************************************************************
+!PRODUCTION
+!P33=0
+ !sloc 29=<u1'u2'>
+ !sloc N/A=<dU1/dx2>=0
+ sloc=61
+ Sname(sloc)="P33"
+ group(sloc)=8
+ STATS(:,sloc) = 0.d0 
+
+!DISSIPATION
+!D33=2/Re*<du3'/dxk*du3'/dxk>
+ !3 components for R33  
+ !sloc 25 eps_31 
+ !sloc 26 eps_32 
+ !sloc 27 eps_33 
+ sloc=68
+ Sname(sloc)="D33"
+ group(sloc)=8
+ STATS(:,sloc) = STATS(:,25)+STATS(:,26)+STATS(:,27) 
+
+!PRESSURE STRAIN (computed above)
+!PS33=<p'du3'/dx3>
+  sloc=64
+  Sname(sloc)="PS33"
+  group(sloc)=8
+
+!BUOYANT FLUX
+!B33=2g/rho_0<rho'u3'>
+ sloc=74
+ Sname(sloc)="B33"
+ group(sloc)=8
+ STATS(:,sloc)=2.d0*g/rho_0*STATS(:,37)
+
+!TRANSPORT
+!dT333/dx3=-d/dx3<u3'u3'u3'>+1/Re<d(u3')/dx3 d(u3')/dx3)>
+ sloc=77
+ Sname(sloc)="T33"
+ group(sloc)=8
+ STATS(:,sloc)=0.d0
+
+
+!******************************************************************
+!***************************R13 BUDGET*****************************
+!******************************************************************
+!PRODUCTION
+!P13=-<u3'^2><dU1/dx3>
+ !sloc 30=<u3'>
+ !sloc 39=d<U1>/dx3
+ sloc=61
+ Sname(sloc)="P13"
+ group(sloc)=8
+ STATS(:,sloc) = -STATS(:,30)*STATS(:,39)**2
+
+!DISSIPATION
+ !D13=2/Re*<du1'/dxk*du3'/dxk>
+  !3 components for R13  
+  !sloc 19 eps_11 
+  !sloc 20 eps_12 
+  !sloc 21 eps_13 
+  sloc=69
+  Sname(sloc)="D13"
+  group(sloc)=8
+  STATS(:,sloc) = STATS(:,19)+STATS(:,20)+STATS(:,20) 
+
+!PRESSURE STRAIN (computed above)
+!PS13=<2p'S_13> S13==1/2<dU1/dx3+dU3/dx1>
+  sloc=87
+  Sname(sloc)="PS13"
+  group(sloc)=8
+
+
+!BUOYANCY
+!B13=g/rho_0<rho'u1'>
+ !sloc 32 <rho'u1'>
+ sloc=75
+ Sname(sloc)="B13"
+ group(sloc)=8
+ STATS(:,sloc)=g/rho_0*STATS(:,32)
+
+!TRANSPORT
+!dT133/dx3=-d/dx3<u3'u3'u1'>+1/Re<d(u1')/dx3 d(u3')/dx3)>
+ sloc=78
+ Sname(sloc)="T13"
+ group(sloc)=8
+ STATS(:,sloc)=0.d0
+
+!******************************************************************
+!***************************R12 BUDGET*****************************
+!******************************************************************
+!PRODUCTION
+!P12=0
+!D12=2/Re*<du1'/dxk*du2'/dxk>
+!B12=0
+!PS12=
+!T123=
+
+!******************************************************************
+!***************************R23 BUDGET*****************************
+!******************************************************************
+!PRODUCTION
+!P23=0
+!D23=2/Re*<du1'/dxk*du2'/dxk>
+!B23=0
+!PS23=
+!T233=
+
+!******************************************************************
+!***************************R_r1 BUDGET****************************
+!******************************************************************
+!PRODUCTION
+!Pr1=0
+ sloc=79
+ Sname(sloc)="Pr1"
+ group(sloc)=8
+ STATS(:,sloc) = 0.d0 
+
+!DISSIPATION
+!Dr1=1/Re(1+1/Pr)*<dr1'/dxk*du1'/dxk> 
+ sloc=80
+ Sname(sloc)="Dr1"
+ group(sloc)=8
+ STATS(:,sloc) = 0.d0 
+
+!BUOYANT DISSIPATION
+!Dbr1=-g/rho_0<rho'^2>
+ sloc=81
+ Sname(sloc)="Dbr1"
+ group(sloc)=8
+ STATS(:,sloc) = -g/rho_0*STATS(:,10)**2 
+
+!TRANSPORT
+!dTr13/dx3=-d/dx3<rho'u3'u1'>-1/Re(1+1/Pr)d/dx3(d/dx3<rho'u1'>)
+ sloc=82
+ Sname(sloc)="Tr13"
+ group(sloc)=8
+ STATS(:,sloc)=0.d0
+
+!******************************************************************
+!***************************R_r3 BUDGET****************************
+!******************************************************************
+!Pr3=-<u3'^2><drho/dx3>
+!sloc 83
+ Sname(sloc)="Pr3"
+ group(sloc)=8
+ STATS(:,sloc) = -STATS(:,8)**2*STATS(:,48) 
+
+!DISSIPATION
+!Dr3=1/Re(1+1/Pr)*<dr1'/dxk*du3'/dxk>
+ sloc=84
+ Sname(sloc)="Dr3"
+ group(sloc)=8
+ STATS(:,sloc) = 0.d0 
+
+!BUOYANT DISSIPATION
+!Dbr3=-g/rho_0<rho'^2>
+ sloc=85
+ Sname(sloc)="Dbr3"
+ group(sloc)=8
+ STATS(:,sloc) = -g/rho_0*STATS(:,10)**2 
+
+!TRANSPORT 
+!dTr33/dx3=-d/dx3<rho'u3'u3'>-1/Re(1+1/Pr)d/dx3(d/dx3<rho'u3'>)
+!Dbr3=-g/rho_0<rho'^2>
+ sloc=86
+ Sname(sloc)="Tr33"
+ group(sloc)=8
+ STATS(:,sloc) = 0.d0 
+
+!*****************************
+!****LENGTH SCALES************
+!*****************************
+!eta=(nu^3/eps)^(1/4) remember eps -(eps)!
+ !sloc 41=eps
+ !sloc 44
+ sloc=44
+ Sname(sloc)="eta"
+ group(sloc)=6
+ STATS(:,sloc)       = ( rRe**3.d0/(-STATS(:,41)) )**(1.d0/4.d0)
+
+!dtheta
+ sloc=46
+ Sname(sloc)="d_theta"
+ group(sloc)=6
+ d_theta=0.d0
+ do k=1,nzp2-1
+  d_theta    = d_theta + ( 0.5d0 - STATS(k+1,1)**2 - STATS(k,1)**2 )*dze(k)*(0.5d0)
+ enddo
+ STATS(:,46) = d_theta
+
+!domega
+ sloc=47
+ Sname(sloc)="d_omega"
+ group(sloc)=6
+ dUmax = 0.d0
+ do k=2,nzp2-1
+  if (dabs(STATS(k,39)).GT.dUmax) dUmax = dabs( STATS(k,39))
+ enddo
+ STATS(:,47) = 1.d0 / dUmax
+
+!Ellison Scale
+ !Le=<rho'^2>/<dRHO/dz>
+ !sloc 10 <rho'^2>
+ !sloc 48 <dRHO/dz>
+ sloc=65
+ Sname(sloc)="Le"
+ group(sloc)=6
+ STATS(:,sloc) = STATS(:,10)/STATS(:,48)
+
+!Buoyant Frequency
+ !N^2=-g/rho_0/(dRHO/dz)
+ !sloc 48 <dRHO/dz>
+ sloc=49
+ Sname(sloc)="N^2"
+ group(sloc)=6
+ STATS(:,sloc) = -g/rho_0/STATS(:,48)
+ 
+!Ozmidov Scale
+ !(<eps>/<N>)^(1/4)
+ !sloc 41 epsilon (minus)
+ !sloc 49 N^2 
+ sloc=50
+ Sname(sloc)="Loz"
+ group(sloc)=6
+ STATS(:,sloc) = ( -STATS(:,41)/STATS(:,49)**r_1_2 )**r_1_4
+
+!d_theta_rho
+ sloc=51
+ Sname(sloc)="d_theta_rho"
+ group(sloc)=6
+ d_theta_rho=0.d0
+ do k=1,nzp2-1
+  d_theta_rho    = d_theta_rho + ( r_1_2 - STATS(k+1,5)**2 - STATS(k,5)**2 )*dze(k)*r_1_2
+ enddo
+ STATS(:,51) = d_theta_rho
+
+!d_omega_rho
+ !1/(dRHO/dz)_max
+ sloc=52
+ Sname(sloc)="d_omega_rho"
+ group(sloc)=6
+ dRHOmax = 0.d0
+ do k=1,nzp2
+  if (dabs(STATS(k,48)).GT.dRHOmax) dRHOmax = dabs( STATS(k,48))
+ enddo
+ STATS(:,52) = 1.d0 / dRHOmax
+
+
+!Gradient Richardson Number
+ !Rig=-g/rho_0*(dRHO/dx3)/(dU1/dx3)**2
+ !sloc 39 dU1/dx3
+ !sloc 48 dRHO/dx3
+
+ sloc=53
+ Sname(sloc)="Ri_gradient"
+ group(sloc)=6
+ STATS(:,sloc) = -g/rho_0*STATS(:,48)/STATS(:,39)**r_1_2
+
+ if (statbin ) then
+  !Create output filename
+  write(filen1,'(a,i5.5,a)') trim(statDIR)//'avg',nstep,'.bin'
+  open( unit=500,file=filen1,status='unknown',form='unformatted',iostat=s1 )
+   write(500) time
+   write(500) nzp2, nstats, ngroups
+   write(500) zc
+   write(500) Sname
+   write(500) Gname
+   write(500) group 
+   write(500) STATS  
+  close(500)
+
+ write(IOUT,'(a18,f10.5)') "FULL VSHEAR STATISTICS BINARY WRITTEN AT: ",time
+
+ endif
+
+ if (tkstat) then
+!****************************************************************************
+!*******************************TK STAT WRITE********************************
+!****************************************************************************
+!write out mean and rms quantities in TKSTAT format
+ !Create output filename
+ filen1 = statdir
+ call concat(filen1,'avg')
+ call concati(filen1,nstep)
+                                                                                                                             
+ open( unit=500,file=filen1,status='unknown',form='formatted',iostat=s1 )
+  !WRITE HEADER
+  write(500,'(a8,f15.8)') "RTIME = ",time
+
+  !CREATE THE GROUP HEADERS
+  do j=1,ngroups
+   tkheader="GROUP = "//trim(Gname(j))
+   do n=1,nstats
+    if (group(n).EQ.j) then
+      tkheader=trim(tkheader)//' '//trim(Sname(n)) 
+    endif
+   enddo 
+    write(500,'(a)') trim(tkheader) 
+  enddo
+
+  !CREATE THE MAIN HEADER
+  tkheader='I J Z S1'
+  do n=1,nstats
+   tkheader=trim(tkheader)//' '//trim(Sname(n))
+  enddo
+  write(500,'(a)') trim(tkheader)
+
+ do k=1,nzp2
+   plane=1
+   write(500,135) i,' ',k,' ',zc(k),' ',zc(k)/d_theta,' ',(STATS(k,n),n=1,nstats)
+
+  enddo
+ close(500)
+                                                                                                                             
+ write(IOUT,'(a18,f15.8)') "TKSTATS WRITTEN AT: ",time
+
+ endif
+
+ endif !END MASTER ONLY
+
+ if ( allocated(Ftemp) ) deallocate(Ftemp,stat=s1)
+ if (s1.NE.0) then
+  write(IOUT,*) "Error De-allocating Ftemp in stat1d"
+  goto 1000
+ endif
+
+
+ 120 FORMAT( (A) )
+ 135 FORMAT( ( 2(I3,a1), 2(E15.8,a1), 150(2X,E15.8E3) ) )
+
+ 1000 continue
+ ok=max(s1,err1)
+ return
+end subroutine statistics_vshear
+
+subroutine statistics_vshear_small(ok)
+!@t
+! \textbf{subroutine statistics\_vshear\_small(ok)}
+!@h
+!   Description:
+!     Calculate the small statistics for the vertical shear layer:
+!     u,v,w,p,rho,u',v',w',p',rho'.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+ use ntypes, only: r8
+ use Flow,   only: u,v,w,p,rho
+ use domain, only: sz,ez,nzp2, sy, ey, nyp2
+ use grid,   only: zc, ze, zL
+ use dd,     only: myid,rankx3,coords,comm3d
+ use IO,     only: statdir,IOUT, tkstat, statbin
+ use parameters, only: nstep
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer :: ok
+                                                                                                                             
+!Local Variables
+ integer,parameter :: nstats=10
+ integer  :: err1, j, k, s1
+ real(r8) :: mean(sz-1:ez+1), rms(sz-1:ez+1)
+ real(r8) :: STATS(1:nzp2,1:nstats)
+ character(len=25) :: Sname 
+ character(len=500) :: filen1
+
+ err1=0
+ s1=0
+
+ !<U1>,<u1'> 
+  call avgX1X2(u,mean,rms,'u')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,1),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,2),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<U2>,<u2'> 
+  call avgX1X2(v,mean,rms,'v')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,4),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,3),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<U3>,<u3'> 
+  call avgX1X2(w,mean,rms,'w')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)    call gather1d_statM(rms,STATS(:,6),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)    call gather1d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,5),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<P>,<p'> 
+  call avgX1X2(p,mean,rms,'cfluc')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,8),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,7),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+        
+ !<RHO>,<rho'> 
+  call avgX1X2(rho,mean,rms,'rf')
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(rms,STATS(:,10),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+  if (rankx3.EQ.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statM(mean,STATS(:,9),0,err1)
+  if (rankx3.NE.0.AND.coords(1).EQ.0.AND.coords(2).EQ.0)  call gather1d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ if (myid.EQ.0) then
+
+ if (statbin) then
+ filen1 = statDIR
+  call concat(filen1,'vshear_')
+  call concati(filen1,nstep)
+  call concat(filen1,'.bin')
+
+  open(unit=500,file=filen1,status='unknown',form='unformatted',iostat=s1)
+   write(500) nyp2,nzp2
+   write(500) zc
+   write(500) Sname
+   write(500) STATS
+  close(unit=500)
+
+  write(IOUT,'(a44,i6)') "SMALL VSHEAR STATISTICS (BINARY) WRITTEN AT: ",nstep
+ endif
+
+ if (tkstat) then
+ filen1 = statDIR
+  call concat(filen1,'vel_')
+  call concati(filen1,nstep)
+  open(unit=501,file=filen1,status='unknown',form='formatted')
+
+   write(501,'(a)') "#VERTICAL SHEAR STATISTICS"
+   write(501,'(a)') "#nzp2 Lz"
+   write(501,'(a,i4,f12.4)') "#",nzp2, zL
+   write(501,'(a)') "#zc(k),<U1>,<u1'>,<U2>,<u2'>,<U3>,<u3'>,<P>,<p'>,<RHO>,<rho'>"
+
+   do k=1,nzp2
+    write(501,130) zc(k),' ',STATS(k,1),' ',STATS(k,2),&
+                         ' ',STATS(k,3),' ',STATS(k,4),&
+                         ' ',STATS(k,5),' ',STATS(k,6),&
+                         ' ',STATS(k,7),' ',STATS(k,8),&
+                         ' ',STATS(k,9),' ',STATS(k,10)
+   enddo
+  close(501)
+  write(IOUT,'(a30,i6)') "SMALL VSHEAR STATS WRITTEN AT: ",nstep
+
+ endif
+
+ endif !END MASTER ONLY
+                                                                                                                             
+ 130  FORMAT( 12(1x,E15.8E3,a1) )
+ ok=max(err1,s1)
+ return
+end subroutine statistics_vshear_small
+
+subroutine gather1d_StatM(varL,OutPencil,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: myid, commx3, sizex3, coords, nzprocs,&
+                   MPI_STATUS_SIZE, inttype, realtype
+ use Domain, only: sx,ex,sy,ey,sz,ez,nxp2,nyp2,nzp2
+ use IO,     only: IOUT
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)                  :: myidM
+ real(r8),intent(in)                 :: varL(sz-1:ez+1)
+ real(r8),intent(out)                :: OutPencil(1:nzp2)
+ integer,intent(out)                 :: ok
+                                                                                                                             
+!Local Variables
+ integer                             :: Tsize, Rcoords(3), s1, status1(MPI_STATUS_SIZE),ierr
+ integer                             :: k,n, kstart, k2, ks, ke
+ real(r8),allocatable,dimension(:)   :: Temp_Recv, Temp_Send
+                                                                                                                             
+ s1=0
+ ierr=0
+                                                                                                                             
+ allocate( Temp_Recv(sz-1:ez+1), STAT=s1 )
+ Tsize=size(Temp_recv)
+
+ do n=0,sizex3-1 !1
+
+  if (n.Eq.myidM) then
+   Rcoords=coords
+   Temp_Recv=varL
+   OutPencil(1)=Temp_Recv(sz-1)
+  else
+   call MPI_RECV(Rcoords,3,inttype,n,2,commx3,status1,ierr)
+   call MPI_RECV(Temp_Recv,Tsize,realtype,n,1,commx3,status1,ierr)
+  endif
+  !Determine Block of Data to recieve
+  kstart = Rcoords(3)*(nzp2-2)/nzprocs
+  !Determine if there is boundary data 
+  ks=0
+  ke=0
+  if ( Rcoords(3).EQ.0      )   ks=1
+  if ( Rcoords(3).EQ.sizex3-1 ) ke=1
+
+  !UnPack Data
+  do k=sz-ks,ez+ke
+   k2=kstart+k
+   OutPencil(k2)=Temp_Recv(k)
+  enddo
+ 
+ enddo !1
+
+ deallocate(Temp_Send,STAT=s1)
+ deallocate(Temp_Recv,STAT=s1)
+
+ ok=max(ierr,s1)
+ return
+end subroutine gather1d_statM
+
+
+subroutine gather1d_statS(varL,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: commx3, coords,MPI_STATUS_SIZE, inttype, realtype
+ use domain, only: sz,ez
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)        :: myidM
+ real(r8),intent(in)       :: varL(sz-1:ez+1)
+ integer,intent(out)       :: ok
+                                                                                                                             
+!Local Variables
+ integer                            :: Tsize,ierr
+                                                                                                                             
+ ierr=0
+ Tsize=size(varL)
+ call MPI_SEND(coords,3,inttype,myidM,2,commx3,ierr)
+ call MPI_SEND(varL,Tsize,realtype,myidM,1,commx3,ierr)
+                                                                                                                             
+                                                                                                                             
+ok=ierr
+return
+end subroutine gather1d_statS
+
+subroutine statistics_wake(ok)
+!@t
+! \textbf{subroutine statistics\_wake(ok)}
+!@h
+!   Description:
+!     Calculate all statistics for the wake.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+
+ use ntypes,     only: r8
+ use IO,         only: IOUT, statDIR, statbin, tkstat
+ use Flow,       only: u,v,w,p,rho,u1_tmp2,u2_tmp2,u3_tmp2,r_tmp1,r_tmp2
+ use domain,     only: sx,ex,sy,ey,sz,ez,nzp2,nyp2
+ use grid,       only: dzc, dze, rdzc, rdze, zc, ze, yc, ye
+ use parameters, only: time, rRe, nstep, rho_0, g, rPr, Re, Pr, delt
+ use dd,         only: myid,coords,rankx2x3,comm3d
+ use ratios
+ use Spng,        only: x1spng, x2spng, x3spng
+ implicit none
+
+!Passed Variables
+ integer,intent(out) :: ok
+
+!Local Variables
+ integer,parameter :: sp=4 !single or double precision statistics
+ integer,parameter :: nstats=65  
+ integer,parameter :: ngroups=9
+ real(sp)          :: STATS(1:nyp2,1:nzp2,1:nstats)
+ character(len=25) :: Sname(1:nstats), Gname(1:ngroups)
+ integer           :: group(1:nstats)
+
+ integer  :: err1, i, j, k, s1 , sloc, t2loc, t3loc, n
+ real(r8) :: mean(sy-1:ey+1,sz-1:ez+1), rms(sy-1:ey+1,sz-1:ez+1)
+ real(r8) :: T2(1:nyp2,1:nzp2,7), T3(1:nyp2,1:nzp2,7), Stemp(1:nyp2,1:nzp2), tempF(1:nyp2,1:nzp2)
+ character(len=150) :: filen1
+ character(len=1024) :: tkheader
+ real(r8),allocatable,dimension(:,:,:) :: Ftemp
+
+ allocate( Ftemp(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating Ftemp in stat1d"
+  goto 1000
+ endif
+
+
+ s1=0
+
+ Gname(1)="Flow"
+ Gname(2)="Vorticity"
+ Gname(3)="Dissipation"
+ Gname(4)="Correlations"
+ Gname(5)="TKE"
+ Gname(6)="Scales"
+ Gname(7)="Scalar"
+ Gname(8)="Budgets"
+ Gname(9)="Integratedquantities"
+ Sname="NA"
+
+ !INTERPOLATE VELOCITIES TO CELL CENTERS
+  u1_tmp2 = 0.d0
+  u2_tmp2 = 0.d0
+  u3_tmp2 = 0.d0
+  call center_velocity(u,u1_tmp2,1 )
+  call center_velocity(v,u2_tmp2,2 )
+  call center_velocity(w,u3_tmp2,3 )
+  call MPI_BARRIER(comm3d,err1)
+
+ !<U1>,<u1'> 
+  call avgX1(u1_tmp2,mean,rms,'u')
+  !<U1>
+   sloc=1
+   Sname(sloc)="U1"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<u1'> 
+   sloc=6
+   Sname(sloc)="u1p"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(rms,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<U2>,<u2'2> 
+  call avgX1(u2_tmp2,mean,rms,'v')
+  !<U2>
+   sloc=2
+   Sname(sloc)="U2"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<u2'> 
+   sloc=7
+   Sname(sloc)="u2p"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<U3>,<u3'> 
+  call avgX1(u3_tmp2,mean,rms,'w')
+  !<U3>
+   sloc=3
+   Sname(sloc)="U3"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<u3'> 
+   sloc=8
+   Sname(sloc)="u3p"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+!**************************INTERNAL WAVE DIAGNOSTIC******************************
+!*******************************du3'/dx3*****************************************
+!**********************************sloc=53***************************************
+  sloc=53
+  Sname(sloc)="dwdz"
+  group(sloc)=5
+  call deriv(u3_tmp2,r_tmp1,3)
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<P>,<p'> 
+  call avgX1(p,mean,rms,'p')
+  !<P>
+   sloc=4
+   Sname(sloc)="P"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<p'> 
+   sloc=9
+   Sname(sloc)="pp"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<RHO>,<rho'> 
+   call avgX1(rho,mean,rms,'rf')
+  !<RHO>
+   sloc=5
+   Sname(sloc)="Rho"
+   group(sloc)=1
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<rho'> 
+   sloc=10
+   Sname(sloc)="rhop"
+   group(sloc)=10
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+  !sloc 39=<dU1/dx3>
+   sloc=39
+   Sname(sloc)="dU1dx3"
+   group(sloc)=6
+   call deriv(u1_tmp2,r_tmp2,3)
+   call avgX1(r_tmp2,mean,rms,'cfluc')
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+  !sloc 40=<dU1/dx2>
+   sloc=40
+   Sname(sloc)="dU1dx2"
+   group(sloc)=6
+   call deriv(u1_tmp2,r_tmp2,2)
+   call avgX1(r_tmp2,mean,rms,'cfluc')
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+  !sloc 48=<dRHO/dx3>
+   sloc=48
+   Sname(sloc)="dRHOdx3"
+   group(sloc)=6
+   call deriv(rho,r_tmp2,3)
+   call avgX1(r_tmp2,mean,rms,'cfluc')
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+
+  !<OMG1>,<omg1'> 
+   call vorticity(r_tmp1,r_tmp2,1)
+   call avgX1(r_tmp1,mean,rms,'cfluc')
+  !<OMG1>
+   sloc=11
+   Sname(sloc)="Omg1"
+   group(sloc)=2
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<omg1'> 
+   sloc=15
+   Sname(sloc)="omg1p"
+   group(sloc)=2
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<OMG2>,<omg2'> 
+   call vorticity(r_tmp1,r_tmp2,2)
+   call avgX1(r_tmp1,mean,rms,'cfluc')
+  !<OMG2>
+   sloc=12
+   Sname(sloc)="Omg2"
+   group(sloc)=2
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<omg2'> 
+   sloc=16
+   Sname(sloc)="omg2p"
+   group(sloc)=2
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<OMG3>,<omg3'> 
+   call vorticity(r_tmp1,r_tmp2,3)
+   call avgX1(r_tmp1,mean,rms,'cfluc')
+  !<OMG3>
+   sloc=13
+   Sname(sloc)="Omg3"
+   group(sloc)=2
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+    call gather2d_statM(mean,Stemp,0,err1)
+    STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+  !<omg3'> 
+   sloc=17
+   Sname(sloc)="omg3p"
+   if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+     call gather2d_statM(rms,Stemp,0,err1)
+     STATS(:,:,sloc)=stemp
+   endif
+   if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+   call MPI_BARRIER(comm3d,err1)
+
+ !<OMG_MAG>,<omg_mag'^2>
+   if (myid.EQ.0) then
+  !<OMG_MAG>
+    sloc=14
+    Sname(sloc)="Omg_Mag"
+   group(sloc)=2
+    STATS(:,:,sloc) = sqrt( STATS(:,:,11)**2+STATS(:,:,12)**2+STATS(:,:,13)**2 ) 
+  !<omg_mag'>
+    sloc=18
+    Sname(sloc)="omg_Mag_p"
+    group(sloc)=2
+    STATS(:,:,sloc) = sqrt( STATS(:,:,15)**2+STATS(:,:,16)**2+STATS(:,:,17)**2 ) 
+   endif
+
+!Subtract mean from cell centered quantities and store in u1_tmp2, u2_tmp2, u3_tmp2, r_tmp2
+  u1_tmp2 = 0.d0
+  u2_tmp2 = 0.d0
+  u3_tmp2 = 0.d0
+  call center_velocity(u,u1_tmp2,1 )
+  call center_velocity(v,u2_tmp2,2 )
+  call center_velocity(w,u3_tmp2,3 )
+
+ !u'
+  call avgX1(u1_tmp2,mean,rms,'uc')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     u1_tmp2(i,j,k)=u1_tmp2(i,j,k)-mean(j,k)
+    enddo
+   enddo
+  enddo
+  call ghost(u1_tmp2,'cfluc',err1) 
+ 
+ !v'
+  call avgX1(u2_tmp2,mean,rms,'vc')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     u2_tmp2(i,j,k)=u2_tmp2(i,j,k)-mean(j,k)
+    enddo
+   enddo
+  enddo
+  call ghost(u2_tmp2,'cfluc',err1)
+
+ !w'  
+  call avgX1(u3_tmp2,mean,rms,'wc')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     u3_tmp2(i,j,k)=u3_tmp2(i,j,k)-mean(j,k)
+    enddo
+   enddo
+  enddo
+  call ghost(u3_tmp2,'cfluc',err1)
+
+!******************************************************************
+!********************DISSIPATION 1/2<sij'sij'>*********************
+!******************************************************************
+ !Dissipation Components!
+ !epsilon_11=(prl_u1'_prl_x1)**2
+  sloc=19
+  Sname(sloc)="eps_11"
+  group(sloc)=3
+  call deriv(u1_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_12=(prl_u1'_prl_x2)**2
+  sloc=20
+  Sname(sloc)="eps_12"
+  group(sloc)=3
+  call deriv(u1_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_13=(prl_u1'_prl_x3)**2
+  sloc=21
+  Sname(sloc)="eps_13"
+  group(sloc)=3
+  call deriv(u1_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_21=(prl_u2'_prl_x1)**2
+  sloc=22
+  Sname(sloc)="eps_21"
+  group(sloc)=3
+  call deriv(u2_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_22=(prl_u2'_prl_x2)**2
+  sloc=23
+  Sname(sloc)="eps_22"
+  group(sloc)=3
+  call deriv(u2_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_23=(prl_u2'_prl_x3)**2
+  sloc=24
+  Sname(sloc)="eps_23"
+  group(sloc)=3
+  call deriv(u2_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_31=(prl_u3'_prl_x1)**2
+  sloc=25
+  Sname(sloc)="eps_31"
+  group(sloc)=3
+  call deriv(u3_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_32=(prl_u3'_prl_x2)**2
+  sloc=26
+  Sname(sloc)="eps_32"
+  group(sloc)=3
+  call deriv(u3_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !epsilon_33=(prl_u3'_prl_x3)**2
+  sloc=27
+  Sname(sloc)="eps_33"
+  group(sloc)=3
+  call deriv(u3_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !SUM ALL 9 COMPONENTS OF DISSIPATION
+  if (myid.EQ.0) then 
+  sloc=28
+  Sname(sloc)="EpsSUM"
+  group(sloc)=3
+  STATS(:,:,sloc) = 0.d0
+   do i=19,27
+    STATS(:,:,sloc) = STATS(:,:,sloc)+STATS(:,:,i) 
+   enddo
+  endif
+
+!******************************************************************
+!**********************SCALAR DISSIPATION**************************
+!******************************************************************
+ !rho'
+  call avgX1(rho,mean,rms,'rf')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp2(i,j,k)=rho(i,j,k)-mean(j,k)
+    enddo
+   enddo
+  enddo
+  call ghost(r_tmp2,'cfluc',err1)
+
+ !Repsilon_1=(prl_rho'_prl_x1)**2
+  sloc=54
+  Sname(sloc)="Seps1"
+  group(sloc)=7
+  call deriv(r_tmp2,r_tmp1,1)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !Repsilon_1=(prl_rho'_prl_x2)**2
+  sloc=55
+  Sname(sloc)="Seps2"
+  group(sloc)=7
+  call deriv(r_tmp2,r_tmp1,2)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !Repsilon_2=(prl_rho'_prl_x3)**2
+  sloc=56
+  Sname(sloc)="Seps3"
+  group(sloc)=7
+  call deriv(r_tmp2,r_tmp1,3)
+  r_tmp1=r_tmp1*r_tmp1
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !SUM ALL 3 COMPONENTS OF SCALAR DISSIPATION
+  if (myid.EQ.0) then 
+  sloc=57
+  Sname(sloc)="SepsSUM"
+  group(sloc)=7
+  STATS(:,:,sloc) = 0.d0
+   do i=54,26
+    STATS(:,:,sloc) = STATS(:,:,sloc)+STATS(:,:,i) 
+   enddo
+  endif
+
+!******************************************************************
+!********************CROSS CORRELAIONS <ui'uj'>********************
+!******************************************************************
+ !<u1'u2'>
+  sloc=29
+  Sname(sloc)="u1pu2p"
+  group(sloc)=4
+  r_tmp1=u1_tmp2*u2_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u1'u3'>
+  sloc=30
+  Sname(sloc)="u1pu3p"
+  group(sloc)=4
+  r_tmp1=u1_tmp2*u3_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'u3'>
+  sloc=33
+  Sname(sloc)="u2pu3p"
+  group(sloc)=4
+  r_tmp1 = u2_tmp2*u3_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !p'
+  call avgX1(p,mean,rms,'c')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp2(i,j,k) =p(i,j,k)-mean(j,k)
+    enddo
+   enddo
+  enddo
+  call ghost(r_tmp2,'cfluc',err1) 
+
+ !<u1'p'>
+  sloc=31
+  Sname(sloc)="u1ppp"
+  group(sloc)=4
+  r_tmp1=u1_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'p'>
+  sloc=34
+  Sname(sloc)="u2ppp"
+  group(sloc)=4
+  r_tmp1 = u2_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'p'>
+  sloc=36
+  Sname(sloc)="u3ppp"
+  group(sloc)=4
+  r_tmp1 = u3_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !rho'
+  call avgX1(rho,mean,rms,'rf')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp2(i,j,k)=rho(i,j,k)-mean(j,k)
+    enddo
+   enddo
+  enddo
+  call ghost(r_tmp2,'cfluc',err1)
+
+ !<u1'rho'>
+  sloc=32
+  Sname(sloc)="u1prhop"
+  group(sloc)=4
+  r_tmp1= u1_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'rho'>
+  sloc=35
+  Sname(sloc)="u2prhop"
+  group(sloc)=4
+  r_tmp1 = u2_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'rho'>
+  sloc=37
+  Sname(sloc)="u3prhop"
+  group(sloc)=4
+  r_tmp1 = u3_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !p'
+  call avgX1(p,mean,rms,'p')
+  do k=sz,ez
+   do j=sy,ey
+    do i=sx,ex
+     r_tmp1(i,j,k) =p(i,j,k)-mean(j,k)
+   enddo
+   enddo
+  enddo
+  call ghost(r_tmp1,'cfluc',err1) 
+
+ !<p'rho'>
+  sloc=38
+  Sname(sloc)="pprho'"
+  group(sloc)=4
+  r_tmp2 =  r_tmp1*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+!******************************************************************
+!***********************PRESSURE STRAIN****************************
+!******************************************************************
+ !<p'd(u1')/dx1>
+  sloc=61
+  Sname(sloc)="pps11'"
+  group(sloc)=8
+  call deriv(u1_tmp2,r_tmp2,1)
+  r_tmp2=r_tmp2*r_tmp1
+  call avgX1(r_tmp2,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<p'd(u2')/dx2>
+  sloc=62
+  Sname(sloc)="pps11'"
+  group(sloc)=8
+  call deriv(u2_tmp2,r_tmp2,2)
+  r_tmp2=r_tmp2*r_tmp1
+  call avgX1(r_tmp2,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<p'd(u3')/dx3>
+  sloc=63
+  Sname(sloc)="pps33'"
+  group(sloc)=8
+  call deriv(u3_tmp2,r_tmp2,3)
+  r_tmp2=r_tmp2*r_tmp1
+  call avgX1(r_tmp2,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<p'd(u1')/dx3>
+  sloc=64
+  Sname(sloc)="pps13'"
+  group(sloc)=8
+  call deriv(u1_tmp2,r_tmp2,3) !du1'/dx3
+  call deriv(u3_tmp2,Ftemp,1) !du3'/dx1
+  r_tmp2=r_tmp2*(r_tmp1+Ftemp) !p'*du1'/dx3*du3'/dx1
+  call avgX1(r_tmp2,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+
+
+!******************************TKE TRANSPORT TERMS*******************************
+!***********************************T2',T3'**************************************
+!********************************************************************************
+!T'3=1/2[<u3' u1' u1'> + <u3' u2' u2'> + <u3' u3' u3'>] + <u3' p'>/rho_0 
+!    -2/Re0[<u1' s'31> + <u2' s'32> + <u3' s'33>]
+ 
+ !<u3'u1'u1'>
+  t3loc=1
+  r_tmp1 = u3_tmp2*u1_tmp2*u1_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T3(:,:,t3loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'u2'u2'>
+  t3loc=2
+  r_tmp1 = u3_tmp2*u2_tmp2*u2_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T3(:,:,t3loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'u3'u3'>
+  t3loc=3
+  r_tmp1 = u3_tmp2*u3_tmp2*u3_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T3(:,:,t3loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3'p'>
+  !sloc  36=<u3'p'>
+  sloc=36
+  t3loc=4
+  if (myid.EQ.0)  T3(:,:,t3loc) = STATS(:,:,36)/rho_0
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u1's'31>
+  t3loc=5
+    !s'_31=1/2(prl_u3'_prl_x1 + prl_u1'_prl_x3)
+  call deriv(u3_tmp2,r_tmp2,1)
+  call deriv(u1_tmp2,r_tmp1,3)
+  r_tmp1=u1_tmp2*(r_1_2*(r_tmp2+r_tmp1))
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T3(:,:,t3loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2's'32>
+  t3loc=6
+    !s'_32=1/2(prl_u3'_prl_x2 + prl_u2'_prl_x3)
+  call deriv(u3_tmp2,r_tmp2,2)
+  call deriv(u2_tmp2,r_tmp1,3)
+  r_tmp1=u2_tmp2*(r_1_2*(r_tmp2+r_tmp1))
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T3(:,:,t3loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u3's'33>
+  t3loc=7
+    !s'_33=(prl_u3'_prl_x3)
+  call deriv(u3_tmp2,r_tmp2,3)
+  r_tmp1=u3_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T3(:,:,t3loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+!T'2=1/2[<u2' u1' u1'> + <u2' u2' u2'> + <u2' u3' u3'>] + <u2' p'>/rho_0 
+!    -2/Re0[<u1' s'21> + <u2' s'22> + <u3' s'23>]
+ !<u2'u1'u1'>
+  t2loc=1
+  r_tmp1 = u2_tmp2*u1_tmp2*u1_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T2(:,:,t2loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'u2'u2'>
+  t2loc=2
+  r_tmp1 = u2_tmp2*u2_tmp2*u2_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T2(:,:,t2loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'u3'u3'>
+  t2loc=3
+  r_tmp1 = u2_tmp2*u3_tmp2*u3_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T2(:,:,t2loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2'p'>
+   !sloc  34=<u2'p'>
+  t2loc=4
+  sloc=34
+  if (myid.EQ.0)  T2(:,:,t2loc) = STATS(:,:,sloc)/rho_0
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u1's'21>
+  t2loc=5
+    !s'_21=1/2(prl_u2'_prl_x1 + prl_u1'_prl_x2)
+  call deriv(u2_tmp2,r_tmp2,1)
+  call deriv(u1_tmp2,r_tmp1,2)
+  r_tmp1=u1_tmp2*(r_1_2*(r_tmp2-r_tmp1))
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T2(:,:,t2loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<u2's'22>
+  t2loc=6
+    !s'_22=(prl_u2'_prl_x2)
+  call deriv(u2_tmp2,r_tmp2,2)
+  r_tmp1=u2_tmp2*r_tmp2
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T2(:,:,t2loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+!<u2's'23>
+  t2loc=7
+    !s'_23=1/2(prl_u2'_prl_x3 + prl_u3'_prl_x2)
+  call deriv(u2_tmp2,r_tmp2,3)
+  call deriv(u3_tmp2,r_tmp1,2)
+  r_tmp1=u2_tmp2*(r_1_2*(r_tmp2-r_tmp1))
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0)  call gather2d_statM(mean,T2(:,:,t2loc),0,err1)
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+if (myid.EQ.0) then
+!**********************************************************************
+!*************************MASTER NODE ONLY*****************************
+!**********************************************************************
+!*****************************
+!*********WAKE TKE************
+!*****************************
+!PRODUCTION
+!P13=-<u1'u3'><dU1/dx3>
+ !sloc 41=P13
+ !sloc 30=<u1'u3'>
+ !sloc 39=d<U>/dx3
+ sloc=41 
+ Sname(sloc)="PROD13"
+ group(sloc)=5
+ STATS(:,:,sloc)=-STATS(:,:,30)*STATS(:,:,39)
+!P12=-<u1'u2'>d<U1>/dx2
+  !sloc 29=<u1'u2'>
+  !sloc 42=P12
+  !sloc 40=d<U1>/dx2 
+  sloc=42
+  Sname(sloc)="PROD12"
+  group(sloc)=5
+  STATS(:,:,sloc)=-STATS(:,:,29)*STATS(:,:,40)
+
+!DISSIPATION
+!eps=2<s'_ijs'_ij>/Re_0
+ !sloc 43=Dissipation
+ !eps_ij=sloc19-sloc27--> sloc28
+ sloc=43
+ Sname(sloc)="DISS"
+ group(sloc)=5
+ STATS(:,:,sloc) = rRe*STATS(:,:,28)
+
+!BUOYANT FLUX
+!B=-g/rho_0<rho' u3'>
+ !sloc 44=Buoyant Flux
+ !sloc 37=<rho' u3'>
+ sloc=44
+ Sname(sloc)="BFLUX"
+ group(sloc)=5
+ STATS(:,:,sloc) = -g/rho_0*STATS(:,:,37)
+
+!TRANSPORT !d(T'3)/dx3 
+!sloc = 45
+ sloc=45
+ Sname(sloc)="dTRANSdx3"
+ group(sloc)=5
+ !T'3
+ do k=1,nzp2
+  tempF(:,k) = r_1_2*(T3(:,k,1)+T3(:,k,2)+T3(:,k,3) ) &
+             +  T3(:,k,4)&
+             + 2.d0*rRe*( T3(:,k,5)+T3(:,k,6)+T3(:,k,7) ) 
+ enddo
+
+ do k=2,nzp2-1
+  STATS(:,k,sloc) = ( tempF(:,k+1) - tempF(:,k-1) ) / ( zc(k+1)-zc(k-1) )
+ enddo
+
+!TRANSPORT !d(T'2)/dx2 
+!sloc = 46
+ sloc=46
+ Sname(sloc)="dTRANSdx2"
+ group(sloc)=5
+ !T'2
+ do j=1,nyp2
+  tempF(j,:) = r_1_2*(T2(j,:,1)+T2(j,:,2)+T2(j,:,3) ) &
+             +  T2(j,:,4)&
+             + 2.d0*rRe*( T2(j,:,5)+T2(j,:,6)+T2(j,:,7) ) 
+ enddo
+
+ do j=2,nyp2-1
+  STATS(j,:,sloc) = ( tempF(j+1,:) - tempF(j-1,:) ) / ( yc(j+1)-yc(j-1) )
+ enddo
+
+!******************************************************************
+!******************WAKE DENSITY VARIANCE BUDGET********************
+!******************************************************************
+!PRODUCTION
+!Prps=-2<rho'u3'><drho/dx3>
+ !sloc 58=Prho
+ !sloc 37=<rho'u3'>
+ !sloc 48=<drho/dx3>
+ sloc=58 
+ Sname(sloc)="DVproduction"
+ group(sloc)=7
+ STATS(:,:,sloc)=-2.d0*STATS(:,:,37)*STATS(:,:,48)
+
+!DISSIPATION
+!Seps=2<s'_ijs'_ij>/Re_0
+ !sloc 41=Dissipation
+ !eps_ij=sloc19-sloc27
+
+ sloc=59
+ Sname(sloc)="DVdissipation"
+ group(sloc)=7
+ STATS(:,:,sloc) = 0.d0
+ do i=54,56
+  !Sum all 3 components
+  STATS(:,:,sloc) = STATS(:,:,sloc)-rRe*rPr*2.d0*STATS(:,:,i)
+ enddo
+
+!TRANSPORT
+!Tr3=d/dx3[ -<rho'^2 u3'> + 1/(Pr*Re)*(d/dx3<rho'^2>) ]
+ sloc=60
+ Sname(sloc)="DVtransport"
+ group(sloc)=7
+ STATS(:,:,sloc) = 0.d0
+ tempF(:,:)=0.d0
+  do k=2,nzp2-1
+   tempF(:,k) = -STATS(:,k,10)*STATS(:,k,10)*STATS(:,k,8)+rPr*rRe*&
+         ( STATS(:,k+1,10)**2 - STATS(:,k-1,10)**2 ) / ( zc(k+1)-zc(k-1) )
+  enddo
+
+ do k=2,nzp2-1
+  STATS(:,k,sloc) = ( tempF(:,k+1) - tempF(:,k-1) ) / ( zc(k+1)-zc(k-1) )
+ enddo
+
+!******************************************************************
+!**************************WAKE LENGTH SCALES**********************
+!******************************************************************
+!eta=(nu^3/eps)^(1/4) remember eps -(eps)!
+ !sloc 43=eps
+ !sloc 47
+ sloc=47
+ Sname(sloc)="eta"
+ group(sloc)=6
+ STATS(:,:,sloc)       = ( rRe**3.d0/(-STATS(:,:,43)) )**(1.d0/4.d0)
+
+!eta_theta=(nu*alpha^2/eps)^(1/4)=eta/sqrt(Pr) Tennekes and Lumley p. 96
+!alpha is the thermal diffusivity, Pr = nu/alpha
+ !sloc 47=nu
+ !sloc 65
+ sloc=65
+ Sname(sloc)="eta"
+ group(sloc)=6
+ STATS(:,:,sloc)       = STATS(:,:,47)*(rPr**r_1_2)
+
+!Ellison Scale
+ !Le=<rho'^2>/<dRHO/dz>
+ !sloc 10 <rho'^2>
+ !sloc 48 <dRHO/dz>
+ sloc=49
+ Sname(sloc)="Le"
+ group(sloc)=6
+ STATS(:,:,sloc) = STATS(:,:,10)/STATS(:,:,48)
+
+!Buoyant Frequency
+ !N^2=-g/rho_0/(dRHO/dz)
+ !sloc 48 <dRHO/dz>
+ sloc=50
+ Sname(sloc)="Le"
+ group(sloc)=6
+ STATS(:,:,sloc) = -g/rho_0/STATS(:,:,48)
+ 
+!Ozmidov Scale
+ !(<eps>/<N>)^(1/4)
+ !sloc 43 epsilon (minus)
+ !sloc 50 N^2 
+ sloc=51
+ Sname(sloc)="Loz"
+ group(sloc)=6
+ STATS(:,:,sloc) = ( -STATS(:,:,43)/STATS(:,:,50)**3 )**r_1_2
+
+!Gradient Richardson Number
+ !Rig=-g/rho_0*(dRHO/dx3)/(dU1/dx3)**2
+ !sloc 39 dU1/dx3
+ !sloc 48 dRHO/dx3
+ sloc=52
+ Sname(sloc)="Ri_gradient"
+ group(sloc)=6
+ STATS(:,:,sloc) = -g/rho_0*STATS(:,:,48)/STATS(:,:,39)**r_1_2
+
+!******************************************************************
+!***********************INTEGRATED QUANTITIES**********************
+!******************************************************************
+
+! MATT IS IT BETTER TO DO THIS OR ELSE TO MAKE THIS BE DONE AUTOMATICALLY BY THE POSTPROCESSING 
+! TOOL AND NOT CALCULATED DURING RUNTIME? STATISTICS ARE ALREADY SLOW...
+
+ if (statbin ) then
+!****************************************************************************
+!***************************BINARY STAT WRITE********************************
+!****************************************************************************
+!Create output filename
+  write(filen1,'(a,i5.5)') 'WakeStatsF_',nstep
+  filen1 = trim(statDIR)//trim(filen1)
+  open( unit=500,file=filen1,status='unknown',form='unformatted',iostat=s1 )
+  !WRITE HEADER
+   write(500) nstep
+   write(500) time,delt,Re,Pr,g,rho_0 
+   write(500) nyp2,nzp2
+   write(500) yc
+   write(500) ye
+   write(500) zc
+   write(500) ze
+   write(500) nstats,ngroups
+   write(500) Sname
+   write(500) Gname
+   write(500) group
+   write(500) STATS
+  close(500)
+  write(IOUT,'(a34,i6)') "FULL WAKE STATISTICS WRITTEN AT: ",nstep
+
+ endif
+ 
+ if (tkstat) then
+!****************************************************************************
+!*******************************TK STAT WRITE********************************
+!****************************************************************************
+  !write out mean and rms quantities in TKSTAT format.
+  ! CAREFUL THIS WILL BE VERY LARGE FOR THE WAKE
+
+  !Create output filename
+  filen1 = statdir
+  call concat(filen1,'avg')
+  call concati(filen1,nstep)
+                                                                                                                             
+  open( unit=500,file=filen1,status='unknown',form='formatted',iostat=s1 )
+   !WRITE HEADER
+   write(500,'(a8,f15.8)') "RTIME = ",time
+
+   !CREATE THE GROUP HEADERS
+   do j=1,ngroups
+    tkheader="GROUP = "//trim(Gname(j))
+    do n=1,nstats
+     if (group(n).EQ.j) then
+      tkheader=trim(tkheader)//' '//trim(Sname(n)) 
+     endif
+    enddo 
+    write(500,'(a)') trim(tkheader) 
+   enddo
+
+   !CREATE THE MAIN HEADER
+   tkheader='I J Z S1'
+   do n=1,nstats
+    tkheader=trim(tkheader)//' '//trim(Sname(n))
+   enddo
+   write(500,'(a)') trim(tkheader)
+   do i=1,nyp2
+    do k=1,nzp2
+     write(500,135) i,' ',k,' ',yc(j),' ',zc(k),' ',(STATS(i,k,n),n=1,nstats)
+    enddo
+   enddo
+  close(500)
+  write(IOUT,'(a18,i5,f15.8)') "TKSTATS WRITTEN AT: ",nstep,time
+  endif
+
+ endif
+!**********************************************************************
+!**********************END MASTER NODE ONLY****************************
+!**********************************************************************
+ if ( allocated(Ftemp) ) deallocate(Ftemp,stat=s1)
+ if (s1.NE.0) then
+  write(IOUT,*) "Error De-allocating Ftemp in stat1d"
+  goto 1000
+ endif
+
+ 1000 continue
+ ok=max(s1,err1)
+ return
+
+ 120 FORMAT( (A) )
+ 135 FORMAT( ( 2(I3,a1), 2(e15.8e3,a1), 150(2X,e15.8e3) ) )
+
+
+end subroutine statistics_wake
+
+
+subroutine statistics_wake_small(ok)
+!@t
+! \textbf{subroutine statistics\_wake\_small(ok)}
+!@h
+!   Description:
+!     Calculate the small statistics for the wake:
+!     u,v,w,p,rho,u',v',w',p',rho'.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+ use ntypes, only: r8
+ use Flow,   only: u,v,w,p,rho,r_tmp1
+ use domain, only: sz,ez,nzp2, sy, ey, nyp2
+ use grid,   only: zc, ze, yc, ye
+ use dd,     only: myid,rankx2x3,coords,comm3d
+ use IO,     only: statDIR,IOUT
+ use parameters, only: nstep, time, g, rho_0, Re, Pr, delt
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer :: ok
+                                                                                                                             
+!Local Variables
+ integer,parameter :: nstats=11, ngroups=1, prec=4
+ integer  :: err1, s1, sloc
+ real(r8) :: mean(sy-1:ey+1,sz-1:ez+1), rms(sy-1:ey+1,sz-1:ez+1)
+ real(prec) :: STATS(1:nyp2,1:nzp2,1:nstats)
+ real(r8) :: Stemp(1:nyp2,1:nzp2)
+
+ character(len=250) :: filen1
+ character(len=25) :: Sname(1:nstats), Gname(1:ngroups)
+ integer           :: group(1:nstats)
+
+ logical,parameter :: debug=.false.
+
+ err1=0
+ s1=0
+ if (debug) call check_point('statistics_wake_small#0',.false.)
+
+ !<U1>,<u1'^2> 
+  sloc=1
+  Sname(sloc)="U1"
+  call avgX1(u,mean,rms,'u')
+
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=real(stemp(:,:))
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  if (debug) call check_point('statistics_wake_small#1',.false.)
+ 
+  sloc=6
+  Sname(sloc)="u1p"
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(rms,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  if (debug) call check_point('statistics_wake_small#2',.false.)
+
+ !<U2>,<u2'^2> 
+  sloc=2
+  Sname(sloc)="U2"
+  call avgX1(v,mean,rms,'v')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  sloc=7
+  Sname(sloc)="u2p"
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(rms,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<U3>,<u3'^2> 
+  sloc=3
+  Sname(sloc)="U3"
+  call avgX1(w,mean,rms,'w')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  sloc=8
+  Sname(sloc)="u3p"
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(rms,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<P>,<p'^2> 
+  sloc=4
+  Sname(sloc)="P"
+  call avgX1(p,mean,rms,'p')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  sloc=9
+  Sname(sloc)="pp"
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(rms,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ !<RHO>,<rho'^2> 
+  sloc=5
+  Sname(sloc)="RHO"
+  call avgX1(rho,mean,rms,'rf')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+  sloc=10
+  Sname(sloc)="rhop"
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(rms,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(rms,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+  if (debug) call check_point('statistics_wake_small#3',.false.)
+
+
+!**************************INTERNAL WAVE DIAGNOSTIC******************************
+!*******************************du3/dx3******************************************
+!********************************************************************************
+  sloc=11
+  Sname(sloc)="dwdz"
+  call deriv(w,r_tmp1,3)
+  call avgX1(r_tmp1,mean,rms,'cfluc')
+  if (rankx2x3.EQ.0.AND.coords(1).EQ.0) then
+   call gather2d_statM(mean,Stemp,0,err1)
+   STATS(:,:,sloc)=stemp
+  endif
+  if (rankx2x3.NE.0.AND.coords(1).EQ.0)  call gather2d_statS(mean,0,err1)
+  call MPI_BARRIER(comm3d,err1)
+
+ if (myid.EQ.0) then
+  write(filen1,'(a,i5.5)') 'WakeStatsS_',nstep
+ filen1 = trim(statDIR)//trim(filen1)
+  open(unit=500,file=filen1,status='unknown',form='unformatted',iostat=s1)
+   if (s1.NE.0) write(IOUT,'(a20,a,a39,i4)') "ERROR Opening File: ",trim(filen1)," in statistics_wake_small with iostat: ",s1
+
+   write(500) nstep
+   write(500) time,delt,Re,Pr,g,rho_0 
+   write(500) nyp2,nzp2
+   write(500) yc
+   write(500) ye
+   write(500) zc
+   write(500) ze
+   write(500) nstats, ngroups
+   write(500) Sname
+   write(500) Gname
+   write(500) group
+   write(500) STATS
+  close(unit=500)
+
+  write(IOUT,'(a34,i6)') "SMALL WAKE STATISTICS WRITTEN AT: ",nstep
+ endif
+ call MPI_BARRIER(comm3d,err1)
+                                                                                                                            
+ ok=max(err1,s1)
+ return
+end subroutine statistics_wake_small
+
+
+subroutine gather2d_StatM(varL,OutPlane,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: myid, commx2x3, sizex2, sizex3, sizex2x3,coords, nyprocs,nzprocs,&
+                   MPI_STATUS_SIZE, inttype, realtype
+ use Domain, only: sx,ex,sy,ey,sz,ez,nxp2,nyp2,nzp2
+ use IO,     only: IOUT
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)                  :: myidM
+ real(r8),intent(in)                 :: varL(sy-1:ey+1,sz-1:ez+1)
+ real(r8),intent(out)                :: OutPlane(1:nyp2,1:nzp2)
+ integer,intent(out)                 :: ok
+                                                                                                                             
+!Local Variables
+ integer                             :: Tsize, Rcoords(3), s1, status1(MPI_STATUS_SIZE),ierr
+ integer                             :: j,k,n, jstart, kstart, j2, k2
+ real(r8),allocatable,dimension(:,:) :: Temp_Recv 
+ integer                             :: js,ks,je,ke                                                                                                                             
+ 
+ logical,parameter                   :: debug=.false.
+ s1=0
+ ierr=0
+                                                                                                                             
+ allocate( Temp_Recv(sy-1:ey+1,sz-1:ez+1), STAT=s1 )
+ Tsize=size(Temp_recv)
+                                                                                                                             
+ do n=0,sizex2x3-1 !1
+                                                                                                                             
+  if (n.Eq.myidM) then
+   Rcoords=coords
+   Temp_Recv=varL
+  else
+   call MPI_RECV(Rcoords,3,inttype,n,2,commx2x3,status1,ierr)
+   call MPI_RECV(Temp_Recv,Tsize,realtype,n,1,commx2x3,status1,ierr)
+  endif
+                                                                                                                      
+  !Determine Block of Data to recieve
+   jstart = Rcoords(2)*(nyp2-2)/nyprocs
+   kstart = Rcoords(3)*(nzp2-2)/nzprocs
+
+  !Determine if there is boundary data 
+   js=0
+   je=0
+   ks=0
+   ke=0
+   if ( Rcoords(2).EQ.0      )   js=1
+   if ( Rcoords(3).EQ.0      )   ks=1
+   if ( Rcoords(2).EQ.sizex2-1 ) je=1
+   if ( Rcoords(3).EQ.sizex3-1 ) ke=1
+
+   !UnPack Data
+   do k=sz-ks,ez+ke
+    do j=sy-js,ey+je
+      j2=jstart+j
+      k2=kstart+k
+      Outplane(j2,k2)=Temp_Recv(j,k)
+     enddo
+    enddo
+  if (debug) write(6,*) "master:",n,maxval(Temp_Recv)
+  enddo
+                                                                                                                            
+ deallocate(Temp_Recv,STAT=s1)
+                                                                                                                             
+ ok=max(ierr,s1)
+ return
+end subroutine gather2d_statM
+
+
+subroutine gather2d_statS(varL,myidM,ok)
+ use ntypes, only: r8
+ use dd,     only: commx2x3, coords,MPI_STATUS_SIZE, inttype, realtype,myid
+ use domain, only: sz,ez,sy,ey
+ implicit none
+                                                                                                                             
+!Passed Variables
+ integer,intent(in)        :: myidM
+ real(r8),intent(in)       :: varL(sy-1:ey+1,sz-1:ez+1)
+ integer,intent(out)       :: ok
+                                                                                                                             
+!Local Variables
+ integer                            :: Tsize,ierr
+
+ logical,parameter                   :: debug=.false.
+
+ ierr=0
+ Tsize=size(varL)
+ call MPI_SEND(coords,3,inttype,myidM,2,commx2x3,ierr)
+ call MPI_SEND(varL,Tsize,realtype,myidM,1,commx2x3,ierr)
+ if (debug) write(6,*) "slave:",myid,maxval(varL)                                                                                                                             
+ok=ierr
+return
+end subroutine gather2d_statS
+#endif
+
+
+!subroutine autocorx2x3(varIN,corOUT,vtype,index1,index2)
+! use ntypes, only: r8
+! use domain, only: sx,ex,nxp2
+! use dd,     only: comm3d, realtype, MPI_STATUS_SIZE
+! implicit none
+!
+!!Passed Variables
+! real(r8),intent(in)   :: varIN(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1)
+! real(r8),intent(out)  :: corOUT(0:nxp2/2-1)
+! integer,intent(in)    :: index2, index2, loc
+! character(len=*)      :: vtype
+!
+!!Local Variables
+! real(r8) :: mean(sy-1:ey+1,sz-1:ez+1), rms(sy-1:ey+1,sz-1:ez+1)
+! real(r8),dimension(:),pointer :: dxt
+! real(r8) :: Length, Rsum
+! integer :: l,i
+! integer :: Msub, MsubG, status1(MPI_STATUS_SIZE), err1, inttype, MPI_MAX
+!
+! select case(vtype)
+!  case('u')
+!   dxt=>dxe
+!  case DEFAULT
+!   dxt=>dxc
+! end select
+!
+! call Reduce_Pencil_to_Master(varIN,1,index1,index2,MSub,Pencil(:),size(Pencil),myidM,err1)
+! call MPI_ALLREDUCE(MSub,MSubG,1,inttype,MPI_MAX,comm3d,err1)
+! if (myid.EQ.MSubG.AND.MSubG.NE.myidM) call mpi_send(Pencil(:),size(Pencil,1),realtype,myidM,14,comm3d,err1)
+! if (myid.eq.myidM.AND.MSubG.NE.myidM) call mpi_recv(Pencil(:),size(Pencil,1),realtype,MsubG,14,comm3d,status1,err1)
+!
+! do l=0,nxp2/2-1
+!  Rsum  =0.d0
+!  Length=0.d0
+!  counter=0
+!  do i=1,nxp2/2
+!   Rsum = Rsum + ( PencilIN(i)*PencilIN(i+l) )
+!   counter=counter+1
+!  enddo
+!  CorOut(l) = Rsum/dble(counter)
+! enddo
+!
+!return
+!end subroutine autocorrelations

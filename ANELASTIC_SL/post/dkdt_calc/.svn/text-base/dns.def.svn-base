@@ -1,0 +1,95 @@
+ # Statistics File Definition & Description for use with tkstat v2.4
+ # Date = 05/07/2006
+ # Written by Kyle Brucker
+ # Format <TEXT>:<XMGR>:<LATEX>:<FORMULA>
+ I:i:i:
+ J:j:j:
+ Z:z:z:
+ S1:x\s3\N/\8d\sw\N\0:x_3/\delta_\omega:
+ u':u':u^'_1:
+ v':v':u^'_2:
+ w':w':u^'_3:
+ p':p':p^':
+ rho':\8r\N\0':\rho^':
+ U:U:\bar{u}_1:
+ V:V:\bar{u}_2:
+ W:W:\bar{u}_3:
+ P:P:\bar{p}:
+ rho:\8r\0:\bar{\rho}:
+ omg_x':\8w\s1\N'\0:\omega_1^':
+ omg_y':\8w\s2\N'\0:\omega_2^':
+ omg_z':\8w\s3\N'\0:\omega_3^':
+ omg_mag':\8w\N\s\0mag\N'\0:\omega_{mag}^':
+ Omg_x:\8w\s1\N\0:\Omega_1:
+ Omg_y:\8w\s2\N\0:\Omega_2:
+ Omg_z:\8w\s3\N\0:\Omega_3:
+ Omg_mag:\8w\N\s\0mag\N\0:\Omega_{mag}:
+ e11:\8e\s11\N\0:\epsilon_{11}:
+ e12:\8e\s12\N\0:\epsilon_{12}:
+ e13:\8e\s13\N\0:\epsilon_{13}:
+ e21:\8e\s21\N\0:\epsilon_{21}:
+ e22:\8e\s22\N\0:\epsilon_{22}:
+ e23:\8e\s23\N\0:\epsilon_{23}:
+ e31:\8e\s31\N\0:\epsilon_{31}:
+ e32:\8e\s32\N\0:\epsilon_{32}:
+ e33:\8e\s33\N\0:\epsilon_{33}:
+ ep1:\8e\s\8r\N\s,1\N\0:\epsilon_{\rho,1}:
+ ep2:\8e\s\8r\N\s,2\N\0:\epsilon_{\rho,2}:
+ ep3:\8e\s\8r\N\s,3\N\0:\epsilon_{\rho,3}:
+ Diss_rho:\8e\s\8r\N\0:\epsilon_{\rho}:
+ dkdt:dk/dt:\frac{dk}{dt}:
+ Prod:P:Production:
+ Diss_sum:\8e\N\s\0sum\N\0:\epsilon_{sum}:
+ Diss_vor:\8e\N\s\0vor\N\0:\epsilon_{vor}:
+ Buoy:B:B:
+ Trans:T:T:
+ Kinetic:k:k:
+ mix_eff:M\se\N\0:\frac{\int -B}{\int (-B + \epsilon)}:
+ trans_eff:T\se\N\0:\frac{\int \epsilon_{\rho}}{\int ( \epsilon_{\rho} + \epsilon)}:
+ uu:u'u':u_1^' u_1^'
+ uv:u'v':u_1^' u_2^'
+ uw:u'w':u_1^' u_3^'
+ up:u'p':u_1^' p^'
+ ur:u'\8r\N'\0:u_1^' \rho^'
+ Ruu:(u'u')/u\srms\N\S2\N\0:\frac{u_1^' u_1^'}{u_{rms}^2}
+ Ruv:(u'v')/(u\srms\Nv\srms\N\0:\frac{u_1^' u_2^'}{u_{rms} v_{rms} }
+ Ruw:(u'w')/(u\srms\Nw\srms\N\0:\frac{u_1^' u_3^'}{u_{rms} w_{rms} }
+ Rup:(u'p')/(u\srms\Np\srms\N\0:\frac{u_1^' p^'}{u_{rms} p_{rms}}
+ Rur:(u'\8r\N')/u\srms\N\8r\N\srms\N\0:\frac{u_1^' \rho^'}{u_{rms} \rho_{rms}}
+ vv:v'v':u_2^' u_2^'
+ vw:v'w':u_2^' u_3^'
+ vp:v'p':u_2^' p^'
+ vr:v'\8r\N'\0:u_2^' \rho^'
+ Rvv:(v'v')/(v\srms\Nv\srms\N\0:\frac{u_2^' u_2^'}{v_{rms} v_{rms} }
+ Rvw:(v'w')/(v\srms\Nw\srms\N\0:\frac{u_2^' u_3^'}{v_{rms} w_{rms} }
+ Rvp:(v'p')/(v\srms\Np\srms\N\0:\frac{u_2^' p^'}{v_{rms} p_{rms}}
+ Rvr:(v'\8r\N')/v\srms\N\8r\N\srms\N\0:\frac{u_2^' \rho^'}{v_{rms} \rho_{rms}}
+ ww:w'w':u_3^' u_3^'
+ wp:w'p':u_3^' p^'
+ wr:w'\8r\N'\N\0:u_3^' \rho^'
+ Rww:(w'w')/(w\srms\Nw\srms\N\0:\frac{u_3^' u_3^'}{w_{rms} w_{rms} }
+ Rwp:(w'p')/(w\srms\Np\srms\N\0:\frac{u_3^' p^'}{w_{rms} p_{rms}}
+ Rwr:(w'\8r\N')/w\srms\N\8r\N\srms\N\0:\frac{u_3^' \rho^'}{w_{rms} \rho_{rms}}
+ pp:p'p':p^' p^'
+ pr:p'\8r\N\N\0':p^' \rho^'
+ Rpp:(p'p')/(p\srms\Np\srms\N\0:\frac{p^' p^'}{p_{rms} p_{rms}}
+ Rpr:(p'\8r\N')/p\srms\N\8r\N\srms\N\0:\frac{p^' \rho^'}{p_{rms} \rho_{rms}}
+ rr:\8r\N'\8r\N'\N\0:\rho^' \rho^'
+ Rr:(\8r\N'\8r\N')/\8r\N\srms\N\8r\N\srms\N\0:\frac{\rho^' \rho^'}{\rho_{rms} \rho_{rms}}
+ dUdz:dU/dz:\frac{d \bar{u_1}}{dx_3}
+ drhodz:d\8r\N\0/dz\N\0:\frac{d \bar{\rho} }{dx_3}
+ N2:N\S2\N\0:N^2
+ Rig:Ri\sg\N\0:Ri_g
+ Le:L\se\N\0:L_E
+ eta:\8h\N\0:\eta
+ Lo:L\sO\N\0:L_O
+ d_omega:\8d\s\8w\N\0:\delta_{\omega}
+ d_theta:\8d\s\8q\N\0:\delta_{\theta}
+ d_rho:\8d\s\8r\N\0:\delta_{\rho}
+ d_theta_rho:\8d\s\8q\N\s\8r\N\0:delta_{\theta,\rho}
+ int_eps:Int \8e\N\0:\int \epsilon
+ int_sceps:Int \8e\N\s\8r\N\0:\int \epsilon_{\rho}
+ int_prod:Int P:\int P
+ int_buoyancy:Int B:\int B
+ int_mix_eff:Int M\se\N\0:frac{-B}{int (-B + \epsilon)}
+ int_trans_eff:Int T\se\N\0:frac{\epsilon_{\rho}}{int (\epsilon_{\rho} + \epsilon)}

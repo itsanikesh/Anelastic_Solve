@@ -1,0 +1,13 @@
+runlocation=$WORKDIR/test
+cd ..
+make ptest
+cd runfiles
+cp ptest.ini $runlocation/
+cp ../ptest.x $runlocation/
+cp cleanup.ptest $runlocation/
+cp setup_results_ptest $runlocation/
+cp ptest.job.jaws $runlocation/
+cd $runlocation/
+./cleanup.ptest
+./setup_results_ptest
+bsub < ./ptest.job.jaws

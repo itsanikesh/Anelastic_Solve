@@ -1,0 +1,391 @@
+\newcommand{\kkzero}{\ensuremath{\frac{k}{k_0}}}
+\newcommand{\ddx}[2]{\frac{\partial #1}{\partial #2}}
+
+
+\subsection{DNS solver}
+Running the DNS solver is done with the combination of Sturb.x and Sturb.ini. 
+All settings for the simulations are given in Sturb.ini. An example file is
+given below:
+\input{autogen/sturbini} % path is from main program
+
+\textbf{Restart block options}
+\begin{description}
+  \item Restart: whether to use a restart file or not
+  \item Fname: Restart filename. Only applies if Restart is yes.
+  \item iter: Iteration number of the restart file. Only applies if Restart is
+ yes.
+\end{description}
+
+\textbf{Parameters block options}
+\begin{description}
+\item Flow: Type of flow. Options are
+  \begin{enumerate}
+    \item Hshear: Horizontal shear layer
+    \item Vshear: Vertical shear layer
+    \item Twake: Towed wake
+    \item SPwake: Self-propelled wake
+    \item PRPwake: Propelled wake
+  \end{enumerate}
+\item Strat: Density Type.
+  \begin{enumerate}
+    \item Linear: Linear Stratification
+    \item TwoLayer: Uses tanh to create a continuous two layer fluid. Usually
+                    used for shear layer simulations.
+    \item Jdeep: Jdeep case of ???KYLE OR HIEU WHAT IS THIS?
+  \end{enumerate}
+\item Reynolds: Reynolds number 
+\item Prandtl: Prandtl number.
+\item RefDensity: Background density, usually non-dimensionalized to 1.
+\item CFL: CFL number for the timestep determination.
+\item DeltaT\_max: maximum value for the timestep. Is this used KYLE?
+\item Clip: Prevent unnatural values in the density, velocity away from a shear
+            layer.
+\item IConly: If yes stop the program after the initial conditions are set up
+              and the restart file is generated.
+\end{description}
+
+\textbf{Gravity block options}
+\begin{description}
+  \item GT1: Time to set gravity to Ginit.
+  \item GT2: Time to set gravity equal to Gfinal. The value is ramped linearly
+             from Ginit to GFinal in GT2-GT1. KYLE IS THIS TRUE???
+  \item Ginit: Initial value of gravity.
+  \item Gfinal: Final version of gravity. Should be entered as a magnitude.
+\end{description}
+
+\textbf{Domain block options}
+\begin{description}
+  \item NX: number of points in the X1 direction.
+  \item NY: number of points in the X2 direction.
+  \item NZ: number of points in the X3 direction.
+\end{description}
+
+\textbf{Decomposition block options}
+\begin{description}
+  \item X1Procs: number of processors to use in the X1 direction.
+  \item X2Procs: number of processors to use in the X2 direction.
+  \item X3Procs: number of processors to use in the X3 direction.
+\end{description}
+
+\textbf{Iteration block options}
+\begin{description}
+  \item Start: Number for the first iteration. KYLE what about restarts???
+  \item End: Maximum number of iterations.
+  \item Restarts: How often to save restart files.
+  \item Stats: How often to save the full statistics package.
+  \item StatSmall: How often to write the small statistics package.
+  \item FirstStat: Whether to write all statistics after the first iteration.
+  \item Planes: How often to save planes of data.
+  \item Pencils: How often to save pencils of data.
+  \item CheckDIV: How often to write the divergence to the screen.
+\end{description}
+
+\textbf{Grid block options}
+this section will be over-written.
+\begin{description}
+  \item Lx: Domain Length in the X1 direction.
+  \item Ly: Domain Length in the X2 direction.
+  \item Lz: Domain Length in the X3 direction.
+  \item x0: Where to set x1 = 0. 
+  \item y0: Where to set x2 = 0. 
+  \item z0: Where to set x3 = 0. 
+  \item XGridtype:
+  \item YGridtype:
+  \item ZGridtype:
+\end{description}
+
+\textbf{Output block options}
+\begin{description}
+  \item RelaxDIR: Directory where pre-relax files will be written out.
+  \item ResultDIR: Directory where results will be written out. KYLE is this still needed or should the other files be modified???
+  \item TempDIR: Directory where temporary files will be written out. KYLE is this still needed???
+  \item PenDIR: Directory where pencil files will be written out.
+  \item PlnDIR: Directory where plane files will be written out.
+  \item FlowDIR: Directory where restart files will be written out.
+  \item StatDIR: Directory where statistics files will be written out.
+  \item MGDIR: Directory where grid files will be written out for each
+        multigrid level.
+  \item GridDIR: Directory where grid files will be written out.
+  \item FileExt: The file extension for output. KYLE is this for all files or just some???
+  \item WriteGrid: Write the grid to a file.
+  \item WriteSponge: Write a file containing the sponge region.
+  \item GridWeights: Write out a measure of how stretched the grids are. KYLE???
+  \item TKstat: If yes, write statistics in a format to be read by TKstat. This
+        is ok for shear layers but not wakes.
+  \item StatBIN: If yes, write statistics in binary.
+  \item BigIO: If yes, write all output to one large file rather than
+        having each processor write its own. Only useful for relatively
+        small runs.
+\end{description}
+
+\textbf{IO block options}
+\begin{description}
+  \item IOUT\_MASTER: Where the master should write out messages. 6 is to 
+        standard out.
+  \item IOUT\_SLAVEX2Procs: Where the slaves should write out messages. 
+        0 has them either not write out or write to an error file.
+\end{description}
+
+\textbf{Planes block options}
+\begin{description}
+  \item iPlanes: Values of i where X2-X3 planes should be written out.
+  \item jPlanes: Values of j where X1-X3 planes should be written out.
+  \item kPlanes: Values of k where X1-X2 planes should be written out.
+\end{description}
+
+\textbf{Lines block options}
+\begin{description}
+  \item iLines: KYLE how are these set up??? Are they working?
+  \item jLines: 
+  \item kLines: 
+\end{description}
+
+\textbf{MGsolver block options}
+\begin{description}
+  \item nxlevels: Number of multigrid levels in X1.
+  \item nylevels: Number of multigrid levels in X2.
+  \item nzlevels: Number of multigrid levels in X3.
+  \item Smoother: Smoother to use when solving at each multigrid level. Options are 
+  \begin{enumerate}
+    \item RBPGS: Red-black point Gauss-Seidel iteration. 
+    \item LJ: Red-black line Gauss-Seidel iteration. Lines are taken in the X1
+          direction. This is well suited to stretched grids. 
+  \end{enumerate}
+  \item maxcy: Maximum number of V cycles for each call to the pressure solver.
+  \item tolmax: Tolerance for the pressure solver.
+  \item PreRelax: Number of iterations at each grid level going down the V 
+        cycle. Should be entered coarsest to finest, i.e. 12, 10, 8, 4, 4, 3.
+  \item PostRelax: Number of iterations at each grid level going up the V 
+        cycle. Should be entered coarsest to finest, i.e. 12, 10, 8, 4, 4, 3.
+  \item Strict: If yes exchange processor boundary data after each red or 
+        black iteration (twice per iteration, once for black, once for red).
+  \item Verbose: If yes, output residual at each V cycle. 
+\end{description}
+
+\textbf{InitPressure block options}
+\begin{description}
+  \item Pzero: If yes, set $p=0$ for the initial conditions. KYLE does this work with RESTARTS???
+\end{description}
+
+\textbf{ISO block options}
+\begin{description}
+  \item KO: Scaling parameter for the energy spectrum E(k). KYLE is this right?
+  \item K1: KYLE What do these do?
+  \item EpsO: 
+  \item Spectrum: Which energy spectrum to use. Options are
+  \begin{enumerate}
+    \item 1: Flat Spectrum $E(k)=1$
+    \item 2: $E(k)=\frac{\left( \kkzero \right)^4}  
+             {\left(1+\frac{12}{5}\left(\kkzero \right)^2 \right)^\frac{17}{6} }$
+    \item 3: $E(k)=\left( \kkzero \right)^4 \exp\left( -2 \left( \kkzero \right) ^2 \right)$
+             if $2 \left( \kkzero \right)^2 < 700 $ else $E(k)=0$
+    \item 4: $E(k)=\left( \kkzero \right)^2 \exp\left( -2 \kkzero \right)$
+             if $2  \kkzero  < 700 $ else $E(k)=0$
+    \item 5: $E(k)=\left( \kkzero \right)^\frac{1}{4} \exp\left(-2 \left(\kkzero \right)^2\right)$
+             if $2 \left( \kkzero \right)^2 < 700 $ else $E(k)=0$
+    \item 6: Kolmogorov Spectrum $E(k)=1.5 \epsilon^ {\frac{2}{3}} k^{\frac{-5}{3}}$
+             if $k_0 < k < k_1$ else $E(k)=0$
+    \item 7: Pulse Spectrum $E(k)=1$ 
+             if $k_0 < k < k_1$ else $E(k)=0$
+  \end{enumerate}
+\end{description}
+
+\textbf{BroadBand block options}
+\begin{description}
+  \item Amplify: Magnitude of the initial disturbance. KYLE WHAT ARE THESE FOR SHEAR LAYERS
+  \item Radius: Radius of the initial disturbance.
+  \item turbICS: If yes, add turbulence to the initial conditions. WHY IS THIS AN OPTION KYLE?
+\end{description}
+
+\textbf{Relax block options}
+\begin{description}
+  \item RelaxTime: Time for pre-relaxing to set up the initial conditions. 
+  \item FixMean: Keep mean constant during pre-relaxing. KYLE IS THIS IMPLEMENTED?
+\end{description}
+
+\textbf{Mean block options}
+\begin{description}
+  \item Param1: Amplitude for the wake.
+  \item Param2: Radius for the wake.
+  \item Param3: Undefined for wake.
+  \item Param4: Undefined for wake.
+  \item X1center: Location of mean profile center in X1.
+  \item X2center: Location of mean profile center in X2.
+  \item X3center: Location of mean profile center in X3.
+\end{description}
+
+\textbf{Density block options}
+\begin{description}
+  \item Param1: 
+    \begin{description}
+      \item Linear case: $\ddx{\rho}{x_3}$
+      \item TwoLayer case: $\triangle \rho$
+      \item Jdeep case: $J_m$
+    \end{description}
+  \item Param2: 
+    \begin{description}
+      \item Linear case: unused
+      \item TwoLayer case: $\triangle \omega$
+      \item Jdeep case: $J_d$
+    \end{description}
+  \item Param3: 
+    \begin{description}
+      \item Linear case: unused
+      \item TwoLayer case: unused
+      \item Jdeep case: $z_0$
+    \end{description}
+  \item X3center: Location of mean density center in X3.
+\end{description}
+
+\textbf{Sponge block options}
+\begin{description}
+  \item Ilower: Size of sponge from X1min in grid cells.
+  \item Iupper: Size of sponge from X1max in grid cells.
+  \item Jlower: Size of sponge from X2min in grid cells.
+  \item Jupper: Size of sponge from X2max in grid cells.
+  \item Klower: Size of sponge from X3min in grid cells.
+  \item Kupper: Size of sponge from X3max in grid cells.
+  \item AmpX1: Amplitude of sponge in X1 direction.
+  \item AmpX2: Amplitude of sponge in X2 direction.
+  \item AmpX3: Amplitude of sponge in X3 direction.
+  \item UseSponge: If yes, turn on the sponge.
+\end{description}
+
+\textbf{BC block options}
+\begin{description}
+  \item X1: Set BCs for X1. Options are periodic and read. Periodic makes all
+            variables periodic, read lets the BCs for each variable be set 
+            below in the appropriate block. If a variable is defined as 
+            periodic, the options below are not used.
+  \item X2: Set BCs for X2.
+  \item X3: Set BCs for X3.
+\end{description}
+
+\textbf{X3min block options}
+\begin{description}
+  \item U1TYPE: Set the type of BC for U1 at X3min. Options are Dirichlet
+       (Dirichlet, dirichlet, dir)  and Neumann (Neumann, neumann, neu).
+  \item U1VALUE: Assign value for U1 as defined by the BC type above.
+  \item FLUCTYPE: Set BCs for the fluctuations. This is important for the 
+        statistics. KYLE WHY DO WE HAVE TO DO THIS AGAIN?
+  \item FLUCVALUE: Assign value for the fluctuations as defined by the BC type
+                   above. 
+\end{description}
+The other boundary condition variables are defined analogously. 
+
+\subsection{LES solver}
+coming soon...
+
+\subsection{Pressure test program}
+Running the Pressure solver test program is done with the combination of
+ptest.x and ptest.ini. This program can be used to find an optimal domain
+decomposition and to tune multigrid settings for the problem to be be studied.
+All settings for the simulations are given in ptest.ini. An example file is
+given below:
+\input{autogen/ptestini}
+
+The ptest.ini file is essentially a smaller version of Sturb.ini. The one major
+difference in the two files is the TestCase block in ptest.ini. 
+\vspace{12pt}
+
+\textbf{TestCase block options}
+\begin{description}
+  \item testcase: There are 6 built in test cases with analytic solutions. They are: 
+  \begin{enumerate}
+    \item dirichletBCs: 1D test with 2 Dirichlet boundary conditions.
+      \begin{align*}
+        \nabla^2 p = rhs \hspace{1.0in}
+         & p(-L/2) = a \\
+         & p(L/2) = b \\
+         & \text{periodic BCs in all other directions}
+      \end{align*}
+    \item linearpgrad: 1D test with 2 Dirichlet boundary conditions.
+      \begin{align*}
+        \nabla^2 p = 0 \hspace{1.0in}
+         & p(-L/2) = a \\
+         & p(L/2) = b \\
+         & \text{periodic BCs in all other directions}
+      \end{align*}
+    \item 1dirichlet1NeumannBC: 1D test with 1 Dirichlet boundary condition
+          and one Neumann boundary condition.
+      \begin{align*}
+        \nabla^2 p = rhs \hspace{1.0in}
+         & p(-L/2) = a \\
+         & \ddx{}{x_i} p(L/2)= b \\
+         & \text{periodic BCs in all other directions}
+      \end{align*}
+    \item 1dsine: 1D sine wave.
+      \begin{align*}
+        \nabla^2 p = - c_x^2 \sin \left(c_x x \right) \hspace{1.0in}
+        & \text{periodic BCs in all directions}
+      \end{align*}
+    \item 3dsines: A product of 3 1D sine waves to create a 3D source. The
+          solution for this is approximate due to the difficulty of matching
+          the periodic length exactly.
+      \begin{align*}
+        \nabla^2 p = -\left( c_x^2 + c_y^2 + c_z^2 \right)
+        \sin \left(c_x x \right) \sin \left(c_y y \right)
+        \sin \left(c_z z \right)  \hspace{1.0in} \\
+        \text{periodic BCs in all directions}
+      \end{align*}
+    \item cfdhw: Similar to linearpgrad but with one set of periodic BCs
+                 replaced by a Neumann one. The initial conditions are 
+                 different as well; noise is applied to the boundaries.
+      \begin{align*}
+        \nabla^2 p = 0 \hspace{1.0in}
+         & p(-L_y/2) = a \\
+         & p(L_y/2) = b \\
+         & \ddx{}{z} p(-L_z/2)= \ddx{}{z} p(L_z/2) = 0 \\
+         & \text{periodic BCs in x}
+      \end{align*}
+  \end{enumerate}
+  \item testdir1D: Assign a direction for one of the 1D cases. Options are
+  \begin{enumerate}
+    \item x1: variation in the x1 direction, x2 and x3 periodic.
+    \item x2: variation in the x2 direction, x1 and x3 periodic.
+    \item x3: variation in the x3 direction, x1 and x2 periodic.
+  \end{enumerate}
+  \item srcflucs: If yes, add small fluctuations to the source term.
+  \item phiflucs: If yes, add small fluctuations to the initial guess for phi.
+\end{description}
+
+\subsection{Grid generation program}
+Running the grid generation program is done with the combination of gridgen.x
+and gridgen.ini. All settings for the grid generation are given in gridgen.ini.
+An example file is given below:
+\input{autogen/gridgenini}
+
+\textbf{Domain block options}
+\begin{description}
+  \item NX: number of grid points in the X1 direction. Ghost points are added
+            automatically so this number should be rich in powers of 2
+            (256 instead of 258). 
+  \item NY: number of grid points in the X2 direction.
+  \item NZ: number of grid points in the X3 direction.
+\end{description}
+
+\textbf{Grid block options}
+\begin{description}
+  \item Lx: Domain length in the X1 direction.
+  \item Ly: Domain length in the X2 direction.
+  \item Lz: Domain length in the X3 direction.
+  \item x0: Set the grid origin in X1. Options are
+  \begin{enumerate}
+    \item start: x0 = 0
+    \item end: x0 = -xL
+    \item center: x0 = -xL/2
+  \end{enumerate}
+  \item y0: Set the grid origin in X2.
+  \item z0: Set the grid origin in X3.
+  \item XGridtype: Type of grid in the X1 direction. Options are
+  \begin{enumerate}
+    \item Uniform: Uniform spacing, $\triangle x = \frac{Lx}{NX+1}$
+    \item stretch1: Hyperbolic sine stretching: $x(i) = -x0 + \frac{xL}{NX+1}*
+                   \sinh \left( 1.75 \frac{i-1}{2*(NX+1)} \right)$
+  \end{enumerate}
+  \item YGridtype: Type of grid in the X2 direction.
+  \item ZGridtype: Type of grid in the X3 direction.
+\end{description}
+
+\subsection{Interpolation Program}
+coming soon... this needs an ini file.

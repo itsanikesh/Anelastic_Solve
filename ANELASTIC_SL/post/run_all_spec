@@ -1,0 +1,12 @@
+./run_spec u1 275 
+./run_spec u1 625 
+./run_spec u1 1150 
+./run_spec u1 1575
+./run_spec u2 275 
+./run_spec u2 625 
+./run_spec u2 1150 
+./run_spec u2 1575
+./run_spec u3 275 
+./run_spec u3 625 
+./run_spec u3 1150 
+./run_spec u3 1575

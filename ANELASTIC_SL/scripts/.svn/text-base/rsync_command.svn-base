@@ -1,0 +1,6 @@
+#This is an example of using rsync with ssh to syncronize a remote and
+#local directory.  In this example the command was executed on the
+#supercomputer and transfers the contents of the directory ./tplanes
+#to the remote computer mustang
+
+rsync -e ssh -avz ./tplanes kbrucker@mustang.ucsd.edu:/work2/kbrucker/T_Large

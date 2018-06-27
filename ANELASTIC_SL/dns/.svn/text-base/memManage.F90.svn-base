@@ -1,0 +1,248 @@
+subroutine allocation(ok)
+!@t
+! \textbf{subroutine allocation(ok)}
+!@h
+!   Description:
+!     Allocate the grid and flow variables.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+!@h
+!   Comments:
+!     An output message is sent to confirm that everything was allocated
+!     properly.
+!@q
+
+ use Domain, only: sx,ex,sy,ey,sz,ez, nxp2, nyp2, nzp2
+ use Grid
+ use Flow
+ use Spng, only: phiX1, phiX2, phiX2, X1inf, X2inf, X3inf
+#ifdef PARALLEL
+ use dd,     only: PlnX1,PlnX2, PlnX3, PenX1, PenX2, PenX3, &
+                               nxprocs, nyprocs, nzprocs
+#endif
+ use IO,     only: IOUT
+ implicit none
+
+!Passed Variables
+ integer,intent(out)       :: ok
+
+!Local Variables
+ integer                    :: s1
+
+!GRID ALLOCATION
+ !X1-Direction
+ allocate( xe(1:nxp2), stat=s1 )
+ allocate( xc(1:nxp2), stat=s1 )
+ allocate( dxe(1:nxp2), stat=s1 )
+ allocate( dxc(1:nxp2), stat=s1 )
+ allocate( rdxe(1:nxp2), stat=s1 )
+ allocate( rdxc(1:nxp2), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating X1 Grid Variables"
+  goto 1000
+ endif
+
+ !X2-Direction
+ allocate( ye(1:nyp2), stat=s1 )
+ allocate( yc(1:nyp2), stat=s1 )
+ allocate( dye(1:nyp2), stat=s1 )
+ allocate( dyc(1:nyp2), stat=s1 )
+ allocate( rdye(1:nyp2), stat=s1 )
+ allocate( rdyc(1:nyp2), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating X2 Grid Variables"
+  goto 1000
+ endif
+
+ !X3-Direction
+ allocate( ze(1:nzp2), stat=s1 )
+ allocate( zc(1:nzp2), stat=s1 )
+ allocate( dze(1:nzp2), stat=s1 )
+ allocate( dzc(1:nzp2), stat=s1 )
+ allocate( rdze(1:nzp2), stat=s1 )
+ allocate( rdzc(1:nzp2), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating X3 Grid Variables"
+  goto 1000
+ endif
+
+
+!FLOW VARIABLE ALLOCATION
+ allocate( u(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating u"
+  goto 1000
+ endif
+
+ allocate( v(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating v"
+  goto 1000
+ endif
+
+ allocate( w(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating w"
+  goto 1000
+ endif
+
+ allocate( p(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating p"
+  goto 1000
+ endif
+
+ allocate( rho(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating rho"
+  goto 1000
+ endif
+
+#ifdef PARALLEL
+ allocate( PlnX1(1:nyp2,1:nzp2,1:2),stat=s1 )
+ allocate( PlnX2(1:nxp2,1:nzp2,1:2),stat=s1 )
+ allocate( PlnX3(1:nxp2,1:nyp2,1:2),stat=s1 )
+ !Pencils
+ allocate( PenX1(1:nxp2,1:4),stat=s1 )
+ allocate( PenX2(1:nyp2,1:4),stat=s1 )
+ allocate( PenX3(1:nzp2,1:4),stat=s1 )
+#endif
+
+ call allocate_temps(s1)
+ if (s1.NE.0) then
+  write(IOUT,*) "Error Allocating temps `allocation`"
+  goto 1000
+ endif
+
+ write(IOUT,'(a)') "ALLOCATION COMPLETED"
+ return
+
+ 1000 continue 
+ ok = s1
+ write(IOUT,'(a)') "ALLOCATION FAILED"
+
+ return
+end subroutine allocation
+
+subroutine deallocate_temps(ok)
+!@t
+! \textbf{subroutine deallocate\_temps(ok)}
+!@h
+!   Description:
+!     Deallocate temporary variables u1_tmp2, u2_tmp2, u3_tmp2, r_tmp1, and
+!     r_tmp2.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use Flow,   only: u1_tmp2,u2_tmp2,u3_tmp2,r_tmp1,r_tmp2
+ use IO,     only: IOUT
+ implicit none
+
+!Passed Variables
+ integer,intent(out)       :: ok
+
+!Local Variables
+ integer                   :: s1
+ s1=0
+ ok=0
+ if ( allocated(u1_tmp2) ) deallocate( u1_tmp2, stat=s1)
+ if ( allocated(u2_tmp2) ) deallocate( u2_tmp2, stat=s1)
+ if ( allocated(u3_tmp2) ) deallocate( u3_tmp2, stat=s1)
+ if ( allocated(r_tmp1) ) deallocate( r_tmp1, stat=s1)
+ if ( allocated(r_tmp2) ) deallocate( r_tmp2, stat=s1)
+
+ if (s1.NE.0) write(IOUT,'(a31,i5)') "ERROR DEALLOCATING TEMPS: stat=",s1
+ ok=s1
+ return
+end subroutine
+
+
+subroutine allocate_temps(ok)
+!@t
+! \textbf{subroutine allocate\_temps(ok)}
+!@h
+!   Description:
+!     Allocate temporary variables u1_tmp2, u2_tmp2, u3_tmp2, r_tmp1, and
+!     r_tmp2.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+
+ use Domain, only: sx,ex,sy,ey,sz,ez
+ use Flow,   only: u1_tmp2,u2_tmp2,u3_tmp2,r_tmp1,r_tmp2
+ use IO,     only: IOUT
+ implicit none
+
+!Passed Variables
+ integer,intent(out)       :: ok
+
+!Local Variables
+ integer                    :: s1
+ ok=0
+ s1=0
+ if (.not. allocated(u1_tmp2) ) allocate( u1_tmp2(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (.not. allocated(u2_tmp2) ) allocate( u2_tmp2(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (.not. allocated(u3_tmp2) ) allocate( u3_tmp2(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (.not. allocated(r_tmp1)  ) allocate( r_tmp1(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+ if (.not. allocated(r_tmp2)  ) allocate( r_tmp2(sx-1:ex+1,sy-1:ey+1,sz-1:ez+1), stat=s1 )
+
+ if (s1.NE.0) write(IOUT,'(a,i5)') "ERROR ALLOCATING TEMPS: stat=",s1
+  ok=s1
+ return
+end subroutine
+
+subroutine zero_temps
+!@t
+! \textbf{subroutine mg\_allocate\_1(ok)}
+!@h
+!   Description:
+!     Set temporary variables u1_tmp2, u2_tmp2, u3_tmp2, r_tmp1, and
+!     r_tmp2 to zero.
+!@q
+!   Current Code Owner:
+!     Matt de Stadler (mdestadl@ucsd.edu)
+
+!   Modification History
+!     Version   Date     Comment 
+!     -------   ----     ------- 
+!     1.0       07/2008  Original code. [Kyle A. Brucker] 
+
+!   Language:
+!     Fortran 90
+ use FLOW, only: u1_tmp2,u2_tmp2,u3_tmp2,r_tmp1,r_tmp2
+ implicit none
+
+ u1_tmp2(:,:,:)=0.d0
+ u2_tmp2(:,:,:)=0.d0
+ u3_tmp2(:,:,:)=0.d0
+ r_tmp1(:,:,:)=0.d0
+ r_tmp2(:,:,:)=0.d0
+
+ return
+end subroutine zero_temps

@@ -1,0 +1,30 @@
+#!/bin/sh
+#ACCOUNT
+#PBS -A onrdc307
+###PBS -A VICONRDC29722307
+###PBS -A "ONRDC-2972-307"
+
+#QUEUE
+##PBS -q standard
+#PBS -q debug 
+
+#WALL TIME
+#PBS -l walltime=00:55:00
+
+#NUMBER OF PROCESSORS
+#PBS -l mppwidth=128
+
+#STANDARD ERROR
+#PBS -e wake.err
+
+#STANDARD OUT
+#PBS -o wake.out
+
+#JOB NAME
+#PBS -N runtest
+
+#RUN
+cd $WORKDIR/wake
+date
+aprun -n 128 ./Sturb.x > wakelog
+date

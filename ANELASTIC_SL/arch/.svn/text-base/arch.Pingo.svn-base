@@ -1,0 +1,98 @@
+###########################################################################
+#                  ARCHITECTURE FILE FOR USE WITH PINGO                   #
+#                     v.1 05/11/2009 Matt de Stadler                      #
+###########################################################################
+
+#RUN DIRECTORY (directory in which executable is created)
+RUNDIR  =./
+
+#COMPILERS AND LINKERS
+FF	=ftn
+AR	=ar
+CPP	=cpp
+CPPFLAGS=-P -traditional
+CC	=
+
+#BUILD FLAGS
+PARALLEL =-DPARALLEL
+OBUILD	 =
+MODULE   =-module ./include
+
+#DEBUGGING OPTIONS
+#DEBUG   =-C -Ktrap=fp  
+
+#OPTIMIZATION FLAGS
+#OPT    =-O3 -Mvect=sse -Mipa=inline,force
+#OPT	=-Mvect=sse -Mipa=inline
+OPT=-O4 -Minfo=inline,ipa -Mvect=sse -Mipa=reshape,align,arg,force,inline:10,const,shape,libc,globals,localarg,pure,vestigial,f90ptr -Munroll=c:5 -Mnoframe -Mcache_align -Mflushz -Mvect=prefetch,assoc
+
+#EXTERNAL LIBRARIES 
+LIBDIRS =-L/opt/fftw/3.1.1/cnos/lib/
+LIBS    =-lfftw3
+
+#INCLUDE DIRECTORIES
+INCDIRS =-I/opt/fftw/3.1.1/cnos/include/
+
+#IOFLAGS
+IOFLAG  =
+
+###########################################################################
+#                                NOTES                                    #
+###########################################################################
+# 1. -module 'dir_name' tells it to put .mod files in the given directory 
+#      and to include 'dir_name' in the include path (i.e. -I'dir_name')
+
+# 2. -DPARALLEL is a preprocessing flag that is required to build the 
+#      parallel version.
+
+# 3. DEBUGGING ON JADE--
+#    -C means check (i.e. check array bounds etc)
+#    -traceback add debug information for runtime traceback
+#    -Ktrap=fp means -Ktrap=inv,divz,ovf 
+#    -Ktrap=ovf checks for floating point overflow
+#    -Ktrap=unf checks for floating point underflow
+#    -Ktrap=inv checks for invalid floating point operands 
+#    -Ktrap=divz checks for division by zero 
+
+# 3. OPTIMIZATIONS ON JADE--
+#     DISCLAMER: FIRST OFF IF THERE ARE ANY PROBLEMS/INCONSISTENCIES
+#     RECOMPILE WITH NO OPTIMIZATIONS!!!!!!  SUPERCOMPUTERS DO NOT
+#     HAVE STATIC ENVIRONMENTS, LIBRARIES CHANGE, COMPILERS CHANGE
+#     WHICH MEANS SOMETHING THAT WORKED YESTERDAY MIGHT NOT WORK 
+#     TODAY.  C'EST LA VIE... JUST REMEMBER TO COMPLETELY RECOMPILE!
+
+#     A MODULE SWAP IS REQUIRED xt-mpt/3.0.3 IS BUGGY AND RESULTED 
+#     IN THE CODE BLOWING UP WHEN OPTIMIZATIONS WERE USED THE 
+#     FOLLOWING TWO LINES FIXED THE PROBLEM.
+#     module swap pgi pgi/8.0.5
+#     module swap xt-mpt/3.0.3 xt-mpt/3.2.0
+
+#     DEFAULT RECOMENDATIONS FROM THE USERS GUIDE 
+#     -Mipa=fast -fastsse
+#     -Mipa=fast really means -Mipa=align,arg,const,f90ptr,shape,libc,globals,localarg,ptr,pure
+#     -fastsse   really means -Mvect=sse -Munroll=c:1 -Mnoframe -Mlre -O2
+
+#     MOST AGGRESSIVE OPTIMIZATIONS TRIED
+#     OPT=-Minfo=inline,ipa -Mvect=sse -Mipa=reshape,align,arg,force,inline:10,
+#           const,shape,libc,globals,localarg,pure,vestigial,f90ptr -O4 
+#           -Munroll=c:5 -Mnoframe -Mcache_align -Mflushz -Mvect=prefetch,assoc
+
+#     THIS FLAG BLEW UP THE CODE
+#     -Mipa=ptr Blows 
+
+#     THIS FLAG SLOWED IT DOWN BY ABOUT 10%
+#     -Mlre Slows it down
+
+#     FLAGS THAT SEEM TO MAKE VERY BIG DIFFERENCE IN THE XT4
+#     -Mvect=sse -Mipa=inline
+
+#     FLAGS THAT SEEM TO MAKE VERY LITTLE DIFFERENCE IN THE XT4
+#     -O2
+#     -O3
+#     -O4
+#     -Mvect=prefetch,assoc 
+#     -Mflushz 
+#     -Mcache_align 
+#     -Munroll=c:5 
+#     -Mnoframe 
+#     -Mipa=align,arg,force,inline:10,const,shape,libc,globals,localarg,pure,vestigial

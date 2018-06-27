@@ -1,0 +1,5 @@
+./cleanup
+./generatesubdocs
+pdflatex manual.tex
+pdflatex manual.tex
+acroread manual.pdf

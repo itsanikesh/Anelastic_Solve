@@ -1,0 +1,1 @@
+mkdir results; mkdir results/tmp; mkdir results/restart; mkdir results/stat; mkdir results/pln; mkdir results/pen; mkdir results/MGgrids; mkdir results/grid; mkdir results/relax

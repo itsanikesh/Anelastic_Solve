@@ -1,0 +1,9 @@
+./jAVGkxspec.x << EOF
+'./'                 # Data Directory with /
+'./'                 # Output Directory with /
+'u1'                  # BaseName
+281                  # Iteration 
+96                  # x3loc
+.true.               # T=Single F=Double
+.true.               # true=center/edge location false=no center/edge location 
+EOF

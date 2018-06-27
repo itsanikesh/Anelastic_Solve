@@ -1,0 +1,2 @@
+sgf.f90 is a post-processing program to output the stretching factor on 2d planes
+viewable in tecplot and paraview.  Requires the tecBINARY and vtkBINARY modules.

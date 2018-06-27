@@ -1,0 +1,28 @@
+#!/bin/sh
+#ACCOUNT
+#PBS -A ONRDC29722307
+
+#QUEUE
+#PBS -q parallel 
+
+#WALL TIME
+#PBS -l walltime=18:00:00
+
+#NUMBER OF PROCESSORS
+#PBS -l select=3:ncpus=16
+
+#STANDARD ERROR
+#PBS -e wake.err
+
+#STANDARD OUT
+#PBS -o wake.out
+
+#JOB NAME
+#PBS -N SPwakewm
+
+#RUN
+cd $WORKDIR/erdc
+date
+mpirun -np 48 ./sturb.x > wake.log
+date
+

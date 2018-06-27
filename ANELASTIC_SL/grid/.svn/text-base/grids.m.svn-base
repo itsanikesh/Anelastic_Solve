@@ -1,0 +1,82 @@
+close all, clear all, clc
+
+% Uniform region
+rx = 0.2;    %  r2
+ry = 4;    %  r3
+
+rx = 5;    %  r2
+ry = 1;    %  r3
+
+% smalldx = 2/256; % dx in turbulent region
+smalldx = 12/127/sqrt(9); % dx in turbulent region
+% smalldx = 12/127; % dx in turbulent region
+% smalldx = 0.09375; % dx in turbulent region
+stretchfactor = 1.02; % percent stretching away from the box
+
+xpts = 512;
+ypts = 224;
+
+x(xpts/2+1) = smalldx/2;
+x(xpts/2)   = - smalldx/2;
+y(ypts/2+1) = smalldx/2; 
+y(ypts/2)   = - smalldx/2;
+xboxflag    = 0;
+
+% x grid
+for i = 1:xpts/2-1
+    % stretched grid
+    if xboxflag == 1;
+        dx = x(xpts/2+i)-x(xpts/2+i-1);
+        x(xpts/2+i+1) = x(xpts/2+i) + dx*stretchfactor;
+        dx = x(xpts/2-i+2)-x(xpts/2-i+1);
+        x(xpts/2-i) = x(xpts/2-i+1) - dx*stretchfactor;
+    end
+    % uniform grid
+    if xboxflag == 0; 
+        x(xpts/2+i+1) = x(xpts/2+i) + smalldx;
+        x(xpts/2-i) = x(xpts/2-i+1) - smalldx;
+        if x(xpts/2+i+1) > rx;
+            xboxflag = 1;
+        end
+    end
+end
+
+% y grid
+xboxflag = 0; 
+for i = 1:ypts/2-1
+    % stretched grid
+    if xboxflag == 1;
+        dx = y(ypts/2+i)-y(ypts/2+i-1);
+        y(ypts/2+i+1) = y(ypts/2+i) + dx*stretchfactor;
+        dx = y(ypts/2-i+2)-y(ypts/2-i+1);
+        y(ypts/2-i) = y(ypts/2-i+1) - dx*stretchfactor;
+    end
+    % uniform grid
+    if xboxflag == 0; 
+        y(ypts/2+i+1) = y(ypts/2+i) + smalldx;
+        y(ypts/2-i) = y(ypts/2-i+1) - smalldx;
+        if y(ypts/2+i+1) > ry;
+            xboxflag = 1;
+        end
+    end
+end
+y = y'; x = x'; 
+
+for i = 1:ypts
+    if (i == 1)
+        xx = x;
+    else
+        xx = [xx,x];
+    end
+end
+for i = 1:xpts
+    if (i == 1)
+        yy = y;
+    else
+        yy = [yy,y];
+    end
+end
+
+plot(xx,yy','b'); hold on; 
+plot(xx',yy,'b');
+axis('square');

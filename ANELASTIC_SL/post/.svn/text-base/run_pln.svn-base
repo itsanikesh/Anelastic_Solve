@@ -1,0 +1,12 @@
+./Pln.x << EOF
+'./'                 # Data Directory with /
+'./results/'                 # Output Directory with /
+.true.               # Tecplot T/F
+.true.               # Paraview T/F
+'phi_j0129'         # BaseName
+0                  # Start Step 
+1                  # End Step       
+1                    # Stride 
+.true.               # T=Single F=Double
+.true.
+EOF

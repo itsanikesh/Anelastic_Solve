@@ -1,0 +1,30 @@
+#!/bin/sh
+#ACCOUNT
+#PBS -A ONRDC29722307
+###PBS -A VICONRDC29722307
+###PBS -A "ONRDC-2972-307"
+
+#QUEUE
+##PBS -q standard
+#PBS -q background 
+
+#WALL TIME
+#PBS -l walltime=03:59:59
+
+#NUMBER OF PROCESSORS
+#PBS -l select=3:ncpus=44:mpiprocs=44
+
+#STANDARD ERROR
+#PBS -e wake.err
+
+#STANDARD OUT
+#PBS -o wake.out
+
+#JOB NAME
+#PBS -N runtest
+
+#RUN
+cd /p/work/anikeshp/SHEAR_LAYERAN/ANELASTIC_SL/run_dir/ 
+date
+aprun -n 128 ./sturb.x > wake.log
+date

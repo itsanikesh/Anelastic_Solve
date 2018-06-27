@@ -1,0 +1,25 @@
+#!/bin/sh
+## -n is number of processors
+#BSUB -n 64
+
+## -o specifies output file, %J denotes jobname prefix.
+#BSUB -o wake.out
+## -e specifies error file, %J denotes jobname prefix.
+#BSUB -e wake.err
+
+## -a is used for parallel jobs
+## REQUIRED for compiled mpich jobs, take out for non mpi jobs.
+#BSUB -a "mvapich"
+
+## -P specifies project name, REQUIRED
+#BSUB -P ONRDC-2972-307
+
+## -q OPTIONAL, specifies queue to run job in
+#BSUB -q debug
+
+## -W is wallclock time hours:minutes
+#BSUB -W 00:25
+cd $WORKDIR/wake
+date
+mpirun.lsf ./Sturb.x > wake.log
+date
