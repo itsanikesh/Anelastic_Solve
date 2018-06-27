@@ -103,6 +103,9 @@ LESobj =$(LESdir)/filter.o \
 	$(LESdir)/straincal.o \
 	$(LESdir)/SSM.o \
         $(LESdir)/DSMrho.o \
+        $(LESdir)/DSMqv.o \
+        $(LESdir)/DSMql.o \
+        $(LESdir)/DSMqr.o \
         $(LESdir)/DSMscal1.o \
 	$(LESdir)/DSM.o \
 	$(LESdir)/DMM.o 

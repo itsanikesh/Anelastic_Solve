@@ -24,7 +24,7 @@
 #PBS -N runtest
 
 #RUN
-cd /p/work/anikeshp/SHEAR_LAYERAN3/run_dir/ 
+cd /p/work/anikeshp/SHEAR_LAYERAN3/runLES/ 
 date
 aprun -n 128 ./sturb.x > wake.log
 date

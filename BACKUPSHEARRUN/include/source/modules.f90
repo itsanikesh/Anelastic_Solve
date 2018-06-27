@@ -71,7 +71,8 @@ end module Flow
 !LES VARIABLES
 module LESmod
  use ntypes
- real(r8),allocatable,dimension(:,:,:) :: S11,S22,S33,S12,S13,S23,modS,modSp,fmodS,fmodSp,delg,Csgs,CTsgs,CSsgs,nuT,kappaT,nappaT 
+ real(r8),allocatable,dimension(:,:,:) :: S11,S22,S33,S12,S13,S23,modS,modSp,fmodS,fmodSp,delg,Csgs,CTsgs,CSsgs,nuT,kappaT,nappaT
+ real(r8),allocatable,dimension(:,:,:) :: Cqvsgs,Cqlsgs,Cqrsgs,kappaqv,kappaql,kappaqr 
  real(r8),allocatable,dimension(:,:,:) :: un_gt, vn_gt, wn_gt, lestmp, lestmp1, lestmp2, lestmp3, lestmp4
  real(r8),allocatable,dimension(:,:,:) :: un_gtgt, vn_gtgt, wn_gtgt
  real(r8),allocatable,dimension(:) :: nusm,kappasm,nappasm 
