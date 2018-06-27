@@ -1,0 +1,16 @@
+./stats2d.x << EOF
+'./'                 # Data Directory with /
+'./vtkfiles/'                 # Output Directory with /
+.false.               # Tecplot T/F
+.true.               # Paraview T/F
+'WakeStatsF_'        # BaseName
+1                  # Start Step
+3990                 # End Step
+1                   # Stride
+.true.               # T=Single F=Double
+$1                    # Statistic
+.false.              # List Available Variables and STOP
+.false.              # Output tke stat files, overwrites above
+.false.              # Output mke stat files, overwrites above
+.false.              # Output KE stat files, overwrites above
+EOF

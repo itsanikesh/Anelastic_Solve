@@ -1,0 +1,2 @@
+#!/bin/sh
+scp -r x1_grid.in x2_grid.in x3_grid.in anikeshp@topaz02.erdc.hpc.mil:/p/work1/anikeshp/warm3/run_dir/
